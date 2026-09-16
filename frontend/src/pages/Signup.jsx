@@ -11,9 +11,11 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineMail } from "react-icons/md";
 import { MdOutlineLock } from "react-icons/md";
+import { MdOutlinePersonOutline } from "react-icons/md";
 
 function Signin() {
     const navigate = useNavigate()
+    const [role, setRole] = useState("Student/Guardian")
     const [showPassword, setShowPassword] = useState(false)
     return (
         <div className='flex justify-center items-center h-[100vh] p-10'>
@@ -106,7 +108,21 @@ function Signin() {
                         <h1 className='text-2xl font-bold'>Login to Your Account</h1>
                         <p className='text-gray-600'>Enter your credentials to access your dashboard.</p>
                     </div>
+                    <div className='flex gap-3'>
+                        {["Student/Guardian", "Admin"].map((r, index) => (
+                            <>
+                                <div key={index} className='px-5 py-2 border border-gray-300 rounded-[7px]  cursor-pointer w-full text-center' onClick={()=>setRole(r)} style={role==r?{background:"#eaf6ee", border: "1px solid #10B981", color: "green"}:{background: "#fff"}}>{r}</div>
+                            </>
+                        ))}
+                    </div>
                     <div className='flex flex-col gap-3'>
+                        <label htmlFor="">Full Name</label>
+                        <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
+                            <MdOutlinePersonOutline size={20}/>
+                            <input type="text" placeholder='Enter your full name' className='outline-none w-full' />
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-3 mt-2'>
                         <label htmlFor="">Email / User ID</label>
                         <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
                             <MdOutlineMail size={20} />
@@ -120,10 +136,7 @@ function Signin() {
                             <input type={`${showPassword ? "text" : "password"}`} placeholder='Enter your password' className='outline-none w-full' />
                             <button className='absolute right-2 top-3 cursor-pointer' onClick={() => setShowPassword(prev => !prev)}>{!showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}</button>
                         </div>
-                    </div>
-                    <div className='flex justify-end mt-2'>
-                        <button className='text-green-600 hover:underline cursor-pointer' onClick={() => navigate("/forgot")}>Forgot Password?</button>
-                    </div>
+                    </div>  
                     <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4"><FaArrowRight />Login</button>
                     <div className='my-8 flex justify-center items-center gap-3'>
                         <div className='h-[1px] w-full bg-gray-200'></div>
@@ -132,7 +145,7 @@ function Signin() {
                     </div>
                     <div className='flex justify-center items-center w-full border border-gray-200 rounded-xl py-3 cursor-pointer gap-3'><FcGoogle size={24} /> Continue with Google</div>
                     <div className='text-center mt-10'>
-                        <p>Don't have an account? <span onClick={() => navigate("/sign-up")} className='text-green-600 cursor-pointer'>Sign Up</span></p>
+                        <p>Don't have an account? <span onClick={() => navigate("/sign-in")} className='text-green-600 cursor-pointer'>Sign In</span></p>
                     </div>
                 </div>
             </div>

@@ -8,6 +8,8 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Features from './pages/Features'
 import Notice from './pages/Notice'
+import Signup from './pages/Signup'
+import Forgot from './pages/Forgot'
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path='/user-dashboard' element={<UserDashboard/>} />
         <Route path='/admin-dashboard' element={<AdminDashboard/>} />
         <Route path='/sign-in' element={<Signin/>} />
+        <Route path='/sign-up' element={<Signup/>} />
+        <Route path='/forgot' element={<Forgot/>} />
       </Routes>
     </>
   )
