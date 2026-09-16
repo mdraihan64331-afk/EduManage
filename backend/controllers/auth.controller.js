@@ -4,13 +4,13 @@ import { genToken } from "../utils/token.js";
 
 export const signup = async (req, res) => {
   try {
-    const [fullName, email, password, role] = req.body;
-    const user = await User.findOne({ email });
+    const {fullName, email, password, role} = req.body;
+    let user = await User.findOne({ email });
     if (user) {
-      res.status(400).json({ message: "user already exist." });
+      return res.status(400).json({ message: "user already exist." });
     }
     if (password.length < 8) {
-      res
+      return res
         .status(400)
         .json({ message: "password must be at least 8 characters." });
     }
@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
-    res.status(400).json(`sign up error ${error}`);
+    return res.status(400).json(`sign up error ${error}`);
   }
 };
 
@@ -42,12 +42,12 @@ export const signin = async (req, res) => {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
     if (!user) {
-      res.status(400).json({ message: "User dosen't exist." });
+      return res.status(400).json({ message: "User dosen't exist." });
     }
 
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
-      res.status(400).json({ message: "Incorrect password" });
+      return res.status(400).json({ message: "Incorrect password" });
     }
 
     const token = await genToken(user._id);
@@ -59,6 +59,15 @@ export const signin = async (req, res) => {
     });
     return res.status(200).json(user)
   } catch (error) {
-    res.status(400).json(`sign in error ${error}`);
+    return res.status(400).json(`sign in error ${error}`);
   }
 };
+
+export const logOut = async (req, res) => {
+  try {
+    res.clearCookie("token")
+    return res.status(200).json({message: "Log out successfully!"})
+  } catch (error) {
+    return res.status(200).json({message: `Log out error ${error} !`})
+  }
+}

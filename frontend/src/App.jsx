@@ -11,6 +11,7 @@ import Notice from './pages/Notice'
 import Signup from './pages/Signup'
 import Forgot from './pages/Forgot'
 
+export const serverURL = "http://localhost:8000"
 function App() {
   return (
     <>
@@ -20,11 +21,11 @@ function App() {
         <Route path='/features' element={<Features />} />
         <Route path='/notice' element={<Notice />} />
         <Route path='/Contact' element={<Contact />} />
-        <Route path='/user-dashboard' element={<UserDashboard/>} />
-        <Route path='/admin-dashboard' element={<AdminDashboard/>} />
-        <Route path='/sign-in' element={<Signin/>} />
-        <Route path='/sign-up' element={<Signup/>} />
-        <Route path='/forgot' element={<Forgot/>} />
+        <Route path='/user-dashboard' element={<UserDashboard />} />
+        <Route path='/admin-dashboard' element={<AdminDashboard />} />
+        <Route path='/sign-in' element={<Signin />} />
+        <Route path='/sign-up' element={<Signup />} />
+        <Route path='/forgot' element={<Forgot />} />
       </Routes>
     </>
   )
