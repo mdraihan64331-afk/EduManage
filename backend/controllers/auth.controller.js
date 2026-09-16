@@ -4,7 +4,7 @@ import { genToken } from "../utils/token.js";
 
 export const signup = async (req, res) => {
   try {
-    const {fullName, email, password, role} = req.body;
+    const { fullName, email, password, role } = req.body;
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "user already exist." });
@@ -57,7 +57,7 @@ export const signin = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    return res.status(200).json(user)
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(400).json(`sign in error ${error}`);
   }
@@ -65,9 +65,34 @@ export const signin = async (req, res) => {
 
 export const logOut = async (req, res) => {
   try {
-    res.clearCookie("token")
-    return res.status(200).json({message: "Log out successfully!"})
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Log out successfully!" });
   } catch (error) {
-    return res.status(200).json({message: `Log out error ${error} !`})
+    return res.status(200).json({ message: `Log out error ${error} !` });
   }
-}
+};
+
+export const googleAuth = async (req, res) => {
+  try {
+    const { fullName, email, role } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        fullName,
+        email,
+        role,
+      });
+
+      const token = await genToken(user._id);
+      res.cookie("token", token, {
+        secure: false,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+    }
+    return res.status(201).json(user)
+  } catch (error) {
+    return res.status(400).json(`google auth error ${error}`)
+  }
+};

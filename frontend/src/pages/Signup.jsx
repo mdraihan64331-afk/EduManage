@@ -14,6 +14,9 @@ import { MdOutlineLock } from "react-icons/md";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import axios from "axios"
 import { serverURL } from '../App';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { auth } from '../../firebase'
+import { ClipLoader } from "react-spinners"
 
 function Signup() {
     const navigate = useNavigate()
@@ -22,22 +25,42 @@ function Signup() {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const handelSignup = async () => {
+        setLoading(true)
         try {
-            const result = axios.post(`${serverURL}/api/auth/sign-up`,{
+            const result =await axios.post(`${serverURL}/api/auth/sign-up`, {
                 fullName,
                 role,
                 email,
                 password
-            },{withCredentials:true})
-            if(email=="admin1234@gmail.com" && password=="admin1234" && role=="admin"){
+            }, { withCredentials: true })
+            if (email == "admin1234@gmail.com" && password == "admin1234" && role == "admin") {
                 navigate("/admin-dashboard")
             } else {
-                navigate("/")   
+                navigate("/")
             }
+            setLoading(false)
         } catch (error) {
             console.log(error)
+            setLoading(false)
+        }
+    }
+
+    const googleAuth = async () => {
+        const provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(auth, provider)
+        try {
+            const { data } = await axios.post(`${serverURL}/api/auth/google-auth`, {
+                fullName: result.user.displayName,
+                email: result.user.email,
+                role
+            }, { withCredentials: true })
+            navigate("/")
+            console.log(data)
+        } catch (error) {
+            console.log("Backend Response:", error.response?.data)
         }
     }
 
@@ -69,7 +92,7 @@ function Signup() {
                     <div className='flex gap-3'>
                         {["Student/Guardian", "Admin"].map((r, index) => (
                             <>
-                                <div key={index} className='px-5 py-2 border border-gray-300 rounded-[7px]  cursor-pointer w-full text-center' onClick={()=>setRole(r)} style={role==r?{background:"#eaf6ee", border: "1px solid #10B981", color: "green"}:{background: "#fff"}}>{r}</div>
+                                <div key={index} className='px-5 py-2 border border-gray-300 rounded-[7px]  cursor-pointer w-full text-center' onClick={() => setRole(r)} style={role == r ? { background: "#eaf6ee", border: "1px solid #10B981", color: "green" } : { background: "#fff" }}>{r}</div>
                             </>
                         ))}
                     </div>
@@ -79,18 +102,18 @@ function Signup() {
                     <div className='flex flex-col gap-3'>
                         <label htmlFor="">Full Name</label>
                         <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
-                            <MdOutlinePersonOutline size={20}/>
-                            <input type="text" placeholder='Enter your full name' className='outline-none w-full' onChange={(e)=>setFullName(e.target.value)}/>
+                            <MdOutlinePersonOutline size={20} />
+                            <input type="text" placeholder='Enter your full name' className='outline-none w-full' onChange={(e) => setFullName(e.target.value)} />
                         </div>
                     </div>
 
-                     {/*Email  */}
+                    {/*Email  */}
 
                     <div className='flex flex-col gap-3 mt-2'>
                         <label htmlFor="">Email / User ID</label>
                         <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
                             <MdOutlineMail size={20} />
-                            <input type="text" placeholder='Enter your email or user ID' className='outline-none w-full' onChange={(e)=>setEmail(e.target.value)}/>
+                            <input type="text" placeholder='Enter your email or user ID' className='outline-none w-full' onChange={(e) => setEmail(e.target.value)} />
                         </div>
                     </div>
 
@@ -100,14 +123,51 @@ function Signup() {
                         <label htmlFor="">Password</label>
                         <div className='relative flex items-center border gap-4 border-gray-300 p-2 rounded-[7px] mt-2 '>
                             <MdOutlineLock size={20} />
-                            <input type={`${showPassword ? "text" : "password"}`} placeholder='Enter your password' className='outline-none w-full' onChange={(e)=>setPassword(e.target.value)}/>
-                            <button className='absolute right-2 top-3 cursor-pointer' onClick={() => setShowPassword(prev => !prev)}>{!showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}</button>
+                            <input type={`${showPassword ? "text" : "password"}`} placeholder='Enter your password' className='outline-none w-full' onChange={(e) => setPassword(e.target.value)} />
+                            <button className='absolute right-2 top-3 cursor-pointer' onClick={() => setShowPassword(prev => !prev)}>{!showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}</button>
                         </div>
-                    </div>  
+                    </div>
 
                     {/* login */}
 
-                    <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelSignup}><FaArrowRight />Login</button>
+                    <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelSignup} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><FaArrowRight />Login</>}</button>
+
+                    {loading && (
+                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+
+                            {/* Loading Card */}
+                            <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+
+                                {/* Spinner + Logo */}
+                                <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+
+                                    {/* Spinner */}
+                                    <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                                    {/* Logo Circle */}
+                                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                                        <img
+                                            src={logoimage}
+                                            alt="EduManage"
+                                            className="h-20 w-20 object-contain"
+                                        />
+                                    </div>
+
+                                </div>
+
+                                {/* Title */}
+                                <h2 className="text-3xl font-bold text-[#102A5C]">
+                                    Please wait...
+                                </h2>
+
+                                {/* Description */}
+                                <p className="mt-3 text-base text-slate-500">
+                                    We are logging you into your account.
+                                </p>
+
+                            </div>
+                        </div>
+                    )}
 
                     <div className='my-8 flex justify-center items-center gap-3'>
                         <div className='h-[1px] w-full bg-gray-200'></div>
@@ -117,7 +177,8 @@ function Signup() {
 
                     {/* google auth */}
 
-                    <div className='flex justify-center items-center w-full border border-gray-200 rounded-xl py-3 cursor-pointer gap-3'><FcGoogle size={24} /> Continue with Google</div>
+                    <button className='flex justify-center items-center w-full border border-gray-200 rounded-xl py-3 cursor-pointer gap-3' onClick={googleAuth}><FcGoogle size={24} /> Continue with Google</button>
+
                     <div className='text-center mt-10'>
                         <p>Don't have an account? <span onClick={() => navigate("/sign-in")} className='text-green-600 cursor-pointer'>Sign In</span></p>
                     </div>
