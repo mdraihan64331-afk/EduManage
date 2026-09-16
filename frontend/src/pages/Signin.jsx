@@ -66,20 +66,7 @@ function Signin() {
                 </div>
             </div>
             <div>
-                <div>
-                    <div className='flex items-center'>
-                        <div className=' w-15'>
-                            <img src={logoimage} alt="" className='t' />
-                        </div>
-                        <div>
-                            <h1 className='text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
-                            <p className=''>School Management System</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h1>Login to Your Account</h1>
-                    </div>
-                </div>
+                
             </div>
         </div>
     )
