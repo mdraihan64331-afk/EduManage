@@ -213,7 +213,7 @@ function Signin() {
                     )}
 
 
-                    <div className='my-8 flex justify-center items-center gap-3'>
+                    <div className='my-4 flex justify-center items-center gap-3'>
                         <div className='h-[1px] w-full bg-gray-200'></div>
                         <div className='text-gray-600'>OR</div>
                         <div className='h-[1px] w-full bg-gray-200'></div>

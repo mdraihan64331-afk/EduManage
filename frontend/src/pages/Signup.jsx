@@ -153,8 +153,8 @@ function Signup() {
                         </div>
                     </div>
                     <div className='mt-3 mb-3'>
-                        <h1 className='text-2xl font-bold'>Login to Your Account</h1>
-                        <p className='text-gray-600'>Enter your credentials to access your dashboard.</p>
+                        <h1 className='text-2xl font-bold'>Create Your Account</h1>
+                        <p className='text-gray-600'>Fill in the details below to get started with EduManage.</p>
                     </div>
 
                     {/* Role */}
@@ -168,7 +168,7 @@ function Signup() {
 
                     {/* Full Name */}
 
-                    <div className='flex flex-col gap-3'>
+                    <div className='flex flex-col gap-3 mt-3'>
                         <label htmlFor="">Full Name</label>
                         <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
                             <MdOutlinePersonOutline size={20} />
@@ -238,7 +238,7 @@ function Signup() {
                         </div>
                     )}
 
-                    <div className='my-8 flex justify-center items-center gap-3'>
+                    <div className='my-4 flex justify-center items-center gap-3'>
                         <div className='h-[1px] w-full bg-gray-200'></div>
                         <div className='text-gray-600'>OR</div>
                         <div className='h-[1px] w-full bg-gray-200'></div>
