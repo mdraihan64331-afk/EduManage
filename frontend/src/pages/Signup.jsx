@@ -30,7 +30,7 @@ function Signup() {
     const handelSignup = async () => {
         setLoading(true)
         try {
-            const result =await axios.post(`${serverURL}/api/auth/sign-up`, {
+            const result = await axios.post(`${serverURL}/api/auth/sign-up`, {
                 fullName,
                 role,
                 email,
@@ -67,6 +67,75 @@ function Signup() {
     return (
         <div className='flex justify-center items-center h-[100vh] p-10'>
             <div className='flex justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
+                {/* image */}
+                <div className='relative w-[70%]'>
+                    <img src={loginImage} alt="" className='rounded-xl' />
+                    <div className='px-10 absolute top-3'>
+                        <div className='flex items-center'>
+                            <div className=' w-15'>
+                                <img src={logoimage} alt="" className='t' />
+                            </div>
+                            <div>
+                                <h1 className='text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
+                                <p className=''>School Management System</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 className="font-['Idiqlat'] font-extralight text-5xl font-bold">Welcome Back!</h1>
+                            <p className="mt-2">Sign in to your account and continue </p>
+                            <p className="mb-4">your educational journey.</p>
+                        </div>
+                        <div className='flex  justify-center items-center gap-5 bg-white p-3 rounded-xl'>
+                            <div className='flex justify-center items-center gap-3 '>
+                                <div className=' p-2 bg-blue-500 rounded-xl'>
+                                    <BsFillPeopleFill size={20} className='text-white' />
+                                </div>
+                                <div>
+                                    <p>Student</p>
+                                    <p>Management</p>
+                                </div>
+                            </div>
+                            <div className='flex justify-center items-center gap-3 '>
+                                <div className=' p-2 bg-green-500 rounded-xl'>
+                                    <RiBookMarkedFill size={20} className='text-white' />
+                                </div>
+                                <div>
+                                    <p>Result</p>
+                                    <p>Management</p>
+                                </div>
+                            </div>
+                            <div className='flex justify-center items-center gap-3 '>
+                                <div className=' p-2 bg-purple-400 rounded-xl'>
+                                    <MdSpatialTracking size={20} className='text-white' />
+                                </div>
+                                <div>
+                                    <p>Attendance</p>
+                                    <p>Tracking</p>
+                                </div>
+                            </div>
+                            <div className='flex justify-center items-center gap-3 '>
+                                <div className=' p-2 bg-orange-400 rounded-xl'>
+                                    <TbMessageReportFilled size={20} className='text-white' />
+                                </div>
+                                <div>
+                                    <p>Reports &</p>
+                                    <p>Analytics</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-8 left-8 -rotate-[10deg] text-white batter-edu">
+                        <h3 className=" text-xl italic font-semibold">
+                            Better Education
+                        </h3>
+
+                        <h3 className=" text-xl italic font-semibold">
+                            Brighter Future
+                        </h3>
+
+                        <div className="mt-1 ml-5 h-[2px] w-24 rotate-[-5deg] bg-white"></div>
+                    </div>
+                </div>
                 <div className='w-[50%] p-3'>
                     <div className='flex justify-between'>
                         <div className='flex items-center'>
@@ -179,78 +248,8 @@ function Signup() {
 
                     <button className='flex justify-center items-center w-full border border-gray-200 rounded-xl py-3 cursor-pointer gap-3' onClick={googleAuth}><FcGoogle size={24} /> Continue with Google</button>
 
-                    <div className='text-center mt-10'>
+                    <div className='text-center mt-5'>
                         <p>Don't have an account? <span onClick={() => navigate("/sign-in")} className='text-green-600 cursor-pointer'>Sign In</span></p>
-                    </div>
-                </div>
-
-                {/* image */}
-                <div className='relative w-[80%]'>
-                    <img src={loginImage} alt="" className='rounded-xl' />
-                    <div className='px-10 absolute top-3'>
-                        <div className='flex items-center'>
-                            <div className=' w-15'>
-                                <img src={logoimage} alt="" className='t' />
-                            </div>
-                            <div>
-                                <h1 className='text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
-                                <p className=''>School Management System</p>
-                            </div>
-                        </div>
-                        <div>
-                            <h1 className="font-['Idiqlat'] font-extralight text-5xl font-bold">Welcome Back!</h1>
-                            <p className="mt-2">Sign in to your account and continue </p>
-                            <p className="mb-4">your educational journey.</p>
-                        </div>
-                        <div className='flex  justify-center items-center gap-5 bg-white p-3 rounded-xl'>
-                            <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-3 bg-blue-500 rounded-xl'>
-                                    <BsFillPeopleFill size={20} className='text-white' />
-                                </div>
-                                <div>
-                                    <p>Student</p>
-                                    <p>Management</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-3 bg-green-500 rounded-xl'>
-                                    <RiBookMarkedFill size={20} className='text-white' />
-                                </div>
-                                <div>
-                                    <p>Result</p>
-                                    <p>Management</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-3 bg-purple-400 rounded-xl'>
-                                    <MdSpatialTracking size={20} className='text-white' />
-                                </div>
-                                <div>
-                                    <p>Attendance</p>
-                                    <p>Tracking</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-3 bg-orange-400 rounded-xl'>
-                                    <TbMessageReportFilled size={20} className='text-white' />
-                                </div>
-                                <div>
-                                    <p>Reports</p>
-                                    <p>& Analytics</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="absolute bottom-8 left-8 -rotate-[10deg] text-white batter-edu">
-                        <h3 className=" text-xl italic font-semibold">
-                            Better Education
-                        </h3>
-
-                        <h3 className=" text-xl italic font-semibold">
-                            Brighter Future
-                        </h3>
-
-                        <div className="mt-1 ml-5 h-[2px] w-24 rotate-[-5deg] bg-white"></div>
                     </div>
                 </div>
             </div>

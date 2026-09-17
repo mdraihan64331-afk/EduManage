@@ -57,7 +57,7 @@ function Signin() {
         // image 
         <div className='flex justify-center items-center h-[100vh] p-10'>
             <div className='flex justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
-                <div className='relative w-[80%]'>
+                <div className='relative w-[70%]'>
                     <img src={loginImage} alt="" className='rounded-xl' />
                     <div className='px-10 absolute top-3'>
                         <div className='flex items-center'>
@@ -107,8 +107,8 @@ function Signin() {
                                     <TbMessageReportFilled size={20} className='text-white' />
                                 </div>
                                 <div>
-                                    <p>Reports</p>
-                                    <p>& Analytics</p>
+                                    <p>Reports & </p>
+                                    <p>Analytics</p>
                                 </div>
                             </div>
                         </div>
