@@ -19,6 +19,16 @@ const UserSchema = new mongoose.Schema({
         enum:["Student/Guardian", "Admin"],
         default: "Student/Guardian"
     },
+    resetOtp:{
+        type: String
+    },
+    isOtpVerified:{
+        type: Boolean,
+        default: false
+    },
+    otpExpires:{
+        type: Date
+    }
 },{timestamps: true})
 
 export const User = new mongoose.model("User",UserSchema)

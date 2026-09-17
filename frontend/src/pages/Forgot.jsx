@@ -21,12 +21,54 @@ function Forgot() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState(1)
+  const [otp, setOtp] = useState("")
 
-  const handelReset = async () => {
+  const handleSentOtp = async () => {
     setLoading(true)
     try {
-      navigate("/")
+      const result = await axios.post(`${serverURL}/api/auth/sent-otp`, {
+        email
+      }, { withCredentials: true })
+      console.log(result)
+      setStep(2)
       setLoading(false)
+    } catch (error) {
+      console.log("STATUS:", error.response?.status)
+      console.log("BACKEND:", error.response?.data)
+      console.log("ERROR:", error.message)
+      setLoading(false)
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+    setLoading(true)
+    try {
+      const result = await axios.post(`${serverURL}/api/auth/verify-otp`, {
+        email, otp
+      }, { withCredentials: true })
+      console.log(result)
+      setStep(3)
+      setLoading(false)
+    } catch (error) {
+      console.log("STATUS:", error.response?.status)
+      console.log("BACKEND:", error.response?.data)
+      console.log("ERROR:", error.message)
+      setLoading(false)
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    setLoading(true)
+    if (newPassword != confirmPassword) {
+      return null
+    }
+    try {
+      const result = await axios.post(`${serverURL}/api/auth/forgot-password`, {
+        email, newPassword
+      }, { withCredentials: true })
+      console.log(result)
+      setLoading(false)
+      navigate("/sign-in")
     } catch (error) {
       console.log(error)
       setLoading(false)
@@ -101,7 +143,7 @@ function Forgot() {
                   <input type="text" value={email} placeholder='Enter your email or user ID' className='outline-none w-full' onChange={(e) => setEmail(e.target.value)} required />
                 </div>
               </div>
-              <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelReset} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Send Reset Link</>}</button>
+              <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handleSentOtp} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Send Reset Link</>}</button>
 
               {/* loading */}
 
@@ -149,10 +191,10 @@ function Forgot() {
                 <label htmlFor="">OTP</label>
                 <div className='flex items-center border gap-4 border-gray-300 p-2 rounded-[7px]'>
                   <FaRegCheckCircle size={20} />
-                  <input type="text" placeholder='Enter your OTP' className='outline-none w-full' required />
+                  <input type="text" placeholder='Enter your OTP' className='outline-none w-full' value={otp} required onChange={(e) => setOtp(e.target.value)} />
                 </div>
               </div>
-              <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelReset} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Veryfy OTP</>}</button>
+              <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handleVerifyOtp} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Veryfy OTP</>}</button>
 
               {/* loading */}
 
@@ -218,7 +260,7 @@ function Forgot() {
               </div>
             </div>
 
-            <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelReset} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Reset Password</>}</button>
+            <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handleForgotPassword} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><IoIosSend size={28} />Reset Password</>}</button>
 
             {/* loading */}
 
