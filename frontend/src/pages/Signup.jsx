@@ -26,6 +26,8 @@ function Signup() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
+    const [error, setError] =useState("")
+
 
     const handelSignup = async () => {
         setLoading(true)
@@ -41,10 +43,12 @@ function Signup() {
             } else {
                 navigate("/")
             }
+            setError("")
             setLoading(false)
         } catch (error) {
             console.log(error)
             setLoading(false)
+            setError(error.response.data.message)
         }
     }
 
@@ -65,86 +69,86 @@ function Signup() {
     }
 
     return (
-        <div className='flex justify-center items-center h-[100vh] p-10'>
-            <div className='flex justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
+        <div className='flex justify-center items-center h-[100vh] p-3 md:p-10 my-45 md:my-0'>
+            <div className='md:flex md:flex-none justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
                 {/* image */}
-                <div className='relative w-[70%]'>
+                <div className='relative w-full md:w-[700px] h-full'>
                     <img src={loginImage} alt="" className='rounded-xl' />
-                    <div className='px-10 absolute top-3'>
+                    <div className='px-5 md:px-10 absolute top-3'>
                         <div className='flex items-center'>
-                            <div className=' w-15'>
+                            <div className='w-10 md:w-15'>
                                 <img src={logoimage} alt="" className='t' />
                             </div>
                             <div>
-                                <h1 className='text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
-                                <p className=''>School Management System</p>
+                                <h1 className='md:text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
+                                <p className='text-xs md:text-2xs'>School Management System</p>
                             </div>
                         </div>
                         <div>
-                            <h1 className="font-['Idiqlat'] font-extralight text-5xl font-bold">Welcome Back!</h1>
-                            <p className="mt-2">Sign in to your account and continue </p>
-                            <p className="mb-4">your educational journey.</p>
+                            <h1 className="font-['Idiqlat'] font-extralight text-3xl md:text-5xl font-bold">Welcome Back!</h1>
+                            <p className="md:mt-2">Sign in to your account and continue </p>
+                            <p className="md:mb-4">your educational journey.</p>
                         </div>
-                        <div className='flex  justify-center items-center gap-5 bg-white p-3 rounded-xl'>
+                        <div className='flex flex-wrap justify-between md:justify-center items-center gap-5 bg-white p-3 rounded-xl'>
                             <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-2 bg-blue-500 rounded-xl'>
-                                    <BsFillPeopleFill size={20} className='text-white' />
+                                <div className='p-2 bg-blue-500 rounded-xl'>
+                                    <BsFillPeopleFill className='text-white w-3 h-3 md:w-5 md:h-5 ' />
                                 </div>
-                                <div>
+                                <div className='md:flex md:flex-col hidden'>
                                     <p>Student</p>
                                     <p>Management</p>
                                 </div>
                             </div>
                             <div className='flex justify-center items-center gap-3 '>
-                                <div className=' p-2 bg-green-500 rounded-xl'>
-                                    <RiBookMarkedFill size={20} className='text-white' />
+                                <div className='p-2 bg-green-500 rounded-xl'>
+                                    <RiBookMarkedFill className='text-white w-3 h-3 md:w-5 md:h-5 ' />
                                 </div>
-                                <div>
+                                <div className='md:flex md:flex-col hidden'>
                                     <p>Result</p>
                                     <p>Management</p>
                                 </div>
                             </div>
                             <div className='flex justify-center items-center gap-3 '>
                                 <div className=' p-2 bg-purple-400 rounded-xl'>
-                                    <MdSpatialTracking size={20} className='text-white' />
+                                    <MdSpatialTracking className='text-white w-3 h-3 md:w-5 md:h-5 ' />
                                 </div>
-                                <div>
+                                <div className='md:flex md:flex-col hidden'>
                                     <p>Attendance</p>
                                     <p>Tracking</p>
                                 </div>
                             </div>
                             <div className='flex justify-center items-center gap-3 '>
                                 <div className=' p-2 bg-orange-400 rounded-xl'>
-                                    <TbMessageReportFilled size={20} className='text-white' />
+                                    <TbMessageReportFilled className='text-white w-3 h-3 md:w-5 md:h-5 ' />
                                 </div>
-                                <div>
-                                    <p>Reports &</p>
+                                <div className='md:flex md:flex-col hidden'>
+                                    <p>Reports & </p>
                                     <p>Analytics</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="absolute bottom-8 left-8 -rotate-[10deg] text-white batter-edu">
-                        <h3 className=" text-xl italic font-semibold">
+                    <div className="absolute bottom-6 md:bottom-8 left-4 md:left-8 -rotate-[10deg] text-white batter-edu">
+                        <h3 className=" text-xs md:text-xl italic font-semibold">
                             Better Education
                         </h3>
 
-                        <h3 className=" text-xl italic font-semibold">
+                        <h3 className=" text-xs md:text-xl italic font-semibold">
                             Brighter Future
                         </h3>
 
-                        <div className="mt-1 ml-5 h-[2px] w-24 rotate-[-5deg] bg-white"></div>
+                        <div className="mt-1 ml-1 md:ml-5 h-[2px] w-16 md:w-24 rotate-[-5deg] bg-white"></div>
                     </div>
                 </div>
-                <div className='w-[50%] p-3'>
+                <div className='md:w-[500px] p-3'>
                     <div className='flex justify-between'>
                         <div className='flex items-center'>
-                            <div className=' w-15'>
+                            <div className='w-10 md:w-15'>
                                 <img src={logoimage} alt="" className='t' />
                             </div>
                             <div>
                                 <h1 className='text-2xl font-bold text-green-600'>Edu<span className='text-black'>Manage</span></h1>
-                                <p className=''>School Management System</p>
+                                <p className='text-xs md:text-2xs'>School Management System</p>
                             </div>
                         </div>
                         <div className='flex gap-2 items-center cursor-pointer text-gray-600' onClick={() => navigate("/")}>
@@ -197,6 +201,12 @@ function Signup() {
                         </div>
                     </div>
 
+                    {/* error */}
+
+                    {error && <>
+                        <p className='text-red-500 my-3 flex justify-center items-center gap-3'>*{error}</p>
+                    </>}
+
                     {/* login */}
 
                     <button className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-600 via-teal-500 to-cyan-600 flex justify-center items-center gap-3 cursor-pointer mt-4" onClick={handelSignup} disabled={loading}>{loading ? <ClipLoader color='white' /> : <><FaArrowRight />Login</>}</button>
@@ -248,7 +258,7 @@ function Signup() {
 
                     <button className='flex justify-center items-center w-full border border-gray-200 rounded-xl py-3 cursor-pointer gap-3' onClick={googleAuth}><FcGoogle size={24} /> Continue with Google</button>
 
-                    <div className='text-center mt-5'>
+                    <div className='text-center md:my-5 my-10'>
                         <p>Don't have an account? <span onClick={() => navigate("/sign-in")} className='text-green-600 cursor-pointer'>Sign In</span></p>
                     </div>
                 </div>

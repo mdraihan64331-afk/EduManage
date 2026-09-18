@@ -10,9 +10,11 @@ import Features from './pages/Features'
 import Notice from './pages/Notice'
 import Signup from './pages/Signup'
 import Forgot from './pages/Forgot'
+import useGetCurrentUser from './hooks/useGetCurrentUser'
 
 export const serverURL = "http://localhost:8000"
 function App() {
+  useGetCurrentUser()
   return (
     <>
       <Routes>
