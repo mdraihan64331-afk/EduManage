@@ -29,7 +29,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handelSignup = async () => {
     setLoading(true);
@@ -44,8 +44,8 @@ function Signup() {
         },
         { withCredentials: true },
       );
-      dispatch(setUserData(result.data))
-      navigate("/landing-home")
+      dispatch(setUserData(result.data));
+      navigate("/");
       setError("");
       setLoading(false);
     } catch (error) {
@@ -65,12 +65,12 @@ function Signup() {
           fullName: result.user.displayName,
           email: result.user.email,
           role,
-          profileImage:result.user.photoURL
+          profileImage: result.user.photoURL,
         },
         { withCredentials: true },
       );
-      dispatch(setUserData(data))
-      console.log(data)
+      dispatch(setUserData(data));
+      console.log(data);
       navigate("/landing-home");
     } catch (error) {
       console.log("Backend Response:", error.response?.data);

@@ -27,7 +27,7 @@ function Signin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handelLogin = async () => {
     setLoading(true);
@@ -40,8 +40,8 @@ function Signin() {
         },
         { withCredentials: true },
       );
-      dispatch(setUserData(result.data))
-      navigate("/landing-home")
+      dispatch(setUserData(result.data));
+      navigate("/");
       setLoading(false);
       setError("");
     } catch (error) {
@@ -58,12 +58,12 @@ function Signin() {
       const { data } = await axios.post(
         `${serverURL}/api/auth/google-auth`,
         {
-          email: result.user.email, 
+          email: result.user.email,
         },
         { withCredentials: true },
       );
-      dispatch(setUserData(data))
-      navigate("/landing-home");
+      dispatch(setUserData(data));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }

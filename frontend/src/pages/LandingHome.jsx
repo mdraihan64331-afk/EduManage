@@ -1,17 +1,13 @@
 import React from "react";
-import UserDashboard from "../components/UserDashboard";
-import { useSelector } from "react-redux";
-import AdminDashboard from "../components/AdminDashboard";
+import Navbar from "../components/Navbar";
 
 function LandingHome() {
-    const { userData } = useSelector((state) => state.user);
   return (
     <div>
-      {userData?.role === "Student/Guardian" && <UserDashboard />}
+      <Navbar />
 
-      {userData?.role === "Admin" && <AdminDashboard />}
     </div>
-  )
+  );
 }
 
-export default LandingHome
+export default LandingHome;
