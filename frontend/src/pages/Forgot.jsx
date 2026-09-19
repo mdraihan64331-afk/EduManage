@@ -73,7 +73,7 @@ function Forgot() {
 
 
   return (
-    <div className='flex justify-center items-center h-[100vh] p-3 md:p-10 my-15 md:my-0'>
+    <div className='flex justify-center items-center h-[100vh] p-3 md:p-10 my-25'>
       <div className='md:flex md:flex-none justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
         {/* image  */}
         <div className='relative w-full md:w-[700px] h-full'>

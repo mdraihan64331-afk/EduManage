@@ -57,7 +57,7 @@ function Signin() {
     }
     return (
         // image 
-        <div className='flex justify-center items-center h-[100vh] p-3 md:p-10 my-35 md:my-0'>
+        <div className='flex justify-center items-center h-[100vh] p-3 md:p-10 my-35 '>
             <div className='md:flex md:flex-none justify-center bg-white shadow-lg shadow-gray-400 rounded-xl'>
                 <div className='relative w-full md:w-[700px] h-full'>
                     <img src={loginImage} alt="" className='rounded-xl' />
