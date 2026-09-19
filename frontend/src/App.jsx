@@ -25,6 +25,7 @@ import Report from './components/Report'
 import Setting from './components/Setting'
 import Profile from './components/Profile'
 import Logout from './components/Logout'
+import LandingHome from './pages/LandingHome.jsx'
 
 export const serverURL = "http://localhost:8000"
 function App() {
@@ -33,6 +34,7 @@ function App() {
     <>
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/landing-home' element={<LandingHome />} />
         <Route path='/about' element={<About />} />
         <Route path='/features' element={<Features />} />
         <Route path='/notice' element={<Notice />} />

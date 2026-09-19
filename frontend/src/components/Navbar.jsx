@@ -3,9 +3,12 @@ import logoimage from '../assets/logo.png'
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import axios from 'axios'
 import { serverURL } from '../App'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../redux/userSlice'
 
 function Navbar() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const navList = [
         { name: "Home", path: "/" },
@@ -18,7 +21,8 @@ function Navbar() {
     const handleLogOut = async () => {
         try {
             const result = await axios.get(`${serverURL}/api/auth/log-out`, { withCredentials: true })
-            console.log(result)
+            dispatch(setUserData(result.data))
+            navigate("/")
         } catch (error) {
             console.log(error)
         }
