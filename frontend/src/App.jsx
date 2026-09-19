@@ -11,6 +11,20 @@ import Notice from './pages/Notice'
 import Signup from './pages/Signup'
 import Forgot from './pages/Forgot'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
+import Student from './components/Student'
+import Teacher from './components/Teacher'
+import Classes from './components/Classes'
+import Attendance from './components/Attendance'
+import Result from './components/Result'
+import Performance from './components/Performance'
+import Homework from './components/Homework'
+import FeesPayment from './components/FeesPayment'
+import NoticeAnnouncement from './components/NoticeAnnouncement.jsx'
+import Rankning from './components/Rankning'
+import Report from './components/Report'
+import Setting from './components/Setting'
+import Profile from './components/Profile'
+import Logout from './components/Logout'
 
 export const serverURL = "http://localhost:8000"
 function App() {
@@ -28,6 +42,20 @@ function App() {
         <Route path='/sign-in' element={<Signin />} />
         <Route path='/sign-up' element={<Signup />} />
         <Route path='/forgot' element={<Forgot />} />
+        <Route path='/students' element={<Student />} />
+        <Route path='/teachers' element={<Teacher />} />
+        <Route path='/classes' element={<Classes />} />
+        <Route path='/attendances' element={<Attendance />} />
+        <Route path='/results' element={<Result />} />
+        <Route path='/performances' element={<Performance />} />
+        <Route path='/homeworks' element={<Homework />} />
+        <Route path='/fees-payments' element={<FeesPayment />} />
+        <Route path='/notice-announcements' element={<NoticeAnnouncement />} />
+        <Route path='/ranknings' element={<Rankning />} />
+        <Route path='/reports' element={<Report />} />
+        <Route path='/settings' element={<Setting />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/logout' element={<Logout />} />
       </Routes>
     </>
   )

@@ -38,7 +38,7 @@ function Signup() {
                 email,
                 password
             }, { withCredentials: true })
-            if (email == "admin1234@gmail.com" && password == "admin1234" && role == "admin") {
+            if (email == "admin1234@gmail.com" && password == "admin1234") {
                 navigate("/admin-dashboard")
             } else {
                 navigate("/")
