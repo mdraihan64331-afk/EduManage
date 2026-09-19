@@ -65,10 +65,12 @@ function Signup() {
           fullName: result.user.displayName,
           email: result.user.email,
           role,
+          profileImage:result.user.photoURL
         },
         { withCredentials: true },
       );
       dispatch(setUserData(data))
+      console.log(data)
       navigate("/landing-home");
     } catch (error) {
       console.log("Backend Response:", error.response?.data);

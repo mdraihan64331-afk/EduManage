@@ -13,7 +13,6 @@ function useGetCurrentUser() {
                     `${serverURL}/api/user/current`,
                     { withCredentials: true }
                 )
-
                 dispatch(setUserData(result.data))
 
             } catch (error) {

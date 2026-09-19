@@ -58,7 +58,7 @@ function Signin() {
       const { data } = await axios.post(
         `${serverURL}/api/auth/google-auth`,
         {
-          email: result.user.email,
+          email: result.user.email, 
         },
         { withCredentials: true },
       );
