@@ -13,22 +13,76 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
+import { CiViewList } from "react-icons/ci";
+
 
 export const adminCatagories = [
-    {"id":1, "icon": <IoHomeOutline />, "menu":"Dashboard", "path":"/admin-dashboard"},
-    {"id":2, "icon": <RxPeople />, "menu":"Srudents", "path":"/students"},
-    {"id":3, "icon": <SlPeople />, "menu":"Teachers", "path":"/teachers"},
-    {"id":4, "icon": <SiGoogleclassroom />, "menu":"Classes", "path":"/classes"},
-    {"id":5, "icon": <MdEventAvailable />, "menu":"Attendance", "path":"/attendances"},
-    {"id":6, "icon": <FaChartBar/>, "menu":"Results", "path":"/results"},
-    {"id":7, "icon": <RiLineChartLine />, "menu":"Performance", "path":"/performances"},
-    {"id":8, "icon": <RiBookletLine />, "menu":"Homework", "path":"/homeworks"},
-    {"id":9, "icon": <RiMoneyDollarCircleLine />, "menu":"Fees / Payments", "path":"/fees-payments"},
-    {"id":10, "icon": <IoNotificationsOutline />, "menu":"Notice / Announcement", "path":"/notice-announcements"},
-    {"id":11, "icon": <RiMedalLine />, "menu":"Rankings", "path":"/ranknings"},
-    {"id":12, "icon": <IoDocumentTextOutline />, "menu":"Reports", "path":"/reports"},
-    {"id":13, "icon": <IoSettingsOutline />, "menu":"Settings", "path":"/settings"},
-    {"id":14, "icon": <IoPersonCircleOutline />, "menu":"Profile", "path":"/profile"},
-    {"id":15, "icon": <IoLogOutOutline />, "menu":"Logout", "path":"/logout"},
+  {
+    id: 1,
+    icon: <IoHomeOutline />,
+    menu: "Dashboard",
+    path: "/admin-dashboard",
+  },
+  {
+    id: 2,
+    icon: <RxPeople />,
+    menu: "Students",
+    path: "/students",
+    subMenu: [
+        {
+            icon: <RxPeople />,
+            subMenuName: "Add Student",
+            path: "/students/add-student"
+        },
+        {
+            icon: <CiViewList/>,
+            subMenuName: "List Student",
+            path: "/students/list-student"
+        },
 
-]
+    ],
+  },
+  { id: 3, icon: <SlPeople />, menu: "Teachers", path: "/teachers" },
+  { id: 4, icon: <SiGoogleclassroom />, menu: "Classes", path: "/classes" },
+  {
+    id: 5,
+    icon: <MdEventAvailable />,
+    menu: "Attendance",
+    path: "/attendances",
+  },
+  { id: 6, icon: <FaChartBar />, menu: "Results", path: "/results" },
+  {
+    id: 7,
+    icon: <RiLineChartLine />,
+    menu: "Performance",
+    path: "/performances",
+  },
+  { id: 8, icon: <RiBookletLine />, menu: "Homework", path: "/homeworks" },
+  {
+    id: 9,
+    icon: <RiMoneyDollarCircleLine />,
+    menu: "Fees / Payments",
+    path: "/fees-payments",
+  },
+  {
+    id: 10,
+    icon: <IoNotificationsOutline />,
+    menu: "Notice / Announcement",
+    path: "/notice-announcements",
+  },
+  { id: 11, icon: <RiMedalLine />, menu: "Rankings", path: "/ranknings" },
+  {
+    id: 12,
+    icon: <IoDocumentTextOutline />,
+    menu: "Reports",
+    path: "/reports",
+  },
+  { id: 13, icon: <IoSettingsOutline />, menu: "Settings", path: "/settings" },
+  {
+    id: 14,
+    icon: <IoPersonCircleOutline />,
+    menu: "Profile",
+    path: "/profile",
+  },
+  { id: 15, icon: <IoLogOutOutline />, menu: "Logout", path: "/logout" },
+];

@@ -5,7 +5,6 @@ function LandingHome() {
   return (
     <div>
       <Navbar />
-
     </div>
   );
 }

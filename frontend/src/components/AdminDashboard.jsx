@@ -1,5 +1,4 @@
 import React from "react";
-import adminImage from "../assets/admin-image.jpg";
 import { IoSearchOutline } from "react-icons/io5";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlinePeopleOutline } from "react-icons/md";
@@ -20,6 +19,7 @@ function AdminDashboard() {
       </div>
       <div className="p-2 w-full h-full">
         <div>
+          {/* admin navbar */}
           <div className="flex justify-end gap-5 items-center">
             <div className="flex items-center gap-2 border border-gray-400 rounded-[5px] p-1">
               <IoSearchOutline />

@@ -76,24 +76,28 @@ export const logOut = async (req, res) => {
 export const googleAuth = async (req, res) => {
   try {
     const { fullName, email, role, profileImage } = req.body;
+
     let user = await User.findOne({ email });
+
     if (!user) {
       user = await User.create({
         fullName,
         email,
         role,
-        profileImage
-      });
-
-      const token = await genToken(user._id);
-      res.cookie("token", token, {
-        secure: false,
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        profileImage,
       });
     }
-    return res.status(201).json(user);
+
+    const token = await genToken(user._id);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(400).json(`google auth error ${error}`);
   }
@@ -137,17 +141,17 @@ export const verifyOtp = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   try {
-    const {email, newPassword} = req.body
-    const user = await User.findOne({email})
-    if(!user || !user.isOtpVerified){
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.isOtpVerified) {
       return res.status(400).json({ message: "OTP verification required." });
     }
-    const hashPassword = await bcryptjs.hash(newPassword, 12)
-    user.password = hashPassword
-    user.isOtpVerified = false
-    await user.save()
+    const hashPassword = await bcryptjs.hash(newPassword, 12);
+    user.password = hashPassword;
+    user.isOtpVerified = false;
+    await user.save();
     return res.status(200).json({ message: "Forgot password successfully." });
   } catch (error) {
     return res.status(400).json(`Forgot password error ${error}`);
   }
-}
+};

@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminDashboard from './components/AdminDashboard'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import Home from './pages/Home'
 import UserDashboard from './components/UserDashboard'
 import Signin from './pages/Signin'
@@ -11,7 +11,6 @@ import Notice from './pages/Notice'
 import Signup from './pages/Signup'
 import Forgot from './pages/Forgot'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
-import Student from './components/Student'
 import Teacher from './components/Teacher'
 import Classes from './components/Classes'
 import Attendance from './components/Attendance'
@@ -26,10 +25,15 @@ import Setting from './components/Setting'
 import Profile from './components/Profile'
 import Logout from './components/Logout'
 import LandingHome from './pages/LandingHome.jsx'
+import AddStudent from './pages/AddStudent.jsx'
+import { useSelector } from 'react-redux'
+import ListStudents from './pages/ListStudents.jsx'
 
 export const serverURL = "http://localhost:8000"
 function App() {
   useGetCurrentUser()
+  const {userData} = useSelector(state=>state.user)
+  const navigate = useNavigate()
   return (
     <>
       <Routes>
@@ -41,10 +45,11 @@ function App() {
         <Route path='/Contact' element={<Contact />} />
         <Route path='/user-dashboard' element={<UserDashboard />} />
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
-        <Route path='/sign-in' element={<Signin />} />
-        <Route path='/sign-up' element={<Signup />} />
+        <Route path='/sign-in' element={!userData?<Signin />:<Navigate to={"/"}/>} />
+        <Route path='/sign-up' element={!userData?<Signup />:<Navigate to={"/"}/>} />
         <Route path='/forgot' element={<Forgot />} />
-        <Route path='/students' element={<Student />} />
+        <Route path='/students/add-student' element={<AddStudent />} />
+        <Route path='/students/list-student' element={<ListStudents />} />
         <Route path='/teachers' element={<Teacher />} />
         <Route path='/classes' element={<Classes />} />
         <Route path='/attendances' element={<Attendance />} />
