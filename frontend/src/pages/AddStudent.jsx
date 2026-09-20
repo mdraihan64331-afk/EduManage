@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
-import { IoSearchOutline } from "react-icons/io5";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxPeople } from "react-icons/rx";
 import { IoPerson } from "react-icons/io5";
@@ -13,9 +11,13 @@ import { IoMdAdd } from "react-icons/io";
 import axios from "axios";
 import { serverURL } from "../App";
 import { useNavigate } from "react-router-dom";
+import { setStudentData } from "../redux/studentSlice";
+import { RxCross2 } from "react-icons/rx";
+import { GoAlertFill } from "react-icons/go";
+import AdminHeader from "../components/AdminHeader";
 
 function AddStudent() {
-  const { userData } = useSelector((state) => state.user);
+
   const [gender, setGender] = useState("");
   const [selectClass, setSelectClass] = useState("");
   const className = [
@@ -44,12 +46,54 @@ function AddStudent() {
   const [address, setAddress] = useState("");
   const [admissionDate, setAdmissionDate] = useState("");
   const [previousSchool, setPreviousSchool] = useState("");
+  const [err, setErr] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
+
+    if (!file) return;
+    // file check
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      setErr("only JPG and PNG images are allowed!");
+      return;
+    }
+
+    // 2MB check
+    if (file.size > 2 * 1024 * 1024) {
+      setErr("Image size must be less then 2MB!");
+      return;
+    }
+
     setBackendImage(file);
     setFrontendImage(URL.createObjectURL(file));
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files[0];
+
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      setErr("Only JPG and PNG images are allowed!");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setErr("Image size must be less than 2MB!");
+      return;
+    }
+
+    setBackendImage(file);
+    setFrontendImage(URL.createObjectURL(file));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
   };
 
   const handleAddStudent = async (e) => {
@@ -79,12 +123,34 @@ function AddStudent() {
         { withCredentials: true },
       );
 
-      console.log(result);
+      dispatch(setStudentData(result.data));
+      setErr("");
       navigate("/students/list-student");
     } catch (error) {
       console.log("ADD STUDENT ERROR:", error);
       console.log("SERVER MESSAGE:", error.response?.data?.message);
+      setShowPopup(true);
+      setErr(error.response?.data?.message);
     }
+  };
+
+  const handleReset = () => {
+    setFullName("");
+    setStudentId("");
+    setRollNumber("");
+    setDob("");
+    setGender("");
+    setSelectClass("");
+    setSection("");
+    setPhone("");
+    setEmail("");
+    setFrontendImage("");
+    setBackendImage("");
+    setGuardianName("");
+    setGuardianPhone("");
+    setAddress("");
+    setAdmissionDate("");
+    setPreviousSchool("");
   };
 
   return (
@@ -93,34 +159,8 @@ function AddStudent() {
       {/* student add section */}
 
       <div className=" w-full ">
-        {/* admin navbar */}
-
-        <div className="flex justify-end gap-5 items-center bg-white p-2">
-          <div className="flex items-center gap-2 border border-gray-400 rounded-[5px] p-1">
-            <IoSearchOutline />
-            <input
-              type="text"
-              placeholder="Search anything..."
-              className="outline-none"
-            />
-          </div>
-          <IoNotificationsOutline />
-          <div className="flex items-center gap-2">
-            {userData?.profileImage ? (
-              <img
-                src={userData.profileImage}
-                alt="Profile"
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            ) : (
-              <h1 className="font-semibold bg-purple-800 flex justify-center items-center text-white w-[40px] h-[40px] rounded-full">
-                {userData?.fullName?.slice(0, 2).toUpperCase()}
-              </h1>
-            )}
-            <h1 className="font-semibold">{userData?.fullName}</h1>
-          </div>
-        </div>
-
+        {/* admin header */}
+        <AdminHeader/>
         {/* add student */}
         <div className="p-2">
           {/* add new students */}
@@ -285,7 +325,7 @@ function AddStudent() {
                       placeholder="Enter your email"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none text-gray-500"
+                      className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none"
                     />
                   </div>
                   {/* email */}
@@ -298,7 +338,7 @@ function AddStudent() {
                       placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none text-gray-500"
+                      className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none"
                     />
                   </div>
                 </div>
@@ -308,12 +348,26 @@ function AddStudent() {
                 <h4 className="flex items-center gap-3 font-semibold">
                   <RxPeople /> Student Photo
                 </h4>
-                {frontendImage ? (
-                  <div>
-                    <img src={frontendImage} alt="" />
-                  </div>
-                ) : (
-                  <div className="w-full p-4 mt-2 border border-gray-300 rounded-[8px]">
+                <div
+                  className="w-full p-4 mt-2 border border-gray-300 rounded-[8px]"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                >
+                  {frontendImage ? (
+                    <div className="w-[200px] h-[200px] relative flex justify-center items-center">
+                      <img
+                        src={frontendImage}
+                        alt=""
+                        className="w-full h-full object-cover rounded-[8px]"
+                      />
+                      <button
+                        className="absolute top-5 right-5 text-white bg-gray-400 p-2 rounded-full cursor-pointer"
+                        onClick={() => setFrontendImage("")}
+                      >
+                        <RxCross2 size={20} />
+                      </button>
+                    </div>
+                  ) : (
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-center items-center">
                         <div className="bg-blue-50 p-3 rounded-full">
@@ -345,8 +399,8 @@ function AddStudent() {
                         className="hidden"
                       />
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -437,7 +491,10 @@ function AddStudent() {
           </div>
           <div className="flex justify-end mt-5 gap-4">
             {/* reset button */}
-            <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group">
+            <button
+              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+              onClick={handleReset}
+            >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                 <RiResetLeftFill /> Reset
               </span>
@@ -445,16 +502,51 @@ function AddStudent() {
             </button>
 
             {/* add button */}
-            {/* <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group " onClick={handleAddStudent}>
+            <button
+              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
+              onClick={handleAddStudent}
+            >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                 <IoMdAdd /> Add Student
               </span>
               <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
-            </button> */}
-            <button onClick={handleAddStudent}>add student</button>
+            </button>
           </div>
         </div>
       </div>
+      {err && (
+        <>
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+            <div className="bg-white p-5 rounded-[8px]">
+              <div
+                className="flex justify-end text-gray-600 cursor-pointer"
+                onClick={() => setErr("")}
+              >
+                <RxCross2 />
+              </div>
+              <div className="flex flex-col justify-center items-center gap-2">
+                <div className=" p-3 rounded-full bg-red-100 text-red-500">
+                  <GoAlertFill size={30} />
+                </div>
+                <h1 className="text-xl font-bold">Something went wrong</h1>
+                <p className="text-gray-500">Please try again latet.</p>
+                <div className="bg-red-100 border border-red-700 w-full p-4 rounded-[8px]">
+                  <div className="flex items-center gap-3 text-red-500">
+                    <GoAlertFill size={30} />
+                    {err}
+                  </div>
+                </div>
+                <button
+                  className="bg-red-600 cursor-pointer px-15 text-white py-2 rounded-[8px]"
+                  onClick={() => setErr("")}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

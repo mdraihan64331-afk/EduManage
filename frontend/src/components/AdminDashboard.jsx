@@ -1,16 +1,13 @@
 import React from "react";
-import { IoSearchOutline } from "react-icons/io5";
-import { IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlinePeopleOutline } from "react-icons/md";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
 import { MdEventAvailable } from "react-icons/md";
 import Overview from "../pages/Overview";
 import Menu from "../pages/Menu";
-import { useSelector } from "react-redux";
+import AdminHeader from "./AdminHeader";
 
 function AdminDashboard() {
-  const { userData } = useSelector((state) => state.user);
   
   return (
     <div className="flex ">
@@ -19,32 +16,8 @@ function AdminDashboard() {
       </div>
       <div className="p-2 w-full h-full">
         <div>
-          {/* admin navbar */}
-          <div className="flex justify-end gap-5 items-center">
-            <div className="flex items-center gap-2 border border-gray-400 rounded-[5px] p-1">
-              <IoSearchOutline />
-              <input
-                type="text"
-                placeholder="Search anything..."
-                className="outline-none"
-              />
-            </div>
-            <IoNotificationsOutline />
-            <div className="flex items-center gap-2">
-              {userData?.profileImage ? (
-                <img
-                  src={userData.profileImage}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              ) : (
-                <h1 className="font-semibold bg-purple-800 flex justify-center items-center text-white w-[40px] h-[40px] rounded-full">
-                  {userData?.fullName?.slice(0, 2).toUpperCase()}
-                </h1>
-              )}
-              <h1 className="font-semibold">{userData?.fullName}</h1>
-            </div>
-          </div>
+          {/* admin header */}
+          <AdminHeader/>
           <div>
             <h1 className="font-bold text-xl">Dashboard</h1>
             <p>Welcome back, Admin! Here's what's happening.</p>
