@@ -44,7 +44,7 @@ function AddStudent() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianPhone, setGuardianPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [admissionDate, setAdmissionDate] = useState("");
+  const [admissionDate, setAdmissionDate] = useState(new Date().toISOString().split("T")[0]);
   const [previousSchool, setPreviousSchool] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
@@ -466,7 +466,7 @@ function AddStudent() {
                   <input
                     type="date"
                     value={admissionDate}
-                    onChange={(e) => setAdmissionDate(e.target.value)}
+                    readOnly
                     className="border border-gray-300 rounded-[8px] w-45 px-2 py-1 outline-none text-gray-500"
                   />
                 </div>

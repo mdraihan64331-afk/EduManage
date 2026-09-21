@@ -49,6 +49,12 @@ function ListStudents() {
     fetchStudents();
   }, []);
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const todayJoined = studentData.filter((student) => {
+    return student.admissionDate?.split("T")[0] === today;
+  }).length;
+
   return (
     <div className="flex bg-blue-50 overflow-hidden">
       <Menu />
@@ -111,7 +117,7 @@ function ListStudents() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Today's Joined</p>
-                  <h1 className="font-bold text-2xl">2</h1>
+                  <h1 className="font-bold text-2xl">{todayJoined}</h1>
                   <p className="text-xs text-gray-400">New Students</p>
                 </div>
               </div>
@@ -178,7 +184,7 @@ function ListStudents() {
             <div className="flex justify-between w-full">
               <div className="flex items-center gap-2">
                 <BsFillPeopleFill size={20} />
-                <h4 className="font-semibold">Student(56)</h4>
+                <h4 className="font-semibold">Student({studentData.length})</h4>
               </div>
               <div>
                 {/* add button */}
@@ -268,7 +274,7 @@ function ListStudents() {
                       <td className="py-3 px-2">{student.gender}</td>
 
                       {/* Admission Date */}
-                      <td className="py-3 px-2">{student.admissionDate}</td>
+                      <td className="py-3 px-2">{new Date(student.admissionDate).toLocaleDateString()}</td>
 
                       {/* Actions */}
                       <td className="py-3 px-2">
