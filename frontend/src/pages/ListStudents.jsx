@@ -55,7 +55,26 @@ function ListStudents() {
     return student.admissionDate?.split("T")[0] === today;
   }).length;
 
-  
+  const handleDelete = async (id) => {
+    try {
+      // Delete student
+      await axios.delete(`${serverURL}/api/student/delete-student/${id}`, {
+        withCredentials: true,
+      });
+
+      // Fetch students again
+      const result = await axios.get(`${serverURL}/api/student/all-students`, {
+        withCredentials: true,
+      });
+
+      console.log(result);
+
+      // Update Redux
+      dispatch(setStudentData(result.data));
+    } catch (error) {
+      console.log("DELETE ERROR:", error);
+    }
+  };
 
   return (
     <div className="flex bg-blue-50 overflow-hidden">
@@ -202,6 +221,7 @@ function ListStudents() {
               </div>
             </div>
             {/* Student Table */}
+
             <div className="mt-4 w-full overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 {/* Table Header */}
@@ -276,16 +296,26 @@ function ListStudents() {
                       <td className="py-3 px-2">{student.gender}</td>
 
                       {/* Admission Date */}
-                      <td className="py-3 px-2">{new Date(student.admissionDate).toLocaleDateString()}</td>
+                      <td className="py-3 px-2">
+                        {new Date(student.admissionDate).toLocaleDateString()}
+                      </td>
 
                       {/* Actions */}
                       <td className="py-3 px-2">
                         <div className="flex gap-1">
-                          <button className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer" onClick={()=>navigate(`/students/edit-student/${student._id}`)}>
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            onClick={() =>
+                              navigate(`/students/edit-student/${student._id}`)
+                            }
+                          >
                             <MdOutlineModeEdit size={18} />
                           </button>
 
-                          <button className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer">
+                          <button
+                            className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
+                            onClick={() => handleDelete(student._id)}
+                          >
                             <RiDeleteBin6Line size={18} />
                           </button>
                         </div>

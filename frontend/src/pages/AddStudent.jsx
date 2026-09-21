@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
+import logoimage from "../assets/login-logo.png";
 import { useDispatch } from "react-redux";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxPeople } from "react-icons/rx";
@@ -15,9 +16,9 @@ import { setStudentData } from "../redux/studentSlice";
 import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
+import { ClipLoader } from "react-spinners";
 
 function AddStudent() {
-
   const [gender, setGender] = useState("");
   const [selectClass, setSelectClass] = useState("");
   const className = [
@@ -44,11 +45,14 @@ function AddStudent() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianPhone, setGuardianPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [admissionDate, setAdmissionDate] = useState(new Date().toISOString().split("T")[0]);
+  const [admissionDate, setAdmissionDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
   const [previousSchool, setPreviousSchool] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
@@ -97,6 +101,7 @@ function AddStudent() {
 
   const handleAddStudent = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("fullName", fullName);
@@ -117,17 +122,24 @@ function AddStudent() {
         formData.append("profile", backendImage);
       }
       const result = await axios.post(
-        `${serverURL}/api/student/add-edit-student`,
+        `${serverURL}/api/student/add-student`,
         formData,
         { withCredentials: true },
       );
 
-      dispatch(setStudentData(result.data));
+      const students = await axios.get(
+        `${serverURL}/api/student/all-students`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      dispatch(setStudentData(students.data));
+      setLoading(false);
       setErr("");
       navigate("/students/list-student");
     } catch (error) {
-      console.log("ADD STUDENT ERROR:", error);
-      console.log("SERVER MESSAGE:", error.response?.data?.message);
+      setLoading(false);
       setErr(error.response?.data?.message);
     }
   };
@@ -147,7 +159,6 @@ function AddStudent() {
     setGuardianName("");
     setGuardianPhone("");
     setAddress("");
-    setAdmissionDate("");
     setPreviousSchool("");
   };
 
@@ -158,7 +169,7 @@ function AddStudent() {
 
       <div className=" w-full ">
         {/* admin header */}
-        <AdminHeader/>
+        <AdminHeader />
         {/* add student */}
         <div className="p-2">
           {/* add new students */}
@@ -503,12 +514,50 @@ function AddStudent() {
             <button
               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
               onClick={handleAddStudent}
+              disabled={loading}
             >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                <IoMdAdd /> Add Student
+                {loading ? (
+                  <ClipLoader color="white" />
+                ) : (
+                  <>
+                    <IoMdAdd /> Add Student
+                  </>
+                )}
               </span>
               <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
             </button>
+            {loading && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                {/* Loading Card */}
+                <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+                  {/* Spinner + Logo */}
+                  <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+                    {/* Spinner */}
+                    <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                    {/* Logo Circle */}
+                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                      <img
+                        src={logoimage}
+                        alt="EduManage"
+                        className="h-20 w-20 object-contain"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-3xl font-bold text-[#102A5C]">
+                    Please wait...
+                  </h2>
+
+                  {/* Description */}
+                  <p className="mt-3 text-base text-slate-500">
+                    Create the student profile.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

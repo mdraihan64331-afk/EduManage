@@ -118,11 +118,10 @@ export const editStudent = async (req, res) => {
       },
       {
         new: true,
-      }
+      },
     );
 
     return res.status(200).json(updatedStudent);
-
   } catch (error) {
     console.log("EDIT STUDENT ERROR:", error);
 
@@ -145,7 +144,6 @@ export const getStudentById = async (req, res) => {
     }
 
     return res.status(200).json(student);
-
   } catch (error) {
     console.log("GET SINGLE STUDENT ERROR:", error);
 
@@ -155,3 +153,28 @@ export const getStudentById = async (req, res) => {
   }
 };
 
+export const deleteStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await AddStudent.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found!",
+      });
+    }
+
+    await AddStudent.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Student deleted successfully!",
+    });
+  } catch (error) {
+    console.log("DELETE STUDENT ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

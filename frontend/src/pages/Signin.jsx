@@ -11,7 +11,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { MdOutlineLock } from "react-icons/md";
-import { MdOutlinePersonOutline } from "react-icons/md";
 import axios from "axios";
 import { serverURL } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
