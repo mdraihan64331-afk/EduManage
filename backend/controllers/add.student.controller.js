@@ -63,3 +63,15 @@ export const addStudent = async (req, res) => {
     });
   }
 };
+
+export const getAllStudents = async (req, res) => {
+  try {
+    const students = await AddStudent.find();
+
+    return res.status(200).json(students);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

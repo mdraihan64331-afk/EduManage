@@ -36,7 +36,7 @@ export const adminCatagories = [
         },
         {
             icon: <CiViewList/>,
-            subMenuName: "List Student",
+            subMenuName: "Student List ",
             path: "/students/list-student"
         },
 

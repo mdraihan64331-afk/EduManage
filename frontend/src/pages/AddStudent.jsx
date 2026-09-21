@@ -47,7 +47,6 @@ function AddStudent() {
   const [admissionDate, setAdmissionDate] = useState("");
   const [previousSchool, setPreviousSchool] = useState("");
   const [err, setErr] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -129,7 +128,6 @@ function AddStudent() {
     } catch (error) {
       console.log("ADD STUDENT ERROR:", error);
       console.log("SERVER MESSAGE:", error.response?.data?.message);
-      setShowPopup(true);
       setErr(error.response?.data?.message);
     }
   };
