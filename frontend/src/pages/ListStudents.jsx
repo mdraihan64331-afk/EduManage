@@ -32,9 +32,12 @@ function ListStudents() {
     "Class 9",
   ];
   const [section, setSection] = useState("");
+  const [input, setInput] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const sectionName = ["A", "B", "C"];
   const dispatch = useDispatch();
-  const { studentData } = useSelector((state) => state.student);
+  const { studentData = [] } = useSelector((state) => state.student);
+  const displayStudents = input ? filteredStudents : studentData;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,6 +78,18 @@ function ListStudents() {
       console.log("DELETE ERROR:", error);
     }
   };
+
+  useEffect(() => {
+    const newList = studentData.filter(
+      (student) =>
+        student.fullName?.toLowerCase().includes(input.toLowerCase()) ||
+        student.studentId?.toLowerCase().includes(input.toLowerCase()) ||
+        student.rollNumber?.toString().includes(input) ||
+        student.phone?.toString().includes(input),
+    );
+
+    setFilteredStudents(newList);
+  }, [studentData, input]);
 
   return (
     <div className="flex bg-blue-50 overflow-hidden">
@@ -150,6 +165,8 @@ function ListStudents() {
               <IoSearchOutline />
               <input
                 type="text"
+                onChange={(e) => setInput(e.target.value)}
+                value={input}
                 placeholder="Search by name, student ID, roll or phone..."
                 className="outline-none w-full"
               />
@@ -243,15 +260,13 @@ function ListStudents() {
 
                 {/* Student Data */}
                 <tbody>
-                  {studentData.map((student, index) => (
+                  {displayStudents.map((student, index) => (
                     <tr
                       key={student._id}
                       className="border-b border-gray-200 hover:bg-gray-50"
                     >
-                      {/* # */}
                       <td className="py-3 px-2">{index + 1}</td>
 
-                      {/* Photo */}
                       <td className="py-3 px-2">
                         <div className="w-10 h-10">
                           <img
@@ -262,7 +277,6 @@ function ListStudents() {
                         </div>
                       </td>
 
-                      {/* Name */}
                       <td className="py-3 px-2">
                         <div>
                           <h1 className="font-semibold">{student.fullName}</h1>
@@ -273,34 +287,26 @@ function ListStudents() {
                         </div>
                       </td>
 
-                      {/* Student ID */}
                       <td className="py-3 px-2">{student.studentId}</td>
 
-                      {/* Class */}
-                      <td className="py-3 px-2 flex justify-center items-center">
+                      <td className="py-3 px-2">
                         <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-2xl">
                           {student.className}
                         </div>
                       </td>
 
-                      {/* Roll */}
                       <td className="py-3 px-2">{student.rollNumber}</td>
 
-                      {/* Section */}
                       <td className="py-3 px-2">{student.section}</td>
 
-                      {/* Phone */}
                       <td className="py-3 px-2">{student.phone}</td>
 
-                      {/* Gender */}
                       <td className="py-3 px-2">{student.gender}</td>
 
-                      {/* Admission Date */}
                       <td className="py-3 px-2">
                         {new Date(student.admissionDate).toLocaleDateString()}
                       </td>
 
-                      {/* Actions */}
                       <td className="py-3 px-2">
                         <div className="flex gap-1">
                           <button
