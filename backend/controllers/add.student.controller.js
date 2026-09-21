@@ -75,3 +75,83 @@ export const getAllStudents = async (req, res) => {
     });
   }
 };
+
+export const editStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await AddStudent.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found!",
+      });
+    }
+
+    let image = student.image;
+
+    if (req.file) {
+      const newImage = await uploadOnCloudinary(req.file.path);
+
+      if (newImage) {
+        image = newImage;
+      }
+    }
+
+    const updatedStudent = await AddStudent.findByIdAndUpdate(
+      id,
+      {
+        fullName: req.body.fullName,
+        studentId: req.body.studentId,
+        rollNumber: req.body.rollNumber,
+        dob: req.body.dob,
+        gender: req.body.gender,
+        className: req.body.className,
+        section: req.body.section,
+        phone: req.body.phone,
+        email: req.body.email,
+        guardianName: req.body.guardianName,
+        guardianPhone: req.body.guardianPhone,
+        address: req.body.address,
+        previousSchool: req.body.previousSchool,
+        image: image,
+      },
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).json(updatedStudent);
+
+  } catch (error) {
+    console.log("EDIT STUDENT ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getStudentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const student = await AddStudent.findById(id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found!",
+      });
+    }
+
+    return res.status(200).json(student);
+
+  } catch (error) {
+    console.log("GET SINGLE STUDENT ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+

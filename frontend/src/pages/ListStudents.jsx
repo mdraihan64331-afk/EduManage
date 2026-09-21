@@ -55,6 +55,8 @@ function ListStudents() {
     return student.admissionDate?.split("T")[0] === today;
   }).length;
 
+  
+
   return (
     <div className="flex bg-blue-50 overflow-hidden">
       <Menu />
@@ -279,7 +281,7 @@ function ListStudents() {
                       {/* Actions */}
                       <td className="py-3 px-2">
                         <div className="flex gap-1">
-                          <button className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer">
+                          <button className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer" onClick={()=>navigate(`/students/edit-student/${student._id}`)}>
                             <MdOutlineModeEdit size={18} />
                           </button>
 

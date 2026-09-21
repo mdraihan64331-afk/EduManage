@@ -117,7 +117,7 @@ function AddStudent() {
         formData.append("profile", backendImage);
       }
       const result = await axios.post(
-        `${serverURL}/api/student/add-student`,
+        `${serverURL}/api/student/add-edit-student`,
         formData,
         { withCredentials: true },
       );

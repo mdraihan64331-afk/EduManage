@@ -16,7 +16,7 @@ const AddStudentSchema = new mongoose.Schema(
       required: true,
     },
     dob: {
-      type: String,
+      type: Date,
       required: true,
     },
     gender: {
@@ -54,7 +54,6 @@ const AddStudentSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: true,
     },
     guardianName: {
       type: String,

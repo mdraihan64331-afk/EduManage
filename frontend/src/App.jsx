@@ -28,6 +28,7 @@ import LandingHome from "./pages/LandingHome.jsx";
 import AddStudent from "./pages/AddStudent.jsx";
 import { useSelector } from "react-redux";
 import ListStudents from "./pages/ListStudents.jsx";
+import EditStudent from "./pages/EditStudent.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -55,6 +56,7 @@ function App() {
         />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/students/add-student" element={<AddStudent />} />
+        <Route path="/students/edit-student/:id" element={<EditStudent />} />
         <Route path="/students/list-student" element={<ListStudents />} />
         <Route path="/teachers" element={<Teacher />} />
         <Route path="/classes" element={<Classes />} />
