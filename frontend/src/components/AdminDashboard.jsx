@@ -14,6 +14,7 @@ import axios from "axios";
 function AdminDashboard() {
   const { studentData } = useSelector((state) => state.student);
   const { userData } = useSelector((state) => state.user);
+  const { teacherData } = useSelector((state) => state.teacher)
   const dispatch = useDispatch();
   const now = new Date();
 
@@ -85,7 +86,7 @@ function AdminDashboard() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400">Total Teachers</p>
-                    <h1 className="font-bold text-2xl">120</h1>
+                    <h1 className="font-bold text-2xl">{teacherData.length}</h1>
                     <p className="text-xs text-green-600">+2 this month</p>
                   </div>
                 </div>

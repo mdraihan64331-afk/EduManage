@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Teacher from "./components/Teacher";
 import Classes from "./components/Classes";
 import Attendance from "./components/Attendance";
 import Result from "./components/Result";
@@ -29,6 +28,8 @@ import AddStudent from "./pages/AddStudent.jsx";
 import { useSelector } from "react-redux";
 import ListStudents from "./pages/ListStudents.jsx";
 import EditStudent from "./pages/EditStudent.jsx";
+import AddTeachers from "./pages/AddTeachers.jsx";
+import TeachersList from "./pages/TeachersList.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -58,7 +59,8 @@ function App() {
         <Route path="/students/add-student" element={<AddStudent />} />
         <Route path="/students/edit-student/:id" element={<EditStudent />} />
         <Route path="/students/list-student" element={<ListStudents />} />
-        <Route path="/teachers" element={<Teacher />} />
+        <Route path="/teacher/add-teacher" element={<AddTeachers />} />
+        <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/attendances" element={<Attendance />} />
         <Route path="/results" element={<Result />} />

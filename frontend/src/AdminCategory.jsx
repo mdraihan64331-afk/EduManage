@@ -15,7 +15,6 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
 
-
 export const adminCatagories = [
   {
     id: 1,
@@ -29,20 +28,36 @@ export const adminCatagories = [
     menu: "Students",
     path: "/students",
     subMenu: [
-        {
-            icon: <RxPeople />,
-            subMenuName: "Add Student",
-            path: "/students/add-student"
-        },
-        {
-            icon: <CiViewList/>,
-            subMenuName: "Student List ",
-            path: "/students/list-student"
-        },
-
+      {
+        icon: <RxPeople />,
+        subMenuName: "Add Student",
+        path: "/students/add-student",
+      },
+      {
+        icon: <CiViewList />,
+        subMenuName: "Student List ",
+        path: "/students/list-student",
+      },
     ],
   },
-  { id: 3, icon: <SlPeople />, menu: "Teachers", path: "/teachers" },
+  {
+    id: 3,
+    icon: <SlPeople />,
+    menu: "Teachers",
+    path: "/teachers",
+    subMenu: [
+      {
+        icon: <SlPeople />,
+        subMenuName: "Add Teacher",
+        path: "/teacher/add-teacher",
+      },
+      {
+        icon: <CiViewList />,
+        subMenuName: "Teacher List",
+        path: "/teacher/teachers-list",
+      },
+    ],
+  },
   { id: 4, icon: <SiGoogleclassroom />, menu: "Classes", path: "/classes" },
   {
     id: 5,

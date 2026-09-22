@@ -45,14 +45,15 @@ function AddStudent() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianPhone, setGuardianPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [admissionDate, setAdmissionDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
   const [previousSchool, setPreviousSchool] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  
+  const [admissionDate, setAdmissionDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
@@ -525,7 +526,7 @@ function AddStudent() {
                   </>
                 )}
               </span>
-              <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+              <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
             </button>
             {loading && (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
