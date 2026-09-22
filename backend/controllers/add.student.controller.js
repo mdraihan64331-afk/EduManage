@@ -23,9 +23,15 @@ export const addStudent = async (req, res) => {
     if (req.file) {
       image = await uploadOnCloudinary(req.file.path);
     }
+
     const existingStudent = await AddStudent.findOne({ email });
     if (existingStudent) {
       return res.status(400).json({ message: "Student already exists!" });
+    }
+
+    const existingRollSectionClass = await AddStudent.findOne({rollNumber, className, section})
+    if(existingRollSectionClass){
+      return res.status(400).json({message : "There is a student in this class, in this section, with this roll number!"})
     }
     if (phone.length < 11) {
       return res
