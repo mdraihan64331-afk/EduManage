@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { GoAlertFill } from "react-icons/go";
@@ -8,17 +8,49 @@ import { IoIosPeople, IoMdAdd } from "react-icons/io";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FiFilter } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
-import { MdEventAvailable, MdPersonAddAlt1 } from "react-icons/md";
+import {
+  MdEventAvailable,
+  MdOutlineModeEdit,
+  MdPersonAddAlt1,
+} from "react-icons/md";
 import { GiGraduateCap } from "react-icons/gi";
 import { SiGoogleclassroom } from "react-icons/si";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { serverURL } from "../App";
+import axios from "axios";
+import { setTeacherData } from "../redux/teacherSlice";
+import { useNavigate } from "react-router-dom";
 
 function TeachersList() {
   const [input, setInput] = useState("");
-  const [filteredTeachers, setFilteredStudents] = useState([]);
+  const [filteredTeachers, setFilteredteachers] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
+  const [deleteTeacher, setDeleteTeacher] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { teacherData = [] } = useSelector((state) => state.teacher);
-  const displayStudents = isFiltered ? filteredTeachers : teacherData;
+  const displayTeachers = isFiltered ? filteredTeachers : teacherData;
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const todayJoined = teacherData.filter((teacher) => {
+    return teacher.joiningDate?.split("T")[0] === today;
+  }).length;
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${serverURL}/api/teacher/delete-teacher/${id}`, {
+        withCredentials: true,
+      });
+
+      const result = await axios.get(`${serverURL}/api/teacher/all-teacher`,{withCredentials: true})
+
+      dispatch(setTeacherData(result.data))
+    } catch (error) {
+      console.log("delete error: ", error)
+    }
+  };
 
   return (
     <div className="flex bg-blue-50">
@@ -84,7 +116,7 @@ function TeachersList() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Joining This Year</p>
-                  {/* <h1 className="font-bold text-2xl">{todayJoined}</h1> */}
+                  <h1 className="font-bold text-2xl">{todayJoined}</h1>
                   <p className="text-xs text-gray-400">+ New Teachers</p>
                 </div>
               </div>
@@ -98,7 +130,7 @@ function TeachersList() {
                 type="text"
                 // onChange={(e) => setInput(e.target.value)}
                 // value={input}
-                placeholder="Search by name, student ID, roll or phone..."
+                placeholder="Search by name, teacher ID, roll or phone..."
                 className="outline-none w-full"
               />
             </div>
@@ -153,62 +185,58 @@ function TeachersList() {
             <div className="flex justify-between w-full">
               <div className="flex items-center gap-2">
                 <BsFillPeopleFill size={20} />
-                {/* <h4 className="font-semibold">Student({studentData.length})</h4> */}
+                {/* <h4 className="font-semibold">teacher({teacherData.length})</h4> */}
               </div>
               <div>
                 {/* add button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  // onClick={() => navigate("/students/add-student")}
+                  onClick={() => navigate("/teacher/add-teacher")}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                    <IoMdAdd /> Add Student
+                    <IoMdAdd /> Add Teacher
                   </span>
                   <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
                 </button>
               </div>
             </div>
-            {/* Student Table */}
+            {/* teacher Table */}
 
             <div className="mt-4 w-full overflow-auto max-h-[300px]">
               <table className="w-full min-w-[700px]">
                 {/* Table Header */}
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="border-b border-gray-300 text-gray-600">
-                    <th className="text-left py-3 px-2">#</th>
                     <th className="text-left py-3 px-2">Photo</th>
-                    <th className="text-left py-3 px-2">Name</th>
-                    <th className="text-left py-3 px-2">Student ID</th>
-                    <th className="text-left py-3 px-2">Class</th>
-                    <th className="text-left py-3 px-2">Roll</th>
-                    <th className="text-left py-3 px-2">Section</th>
+                    <th className="text-left py-3 px-2">Teacher Name</th>
+                    <th className="text-left py-3 px-2">Teacher ID</th>
+                    <th className="text-left py-3 px-2">Subject</th>
+                    <th className="text-left py-3 px-2">Assigned Class</th>
                     <th className="text-left py-3 px-2">Phone</th>
-                    <th className="text-left py-3 px-2">Gender</th>
-                    <th className="text-left py-3 px-2">Admission</th>
+                    <th className="text-left py-3 px-2">Teacher Role</th>
+                    <th className="text-left py-3 px-2">Joining Date</th>
                     <th className="text-left py-3 px-2">Actions</th>
                   </tr>
                 </thead>
 
-                {/* Student Data */}
+                {/* teacher Data */}
                 <tbody>
-                  {/* {displayStudents.map((student, index) => (
+                  {displayTeachers.map((teacher, index) => (
                     <tr
-                      key={student._id}
+                      key={teacher._id}
                       className="border-b border-gray-200 hover:bg-gray-50"
                     >
-                      <td className="py-3 px-2">{index + 1}</td>
-
                       <td className="py-3 px-2">
                         <div className="w-10 h-10">
-                          {student.image ? (
+                          {teacher.image ? (
                             <img
-                              src={student.image}
-                              alt={student.fullName}
+                              src={teacher.image}
+                              alt={teacher.fullName}
                               className="w-full h-full rounded-full object-cover"
                             />
                           ) : (
                             <div className="bg-purple-800 w-full h-full flex text-white font-semibold justify-center items-center rounded-full">
-                              {student?.fullName?.slice(0, 1).toUpperCase()}
+                              {teacher?.fullName?.slice(0, 1).toUpperCase()}
                             </div>
                           )}
                         </div>
@@ -216,32 +244,30 @@ function TeachersList() {
 
                       <td className="py-3 px-2">
                         <div>
-                          <h1 className="font-semibold">{student.fullName}</h1>
+                          <h1 className="font-semibold">{teacher.fullName}</h1>
 
                           <p className="text-xs text-gray-500">
-                            {student.email}
+                            {teacher.email}
                           </p>
                         </div>
                       </td>
 
-                      <td className="py-3 px-2">{student.studentId}</td>
+                      <td className="py-3 px-2">{teacher.teacherId}</td>
 
                       <td className="py-3 px-2">
-                        <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-2xl">
-                          {student.className}
+                        <div className="bg-blue-100 text-center text-blue-600 px-2 py-1 rounded-2xl">
+                          {teacher.subject}
                         </div>
                       </td>
 
-                      <td className="py-3 px-2">{student.rollNumber}</td>
+                      <td className="py-3 px-2">{teacher.assignedClass}</td>
 
-                      <td className="py-3 px-2">{student.section}</td>
+                      <td className="py-3 px-2">{teacher.phone}</td>
 
-                      <td className="py-3 px-2">{student.phone}</td>
-
-                      <td className="py-3 px-2">{student.gender}</td>
+                      <td className="py-3 px-2">{teacher.teacherRole}</td>
 
                       <td className="py-3 px-2">
-                        {new Date(student.admissionDate).toLocaleDateString()}
+                        {new Date(teacher.joiningDate).toLocaleDateString()}
                       </td>
 
                       <td className="py-3 px-2">
@@ -249,7 +275,7 @@ function TeachersList() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/students/edit-student/${student._id}`)
+                              navigate(`/teacher/edit-teacher/${teacher._id}`)
                             }
                           >
                             <MdOutlineModeEdit size={18} />
@@ -258,7 +284,7 @@ function TeachersList() {
                           <button
                             className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
                             onClick={() => {
-                              setDeleteStudent(student);
+                              setDeleteTeacher(teacher);
                               setShowDeleteModal(true);
                             }}
                           >
@@ -267,33 +293,32 @@ function TeachersList() {
                         </div>
                       </td>
                     </tr>
-                  ))} */}
+                  ))}
                 </tbody>
               </table>
 
               {/* delete popup */}
-              {/* {showDeleteModal && deleteStudent && (
+              {showDeleteModal && deleteTeacher && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                   <div className="bg-white w-[600px] rounded-xl shadow-xl p-6">
-                    
-                    Header
+                    {/* Header */}
 
                     <div className="flex justify-between">
                       <div>
                         <h2 className="text-xl flex items-center gap-2 font-bold text-gray-800">
                           <RiDeleteBin6Line size={30} color="red" /> Delete
-                          Student
+                          teacher
                         </h2>
 
                         <p className="text-sm text-gray-500 mt-1">
-                          Are you sure you want to delete this student?
+                          Are you sure you want to delete this teacher?
                         </p>
                       </div>
                       <div
                         className="flex justify-end text-gray-600 cursor-pointer"
                         onClick={() => {
                           setShowDeleteModal(false);
-                          setDeleteStudent(null);
+                          setDeleteTeacher(null);
                         }}
                       >
                         <RxCross2 />
@@ -303,15 +328,15 @@ function TeachersList() {
                     <div className="mt-5 flex gap-4 rounded-xl p-4">
                       <div className="">
                         <div className="w-30 h-30">
-                          {deleteStudent.image ? (
+                          {deleteTeacher.image ? (
                             <img
-                              src={deleteStudent.image}
-                              alt={deleteStudent.fullName}
+                              src={deleteTeacher.image}
+                              alt={deleteTeacher.fullName}
                               className="w-full h-full rounded-[8px] object-cover"
                             />
                           ) : (
                             <div className="w-full h-full rounded-[8px] bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
-                              {deleteStudent.fullName
+                              {deleteTeacher.fullName
                                 ?.slice(0, 1)
                                 .toUpperCase()}
                             </div>
@@ -322,33 +347,33 @@ function TeachersList() {
                       <div className="text-sm">
                         <div>
                           <h3 className="font-bold text-lg">
-                            {deleteStudent.fullName}
+                            {deleteTeacher.fullName}
                           </h3>
                         </div>
                         <div className="mt-2">
                           <div className="flex items-center gap-3 text-gray-400">
-                            <p>Student ID: </p>
-                            <p>{deleteStudent.studentId}</p>
+                            <p>Teacher ID: </p>
+                            <p>{deleteTeacher.teacherId}</p>
                           </div>
 
                           <div className="flex items-center gap-3 text-gray-400">
-                            <p>Roll No: </p>
-                            <p>{deleteStudent.rollNumber}</p>
+                            <p>Subject: </p>
+                            <p>{deleteTeacher.subject}</p>
                           </div>
 
                           <div className="flex items-center gap-3 text-gray-400">
-                            <p>Class:</p>
-                            <p>{deleteStudent.className}</p>
+                            <p>Assigned Class:</p>
+                            <p>{deleteTeacher.assignedClass}</p>
                           </div>
 
                           <div className="flex items-center gap-3 text-gray-400">
-                            <p>Section: </p>
-                            <p>{deleteStudent.section}</p>
+                            <p>Teacher Role: </p>
+                            <p>{deleteTeacher.teacherRole}</p>
                           </div>
 
                           <div className="flex items-center gap-3 text-gray-400">
                             <p>Gender</p>
-                            <p>{deleteStudent.gender}</p>
+                            <p>{deleteTeacher.gender}</p>
                           </div>
                         </div>
                       </div>
@@ -364,7 +389,7 @@ function TeachersList() {
                             This action cannot be undone!
                           </p>
                           <p>
-                            All data related to this student will be permanently
+                            All data related to this teacher will be permanently
                             removed
                           </p>
                           <p>
@@ -376,13 +401,12 @@ function TeachersList() {
                     </div>
 
                     <div className="flex items-center justify-center gap-3 mt-6">
-
-                      cancel button
+                      {/* cancel button */}
 
                       <button
                         onClick={() => {
                           setShowDeleteModal(false);
-                          setDeleteStudent(null);
+                          setDeleteTeacher(null);
                         }}
                         className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
                       >
@@ -392,25 +416,25 @@ function TeachersList() {
                         <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
                       </button>
 
-                      delete button
+                      {/* delete button */}
 
                       <button
                         onClick={async () => {
-                          await handleDelete(deleteStudent._id);
+                          await handleDelete(deleteTeacher._id);
                           setShowDeleteModal(false);
-                          setDeleteStudent(null);
+                          setDeleteTeacher(null);
                         }}
                         className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
                       >
                         <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                          <RiDeleteBin6Line /> Delete Student
+                          <RiDeleteBin6Line /> Delete teacher
                         </span>
                         <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
                       </button>
                     </div>
                   </div>
                 </div>
-              )} */}
+              )}
             </div>
           </div>
         </div>

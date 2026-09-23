@@ -153,7 +153,7 @@ function EditStudent() {
 
     try {
       const formData = new FormData();
-
+      
       formData.append("fullName", fullName);
       formData.append("studentId", studentId);
       formData.append("rollNumber", rollNumber);

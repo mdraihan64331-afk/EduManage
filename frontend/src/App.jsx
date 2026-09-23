@@ -30,10 +30,13 @@ import ListStudents from "./pages/ListStudents.jsx";
 import EditStudent from "./pages/EditStudent.jsx";
 import AddTeachers from "./pages/AddTeachers.jsx";
 import TeachersList from "./pages/TeachersList.jsx";
+import useGetTeacher from "./hooks/useGetTeacher.jsx";
+import EditTeacher from "./pages/EditTeacher.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
   useGetCurrentUser();
+  useGetTeacher()
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
   return (
@@ -61,6 +64,7 @@ function App() {
         <Route path="/students/list-student" element={<ListStudents />} />
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
+        <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/attendances" element={<Attendance />} />
         <Route path="/results" element={<Result />} />
