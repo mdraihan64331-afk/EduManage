@@ -194,7 +194,7 @@ function AddTeachers() {
                   {/* teacher ID */}
                   <div className="flex flex-col gap-1">
                     <label htmlFor="">
-                      teacher ID <span className="text-red-500">*</span>
+                      Teacher ID <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
