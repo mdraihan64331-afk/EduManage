@@ -11,31 +11,43 @@ import { IoSearchOutline } from "react-icons/io5";
 import {
   MdEventAvailable,
   MdOutlineModeEdit,
-  MdPersonAddAlt1,
 } from "react-icons/md";
-import { GiGraduateCap } from "react-icons/gi";
 import { SiGoogleclassroom } from "react-icons/si";
 import { useDispatch, useSelector } from "react-redux";
 import { serverURL } from "../App";
 import axios from "axios";
 import { setTeacherData } from "../redux/teacherSlice";
 import { useNavigate } from "react-router-dom";
+import { GiBlackBook } from "react-icons/gi";
+import { IoPerson } from "react-icons/io5";
 
 function TeachersList() {
   const [input, setInput] = useState("");
-  const [filteredTeachers, setFilteredteachers] = useState([]);
+  const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
   const [deleteTeacher, setDeleteTeacher] = useState(null);
+  const [subject, setSubject] = useState();
+  const selectSubject = [
+    "Bangle",
+    "English",
+    "Mathematics",
+    "Science",
+    "Bangladesh and Global Studies",
+    "ICT",
+    "Religion and Moral Education",
+  ];
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
   const { teacherData = [] } = useSelector((state) => state.teacher);
   const displayTeachers = isFiltered ? filteredTeachers : teacherData;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const today = new Date().toISOString().split("T")[0];
+  const currentYear = new Date().getFullYear();
 
-  const todayJoined = teacherData.filter((teacher) => {
-    return teacher.joiningDate?.split("T")[0] === today;
+  const joiningThisYear = teacherData.filter((teacher) => {
+    if (!teacher.joiningDate) return false;
+
+    return new Date(teacher.joiningDate).getFullYear() === currentYear;
   }).length;
 
   const handleDelete = async (id) => {
@@ -44,12 +56,42 @@ function TeachersList() {
         withCredentials: true,
       });
 
-      const result = await axios.get(`${serverURL}/api/teacher/all-teacher`,{withCredentials: true})
+      const result = await axios.get(`${serverURL}/api/teacher/all-teacher`, {
+        withCredentials: true,
+      });
 
-      dispatch(setTeacherData(result.data))
+      dispatch(setTeacherData(result.data));
     } catch (error) {
-      console.log("delete error: ", error)
+      console.log("delete error: ", error);
     }
+  };
+
+  const handleFilter = () => {
+    let filtered = teacherData;
+
+    if (input) {
+      filtered = filtered.filter(
+        (teacher) =>
+          teacher.fullName?.toLowerCase().includes(input.toLowerCase()) ||
+          teacher.teacherId?.toLowerCase().includes(input.toLowerCase()) ||
+          teacher.subject?.toLowerCase().includes(input.toLowerCase()) ||
+          teacher.phone?.toString().includes(input),
+      );
+    }
+
+    if (subject) {
+      filtered = filtered.filter((teacher) => teacher.subject === subject);
+    }
+
+    setFilteredTeachers(filtered);
+    setIsFiltered(true);
+  };
+
+  const handleReset = () => {
+    setInput("");
+    setSubject("");
+    setFilteredTeachers([]);
+    setIsFiltered(false);
   };
 
   return (
@@ -74,7 +116,7 @@ function TeachersList() {
 
               <div className="h-30 w-full bg-white flex items-center gap-4 p-3 border border-gray-300 shadow rounded-xl">
                 <div className="bg-green-100 rounded-xl p-2">
-                  <MdPersonAddAlt1 size={25} className="text-green-600" />
+                  <IoPerson size={25} className="text-green-600" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Total Teachers</p>
@@ -100,7 +142,7 @@ function TeachersList() {
 
               <div className="h-30 w-full flex bg-white items-center gap-4 p-3 border border-gray-300 shadow rounded-xl">
                 <div className="bg-purple-200 rounded-xl p-2">
-                  <GiGraduateCap size={25} className="text-purple-700" />
+                  <GiBlackBook size={25} className="text-purple-700" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Subjects</p>
@@ -116,7 +158,7 @@ function TeachersList() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Joining This Year</p>
-                  <h1 className="font-bold text-2xl">{todayJoined}</h1>
+                  <h1 className="font-bold text-2xl">{joiningThisYear}</h1>
                   <p className="text-xs text-gray-400">+ New Teachers</p>
                 </div>
               </div>
@@ -124,68 +166,59 @@ function TeachersList() {
           </div>
           <div className="flex items-center justify-between gap-3 bg-white p-2 rounded-[8px] shadow">
             {/* search */}
-            <div className="flex items-center gap-2 border w-90 border-gray-400 rounded-[5px] p-1">
-              <IoSearchOutline />
-              <input
-                type="text"
-                // onChange={(e) => setInput(e.target.value)}
-                // value={input}
-                placeholder="Search by name, teacher ID, roll or phone..."
-                className="outline-none w-full"
-              />
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 border w-90 border-gray-400 rounded-[5px] p-1">
+                <IoSearchOutline />
+                <input
+                  type="text"
+                  onChange={(e) => setInput(e.target.value)}
+                  value={input}
+                  placeholder="Search by name, teacher ID, roll or phone..."
+                  className="outline-none w-full"
+                />
+              </div>
+              {/* subject */}
+              <div className="flex flex-col gap-1">
+                <select
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-50 border border-gray-300  rounded-[8px] px-2 py-1 outline-none"
+                >
+                  <option value="">All Subject</option>
+                  {selectSubject.map((e, index) => (
+                    <option key={index}>{e}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-            {/* class */}
-            <div className="flex flex-col gap-1">
-              {/* <select
-                value={selectClass}
-                onChange={(e) => setSelectClass(e.target.value)}
-                className="w-50 border border-gray-300  rounded-[8px] px-2 py-1 outline-none"
+            <div className="flex justify-center gap-3">
+              {/* filter */}
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
+                onClick={handleFilter}
               >
-                <option value="">Select Class</option>
-                {className.map((e, index) => (
-                  <option key={index}>{e}</option>
-                ))}
-              </select> */}
-            </div>
-            {/* section */}
-            <div className="flex flex-col gap-1">
-              {/* <select
-                value={section}
-                onChange={(e) => setSection(e.target.value)}
-                className=" border w-50 border-gray-300 rounded-[8px] px-2 py-1 outline-none"
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <FiFilter /> Filter
+                </span>
+                <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
+              {/* reset */}
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                onClick={handleReset}
               >
-                <option value="">Select Section</option>
-                {sectionName.map((e, index) => (
-                  <option key={index}>{e}</option>
-                ))}
-              </select> */}
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <RiResetLeftFill /> Reset
+                </span>
+                <span className="absolute inset-y-0 right-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
             </div>
-            {/* filter */}
-            <button
-              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
-              // onClick={handleFilter}
-            >
-              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                <FiFilter /> Filter
-              </span>
-              <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
-            </button>
-            {/* reset */}
-            <button
-              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-              // onClick={handleReset}
-            >
-              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                <RiResetLeftFill /> Reset
-              </span>
-              <span className="absolute inset-y-0 right-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
-            </button>
           </div>
           <div className="p-4 bg-white mt-4 rounded-[8px]">
             <div className="flex justify-between w-full">
               <div className="flex items-center gap-2">
                 <BsFillPeopleFill size={20} />
-                {/* <h4 className="font-semibold">teacher({teacherData.length})</h4> */}
+                <h4 className="font-semibold">Teacher({teacherData.length})</h4>
               </div>
               <div>
                 {/* add button */}

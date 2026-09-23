@@ -19,6 +19,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
+import { IoPerson } from "react-icons/io5";
 
 function ListStudents() {
   const [selectClass, setSelectClass] = useState("");
@@ -148,7 +149,7 @@ function ListStudents() {
 
               <div className="h-30 w-full bg-white flex items-center gap-4 p-3 border border-gray-300 shadow rounded-xl">
                 <div className="bg-green-100 rounded-xl p-2">
-                  <MdPersonAddAlt1 size={25} className="text-green-600" />
+                  <IoPerson size={25} className="text-green-600" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Total Students</p>

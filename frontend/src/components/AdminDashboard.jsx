@@ -14,16 +14,25 @@ import axios from "axios";
 function AdminDashboard() {
   const { studentData } = useSelector((state) => state.student);
   const { userData } = useSelector((state) => state.user);
-  const { teacherData } = useSelector((state) => state.teacher)
+  const { teacherData } = useSelector((state) => state.teacher);
   const dispatch = useDispatch();
   const now = new Date();
 
-  const thisMonthJoined = studentData.filter((student) => {
+  const thisMonthStudentJoined = studentData.filter((student) => {
     const admissionDate = new Date(student.admissionDate);
 
     return (
       admissionDate.getMonth() === now.getMonth() &&
       admissionDate.getFullYear() === now.getFullYear()
+    );
+  }).length;
+
+  const thisMonthTeacherJoined = teacherData.filter((teacher) => {
+    const joiningDate = new Date(teacher.joiningDate);
+
+    return (
+      joiningDate.getMonth() === now.getMonth() &&
+      joiningDate.getFullYear() === now.getFullYear()
     );
   }).length;
 
@@ -54,7 +63,11 @@ function AdminDashboard() {
         <div className="p-2">
           <div>
             <h1 className="font-bold text-2xl">Dashboard</h1>
-            <p>Welcome back, <span className="font-semibold">{userData?.fullName}</span>! Here's what's happening.</p>
+            <p>
+              Welcome back,{" "}
+              <span className="font-semibold">{userData?.fullName}</span>!
+              Here's what's happening.
+            </p>
             <div className="flex-1 py-6">
               <div className="grid grid-cols-4 gap-4">
                 {/* total students */}
@@ -70,7 +83,7 @@ function AdminDashboard() {
                     <p className="text-xs text-gray-400">Total Students</p>
                     <h1 className="font-bold text-2xl">{studentData.length}</h1>
                     <p className="text-xs text-green-600">
-                      +{thisMonthJoined} this month
+                      +{thisMonthStudentJoined} this month
                     </p>
                   </div>
                 </div>
@@ -87,7 +100,7 @@ function AdminDashboard() {
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400">Total Teachers</p>
                     <h1 className="font-bold text-2xl">{teacherData.length}</h1>
-                    <p className="text-xs text-green-600">+2 this month</p>
+                    <p className="text-xs text-green-600">+{thisMonthTeacherJoined} this month</p>
                   </div>
                 </div>
 
