@@ -552,7 +552,7 @@ function EditTeacher() {
 
                     {/* Description */}
                     <p className="mt-3 text-base text-slate-500">
-                      Create the Teacher profile.
+                      Update the Teacher profile.
                     </p>
                   </div>
                 </div>

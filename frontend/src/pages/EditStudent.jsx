@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
+import logoimage from "../assets/login-logo.png";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxPeople } from "react-icons/rx";
 import { IoPerson } from "react-icons/io5";
@@ -13,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
+import { ClipLoader } from "react-spinners";
 
 function EditStudent() {
   const { id } = useParams();
@@ -42,6 +44,7 @@ function EditStudent() {
   const [dob, setDob] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [backendImage, setBackendImage] = useState(null);
   const [frontendImage, setFrontendImage] = useState("");
@@ -150,10 +153,10 @@ function EditStudent() {
 
   const handleEditStudent = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const formData = new FormData();
-      
+
       formData.append("fullName", fullName);
       formData.append("studentId", studentId);
       formData.append("rollNumber", rollNumber);
@@ -181,12 +184,13 @@ function EditStudent() {
       );
 
       console.log("UPDATED STUDENT:", result.data);
-
+      setLoading(false);
       navigate("/students/list-student");
     } catch (error) {
       console.log("EDIT STUDENT ERROR:", error);
 
       setErr(error.response?.data?.message || "Student update failed!");
+      setLoading(false);
     }
   };
 
@@ -232,7 +236,6 @@ function EditStudent() {
       setErr(error.response?.data?.message || "Reset failed!");
     }
   };
-
 
   return (
     <div className="flex bg-blue-50 min-h-screen">
@@ -667,14 +670,52 @@ function EditStudent() {
               type="button"
               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
               onClick={handleEditStudent}
+              disabled={loading}
             >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                <IoMdCheckmark />
-                Update Student
+                {loading ? (
+                  <ClipLoader color="white" />
+                ) : (
+                  <>
+                    <IoMdCheckmark />
+                    Update Student
+                  </>
+                )}
               </span>
 
               <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
             </button>
+            {loading && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                {/* Loading Card */}
+                <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+                  {/* Spinner + Logo */}
+                  <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+                    {/* Spinner */}
+                    <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                    {/* Logo Circle */}
+                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                      <img
+                        src={logoimage}
+                        alt="EduManage"
+                        className="h-20 w-20 object-contain"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-3xl font-bold text-[#102A5C]">
+                    Please wait...
+                  </h2>
+
+                  {/* Description */}
+                  <p className="mt-3 text-base text-slate-500">
+                    Update the Teacher profile.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

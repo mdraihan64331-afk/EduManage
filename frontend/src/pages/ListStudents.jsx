@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import { IoPerson } from "react-icons/io5";
+import { FaRegEye } from "react-icons/fa";
 
 function ListStudents() {
   const [selectClass, setSelectClass] = useState("");
@@ -355,13 +356,22 @@ function ListStudents() {
                         <div className="flex gap-1">
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            // onClick={() => {
+                            //   setDeleteStudent(student);
+                            //   setShowDeleteModal(true);
+                            // }}
+                          >
+                            <FaRegEye size={18} />
+                          </button>
+                          
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
                               navigate(`/students/edit-student/${student._id}`)
                             }
                           >
                             <MdOutlineModeEdit size={18} />
                           </button>
-
                           <button
                             className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
                             onClick={() => {
