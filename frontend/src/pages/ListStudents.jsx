@@ -41,6 +41,8 @@ function ListStudents() {
   const [isFiltered, setIsFiltered] = useState(false);
   const [deleteStudent, setDeleteStudent] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [viewStudent, setViewStudent] = useState(null)
+  const [showStudentModal, setShowStudentModal] = useState(false)
   const sectionName = ["A", "B", "C"];
   const dispatch = useDispatch();
   const { studentData = [] } = useSelector((state) => state.student);
@@ -356,10 +358,10 @@ function ListStudents() {
                         <div className="flex gap-1">
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                            // onClick={() => {
-                            //   setDeleteStudent(student);
-                            //   setShowDeleteModal(true);
-                            // }}
+                            onClick={() => {
+                              setViewStudent(student);
+                              setShowStudentModal(true);
+                            }}
                           >
                             <FaRegEye size={18} />
                           </button>

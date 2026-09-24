@@ -68,6 +68,7 @@ const teacherShema = new mongoose.Schema(
     qualification: {
       type: String,
       required: true,
+      default: []
     },
   },
   { timestamps: true },

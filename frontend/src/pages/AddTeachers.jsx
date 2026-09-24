@@ -318,7 +318,7 @@ function AddTeachers() {
                     </label>
                     <input
                       type="tel"
-                      placeholder="Enter your email"
+                      placeholder="Enter your phone"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none"

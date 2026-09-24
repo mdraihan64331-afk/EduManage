@@ -8,10 +8,7 @@ import { IoIosPeople, IoMdAdd } from "react-icons/io";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FiFilter } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
-import {
-  MdEventAvailable,
-  MdOutlineModeEdit,
-} from "react-icons/md";
+import { MdEventAvailable, MdOutlineModeEdit } from "react-icons/md";
 import { SiGoogleclassroom } from "react-icons/si";
 import { useDispatch, useSelector } from "react-redux";
 import { serverURL } from "../App";
@@ -20,6 +17,10 @@ import { setTeacherData } from "../redux/teacherSlice";
 import { useNavigate } from "react-router-dom";
 import { GiBlackBook } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
+import { FaRegEye } from "react-icons/fa";
+import { FaRegIdCard } from "react-icons/fa6";
+import { FiPhone } from "react-icons/fi";
+import { MdOutlineEmail } from "react-icons/md";
 
 function TeachersList() {
   const [input, setInput] = useState("");
@@ -37,6 +38,8 @@ function TeachersList() {
     "Religion and Moral Education",
   ];
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [viewTeacher, setViewTeacher] = useState(null);
+  const [showTeacherModal, setShowTeacherModal] = useState(false);
   const { teacherData = [] } = useSelector((state) => state.teacher);
   const displayTeachers = isFiltered ? filteredTeachers : teacherData;
   const dispatch = useDispatch();
@@ -173,7 +176,7 @@ function TeachersList() {
                   type="text"
                   onChange={(e) => setInput(e.target.value)}
                   value={input}
-                  placeholder="Search by name, teacher ID, roll or phone..."
+                  placeholder="Search by name, teacher ID and subject..."
                   className="outline-none w-full"
                 />
               </div>
@@ -277,7 +280,9 @@ function TeachersList() {
 
                       <td className="py-3 px-2">
                         <div>
-                          <h1 className="font-semibold">{teacher.fullName}</h1>
+                          <h1 className="font-semibold capitalize">
+                            {teacher.fullName}
+                          </h1>
 
                           <p className="text-xs text-gray-500">
                             {teacher.email}
@@ -307,6 +312,15 @@ function TeachersList() {
                         <div className="flex gap-1">
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            onClick={() => {
+                              setViewTeacher(teacher);
+                              setShowTeacherModal(true);
+                            }}
+                          >
+                            <FaRegEye size={18} />
+                          </button>
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
                               navigate(`/teacher/edit-teacher/${teacher._id}`)
                             }
@@ -332,7 +346,7 @@ function TeachersList() {
 
               {/* delete popup */}
               {showDeleteModal && deleteTeacher && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-100">
                   <div className="bg-white w-[600px] rounded-xl shadow-xl p-6">
                     {/* Header */}
 
@@ -379,7 +393,7 @@ function TeachersList() {
 
                       <div className="text-sm">
                         <div>
-                          <h3 className="font-bold text-lg">
+                          <h3 className="font-bold text-lg capitalize">
                             {deleteTeacher.fullName}
                           </h3>
                         </div>
@@ -467,6 +481,176 @@ function TeachersList() {
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* view teacher */}
+
+              {showTeacherModal && viewTeacher && (
+                <>
+                  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl w-[600px] h-[550px]">
+                      {/* view teacher header */}
+                      <div className="p-3 flex rounded-[8px] justify-between bg-[linear-gradient(to_right,#067080,#0b9788,#058294,#30a2af)]">
+                        <div className="flex gap-4">
+                          <div className="h-20 w-20 rounded-full">
+                            {viewTeacher ? (
+                              <img
+                                src={viewTeacher.image}
+                                alt={viewTeacher.fullName}
+                                className="h-full w-full rounded-full object-cover border border-white"
+                              />
+                            ) : (
+                              <div className="w-full h-full rounded-[8px] bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
+                                <h1>
+                                  {viewTeacher.fullName
+                                    ?.slice(0, 1)
+                                    .toUpperCase()}
+                                </h1>
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <h1 className="text-xl font-semibold text-white capitalize">
+                              {viewTeacher.fullName}
+                            </h1>
+                            <p className="text-gray-200">
+                              {viewTeacher.teacherRole}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* button section */}
+                        <div className="flex flex-col justify-between">
+                          <div
+                            className="flex justify-end text-gray-200 cursor-pointer"
+                            onClick={() => {
+                              setShowTeacherModal(false);
+                              setViewTeacher(null);
+                            }}
+                          >
+                            <RxCross2 size={20} />
+                          </div>
+                          <div className="flex gap-3">
+                            <button
+                              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 bg-blue-600 text-white rounded-lg cursor-pointer group"
+                              onClick={() =>
+                                navigate(
+                                  `/teacher/edit-teacher/${viewTeacher._id}`,
+                                )
+                              }
+                            >
+                              <span className="relative z-10 flex items-center gap-2 group-hover:text-blue-600 transition-colors duration-300">
+                                <MdOutlineModeEdit size={18} /> Edit
+                              </span>
+
+                              <span className="absolute inset-y-0 right-0 w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                            </button>
+
+                            <button
+                              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 bg-red-600 text-white rounded-lg cursor-pointer group"
+                              onClick={() => {
+                                setDeleteTeacher(viewTeacher);
+                                setShowDeleteModal(true);
+                              }}
+                            >
+                              <span className="relative z-10 flex items-center gap-2 group-hover:text-red-600 transition-colors duration-300">
+                                <RiDeleteBin6Line size={18} /> Delete
+                              </span>
+                              <span className="absolute inset-y-0 left-0 w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* view teacher details */}
+                      <div className="py-3 px-5">
+                        <div className="flex justify-between ">
+
+                          {/* teacher id and phone */}
+                          <div className="flex flex-col gap-5">
+                            <div className="flex gap-3 items-center">
+                              <FaRegIdCard />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  {viewTeacher.teacherId}
+                                </h3>
+                                <p className="text-gray-600 ">Teacher ID</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-3 items-center">
+                              <FiPhone />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  {viewTeacher.phone}
+                                </h3>
+                                <p className="text-gray-600 ">Phone</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* subject and email */}
+                          <div className="flex flex-col gap-5">
+                            <div className="flex gap-3 items-center">
+                              <GiBlackBook />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  {viewTeacher.subject}
+                                </h3>
+                                <p className="text-gray-600 ">Subject</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-3 items-center">
+                              <MdOutlineEmail />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  {viewTeacher.email}
+                                </h3>
+                                <p className="text-gray-600 ">email</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* class and joining date */}
+                          <div className="flex flex-col gap-5">
+                            <div className="flex gap-3 items-center">
+                              <SiGoogleclassroom />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  Class {viewTeacher.assignedClass}
+                                </h3>
+                                <p className="text-gray-600 ">Assigned Class</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-3 items-center">
+                              <MdEventAvailable />
+                              <div>
+                                <h3 className="font-semibold ">
+                                  {new Date(
+                                    viewTeacher.joiningDate,
+                                  ).toLocaleDateString()}
+                                </h3>
+                                <p className="text-gray-600 ">Joining Date</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="py-3 px-5">
+                        {/* about teacher */}
+                        <div className="bg-blue-50 p-2 rounded-[8px]">
+                          <h4 className="font-semibold">About Teacher</h4>
+                          <p className="mt-2">{viewTeacher.aboutTeacher}</p>
+                        </div>
+                        {/* Qualifications */}
+                        <div className="mt-3 p-2 rounded-[8px]">
+                          <h4 className="font-semibold">Qualifications</h4>
+                          <p className="mt-2">{viewTeacher.qualification}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
