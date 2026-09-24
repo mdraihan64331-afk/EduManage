@@ -75,6 +75,47 @@ const AddStudentSchema = new mongoose.Schema(
     previousSchool: {
       type: String,
     },
+    bloodGroup: {
+      type: String,
+      enum: ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
+    },
+    religion: {
+      type: String,
+      enum: ["Islam", "Christianity", "Handuism", "Buddhism", "Judaism"],
+      required: true,
+    },
+    nationality: {
+      type: String,
+      required: true,
+    },
+    classTeacher: {
+      type: String,
+      required: true,
+    },
+    fatherName:{
+      type: String,
+      required: true
+    },
+    fatherPhone:{
+      type: String,
+      required: true
+    },
+    fatherOccupation:{
+      type: String,
+      required: true
+    },
+    motherName:{
+      type: String,
+      required: true
+    },
+    motherPhone:{
+      type: String,
+      required: true
+    },
+    motherOccupation:{
+      type: String,
+      required: true
+    },
   },
   { timestamps: true },
 );

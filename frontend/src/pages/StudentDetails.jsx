@@ -248,9 +248,9 @@ function StudentDetails() {
                   <p>{student?.studentId}</p>
                   <p>{new Date(student?.dob).toLocaleDateString()}</p>
                   <p>{student?.gender}</p>
-                  <p>..</p>
-                  <p>..</p>
-                  <p>..</p>
+                  <p>{student?.bloodGroup}</p>
+                  <p>{student?.religion}</p>
+                  <p>{student?.nationality}</p>
                   <p>{student?.phone}</p>
                   <p>{student?.email}</p>
                   <p>{student?.address}</p>
@@ -267,14 +267,12 @@ function StudentDetails() {
                   <p>Class</p>
                   <p>Section</p>
                   <p>Roll Number</p>
-                  <p>Academic Year</p>
                   <p>Admission Date</p>
-                  <p>Current Session</p>
                   <p>Class Teacher</p>
+                  <p>Guardian Phone</p>
                   <p>Guardian</p>
                 </div>
                 <div className="mx-5">
-                  <div>:</div>
                   <div>:</div>
                   <div>:</div>
                   <div>:</div>
@@ -287,10 +285,9 @@ function StudentDetails() {
                   <p>{student?.className?.slice(6, 7)}</p>
                   <p>{student?.section}</p>
                   <p>{student?.rollNumber}</p>
-                  <p>..</p>
                   <p>{new Date(student?.admissionDate).toLocaleDateString()}</p>
-                  <p>..</p>
-                  <p>..</p>
+                  <p>{student?.classTeacher}</p>
+                  <p>{student?.guardianPhone}</p>
                   <p></p>
                   <p></p>
                   <p>{student?.guardianName}</p>
@@ -322,12 +319,12 @@ function StudentDetails() {
                   <div>:</div>
                 </div>
                 <div>
-                  <p>...</p>
-                  <p>...</p>
-                  <p>...</p>
-                  <p>...</p>
-                  <p>...</p>
-                  <p>...</p>
+                  <p>{student?.fatherName}</p>
+                  <p>{student?.fatherPhone}</p>
+                  <p>{student?.fatherOccupation}</p>
+                  <p>{student?.motherName}</p>
+                  <p>{student?.motherPhone}</p>
+                  <p>{student?.motherOccupation}</p>
                   <p>{student?.address}</p>
                 </div>
               </div>

@@ -55,6 +55,18 @@ function EditStudent() {
 
   const [admissionDate, setAdmissionDate] = useState("");
   const [previousSchool, setPreviousSchool] = useState("");
+  const [selectBloodGroup, setSelectBloodGroup] = useState("");
+  const bloodGroup = ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"];
+  const [selectReligion, setSelectReligion] = useState("");
+  const religion = ["Islam", "Christianity", "Handuism", "Buddhism", "Judaism"];
+  const [nationality, setNationality] = useState("");
+  const [classTeacher, setClassTeacher] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [fatherPhone, setFatherPhone] = useState("");
+  const [fatherOccupation, setFatherOccupation] = useState("");
+  const [motherName, setMotherName] = useState("");
+  const [motherPhone, setMotherPhone] = useState("");
+  const [motherOccupation, setMotherOccupation] = useState("");
 
   const [err, setErr] = useState("");
 
@@ -95,6 +107,16 @@ function EditStudent() {
         );
 
         setPreviousSchool(student.previousSchool || "");
+        setSelectBloodGroup(student.bloodGroup || "");
+        setSelectReligion(student.religion || "");
+        setNationality(student.nationality || "");
+        setFatherName(student.fatherName || "");
+        setFatherPhone(student.fatherPhone || "");
+        setFatherOccupation(student.fatherOccupation || "");
+        setMotherName(student.motherName || "");
+        setMotherPhone(student.motherPhone || "");
+        setMotherOccupation(student.motherOccupation || "");
+        setClassTeacher(student.classTeacher || "");
 
         setFrontendImage(student.image || "");
       } catch (error) {
@@ -170,6 +192,16 @@ function EditStudent() {
       formData.append("guardianPhone", guardianPhone);
       formData.append("address", address);
       formData.append("previousSchool", previousSchool);
+      formData.append("bloodGroup", selectBloodGroup);
+      formData.append("religion", selectReligion);
+      formData.append("nationality", nationality);
+      formData.append("classTeacher", classTeacher);
+      formData.append("fatherName", fatherName);
+      formData.append("fatherPhone", fatherPhone);
+      formData.append("fatherOccupation", fatherOccupation);
+      formData.append("motherName", motherName);
+      formData.append("motherPhone", motherPhone);
+      formData.append("motherOccupation", motherOccupation);
 
       if (backendImage) {
         formData.append("profile", backendImage);
@@ -227,6 +259,16 @@ function EditStudent() {
       );
 
       setPreviousSchool(student.previousSchool || "");
+      setSelectBloodGroup(student.bloodGroup || "");
+      setSelectReligion(student.religion || "");
+      setNationality(student.nationality || "");
+      setFatherName(student.fatherName || "");
+      setFatherPhone(student.fatherPhone || "");
+      setFatherOccupation(student.fatherOccupation || "");
+      setMotherName(student.motherName || "");
+      setMotherPhone(student.motherPhone || "");
+      setMotherOccupation(student.motherOccupation || "");
+      setClassTeacher(student.classTeacher || "");
 
       setFrontendImage(student.image || "");
       setBackendImage(null);
@@ -296,9 +338,8 @@ function EditStudent() {
 
                     <input
                       type="text"
-                      placeholder="STD-2026-001"
-                      value={studentId}
-                      onChange={(e) => setStudentId(e.target.value)}
+                      placeholder="Auto generated"
+                      readOnly
                       className="border border-gray-300 rounded-[8px] w-50 px-2 py-1 outline-none"
                     />
                   </div>
@@ -404,7 +445,6 @@ function EditStudent() {
                     </select>
                   </div>
                 </div>
-
                 <div className="flex gap-4 items-center mt-3">
                   {/* Section */}
 
@@ -460,11 +500,65 @@ function EditStudent() {
                     />
                   </div>
                 </div>
+                <div className="flex gap-4 items-center mt-3">
+                  {/* blood group */}
+
+                  <div className="flex flex-col gap-1">
+                    <label>
+                      Blood group <span className="text-red-500">*</span>
+                    </label>
+
+                    <select
+                      value={selectBloodGroup}
+                      onChange={(e) => setSelectBloodGroup(e.target.value)}
+                      className="border w-50 border-gray-300 rounded-lg px-2 py-1 outline-none"
+                    >
+                      <option value="">Select Blood group</option>
+
+                      {bloodGroup.map((e, index) => (
+                        <option key={index} value={e}>
+                          {e}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* religion */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="">
+                      Religion <span className="text-red-500">*</span>
+                    </label>
+
+                    <select
+                      value={selectReligion}
+                      onChange={(e) => setSelectReligion(e.target.value)}
+                      className=" border w-50 border-gray-300 rounded-lg px-2 py-1 outline-none"
+                    >
+                      <option value="">Select Religion</option>
+                      {religion.map((e, index) => (
+                        <option key={index}>{e}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {/* nationality */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="">
+                      Nationality <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter your Nationality"
+                      value={nationality}
+                      onChange={(e) => setNationality(e.target.value)}
+                      className="border border-gray-300 w-50 rounded-[8px] px-2 py-1 outline-none"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* VERTICAL LINE */}
 
-              <div className="w-[1px] h-70 bg-gray-300"></div>
+              <div className="w-[1px] h-85 bg-gray-300"></div>
 
               {/* STUDENT PHOTO */}
 
@@ -551,53 +645,131 @@ function EditStudent() {
                 Guardian Information
               </h4>
 
-              <div className="flex gap-4">
-                {/* Guardian Name */}
-
-                <div className="flex flex-col gap-1">
-                  <label className="font-semibold">
-                    Guardian Name <span className="text-red-500">*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    placeholder="Enter guardian name"
-                    value={guardianName}
-                    onChange={(e) => setGuardianName(e.target.value)}
-                    className="border border-gray-300 w-42 outline-none px-2 py-1 rounded-[8px]"
-                  />
+              <div className="flex flex-col gap-3 mt-3">
+                <div className="flex gap-4">
+                  {/* father's name */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Father's Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter father's name"
+                      value={fatherName}
+                      onChange={(e) => setFatherName(e.target.value)}
+                      className="border border-gray-300 w-42 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* father's Phone */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Father's Phone <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter father's phone"
+                      value={fatherPhone}
+                      onChange={(e) => setFatherPhone(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* father occupation */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Father's Occupation{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter father's occupation"
+                      value={fatherOccupation}
+                      onChange={(e) => setFatherOccupation(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
                 </div>
-
-                {/* Guardian Phone */}
-
-                <div className="flex flex-col gap-1">
-                  <label className="font-semibold">
-                    Guardian Phone <span className="text-red-500">*</span>
-                  </label>
-
-                  <input
-                    type="tel"
-                    placeholder="Enter guardian phone"
-                    value={guardianPhone}
-                    onChange={(e) => setGuardianPhone(e.target.value)}
-                    className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
-                  />
+                <div className="flex gap-4">
+                  {/* mother's name */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Mother's Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter mother's name"
+                      value={motherName}
+                      onChange={(e) => setMotherName(e.target.value)}
+                      className="border border-gray-300 w-42 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* mother's Phone */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Mother's Phone <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter guardian phone"
+                      value={motherPhone}
+                      onChange={(e) => setMotherPhone(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* mother's occupation */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Mother's Occupation{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter mother's occupation"
+                      value={motherOccupation}
+                      onChange={(e) => setMotherOccupation(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
                 </div>
-
-                {/* Address */}
-
-                <div className="flex flex-col gap-1">
-                  <label className="font-semibold">
-                    Guardian Address <span className="text-red-500">*</span>
-                  </label>
-
-                  <textarea
-                    placeholder="Enter student address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    rows="2"
-                    className="border border-gray-300 w-40 px-2 py-1 rounded-[8px] outline-none resize-none"
-                  />
+                <div className="flex gap-4">
+                  {/* guardian name */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Guardian Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter guardian name"
+                      value={guardianName}
+                      onChange={(e) => setGuardianName(e.target.value)}
+                      className="border border-gray-300 w-42 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* guardian Phone */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Guardian Phone <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter guardian phone"
+                      value={guardianPhone}
+                      onChange={(e) => setGuardianPhone(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
+                  {/* guardian address */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Guardian Address <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      placeholder="Enter student address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      rows="2"
+                      className="w-full border border-gray-300 w-40 px-2 py-1 rounded-[8px] outline-none resize-none"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -610,37 +782,49 @@ function EditStudent() {
                 Admissions Information
               </h4>
 
-              <div className="flex gap-2">
-                {/* Admission Date */}
-
-                <div className="flex flex-col gap-1">
-                  <label className="font-semibold">
-                    Admission Date <span className="text-red-500">*</span>
-                  </label>
-
-                  <input
-                    type="date"
-                    value={admissionDate}
-                    readOnly
-                    className="border border-gray-300 rounded-[8px] w-45 px-2 py-1 outline-none text-gray-500 bg-gray-100"
-                  />
+              <div>
+                <div className="flex gap-2">
+                  {/* admission date */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      admission date <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      value={admissionDate}
+                      readOnly
+                      className="border border-gray-300 rounded-[8px] w-45 px-2 py-1 outline-none text-gray-500"
+                    />
+                  </div>
+                  {/* previous school */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="">
+                      <span className="font-semibold">Previous Schoole</span>
+                      (Optional)
+                    </label>
+                    <textarea
+                      placeholder="Enter student school"
+                      value={previousSchool}
+                      onChange={(e) => setPreviousSchool(e.target.value)}
+                      rows="2"
+                      className="w-full w-45 border border-gray-300 px-2 py-1 rounded-[8px] outline-none resize-none"
+                    />
+                  </div>
                 </div>
-
-                {/* Previous School */}
-
-                <div className="flex flex-col gap-1">
-                  <label>
-                    <span className="font-semibold">Previous School</span>{" "}
-                    (Optional)
-                  </label>
-
-                  <textarea
-                    placeholder="Enter previous school"
-                    value={previousSchool}
-                    onChange={(e) => setPreviousSchool(e.target.value)}
-                    rows="2"
-                    className="border border-gray-300 w-45 px-2 py-1 rounded-[8px] outline-none resize-none"
-                  />
+                <div>
+                  {/* class teacher */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="font-semibold">
+                      Class Teacher <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter class teacher"
+                      value={classTeacher}
+                      onChange={(e) => setClassTeacher(e.target.value)}
+                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

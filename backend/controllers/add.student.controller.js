@@ -5,7 +5,6 @@ export const addStudent = async (req, res) => {
   try {
     const {
       fullName,
-      studentId,
       rollNumber,
       dob,
       gender,
@@ -18,6 +17,16 @@ export const addStudent = async (req, res) => {
       address,
       admissionDate,
       previousSchool,
+      bloodGroup,
+      religion,
+      nationality,
+      classTeacher,
+      fatherName,
+      fatherPhone,
+      fatherOccupation,
+      motherName,
+      motherPhone,
+      motherOccupation,
     } = req.body;
     let image;
     if (req.file) {
@@ -29,9 +38,16 @@ export const addStudent = async (req, res) => {
       return res.status(400).json({ message: "Student already exists!" });
     }
 
-    const existingRollSectionClass = await AddStudent.findOne({rollNumber, className, section})
-    if(existingRollSectionClass){
-      return res.status(400).json({message : "There is a student in this class, in this section, with this roll number!"})
+    const existingRollSectionClass = await AddStudent.findOne({
+      rollNumber,
+      className,
+      section,
+    });
+    if (existingRollSectionClass) {
+      return res.status(400).json({
+        message:
+          "There is a student in this class, in this section, with this roll number!",
+      });
     }
     if (phone.length < 11) {
       return res
@@ -43,6 +59,10 @@ export const addStudent = async (req, res) => {
         .status(400)
         .json({ message: "Your number must be as least 11 digits!" });
     }
+
+    const studentCount = await AddStudent.countDocuments();
+
+    const studentId = `STD-2026-${String(studentCount + 1).padStart(3, "0")}`;
     const user = await AddStudent.create({
       fullName,
       studentId,
@@ -59,6 +79,16 @@ export const addStudent = async (req, res) => {
       admissionDate,
       previousSchool,
       image,
+      bloodGroup,
+      religion,
+      nationality,
+      classTeacher,
+      fatherName,
+      fatherPhone,
+      fatherOccupation,
+      motherName,
+      motherPhone,
+      motherOccupation,
     });
     return res.status(201).json(user);
   } catch (error) {
@@ -121,6 +151,16 @@ export const editStudent = async (req, res) => {
         address: req.body.address,
         previousSchool: req.body.previousSchool,
         image: image,
+        bloodGroup: req.body.bloodGroup,
+        religion: req.body.religion,
+        nationality: req.body.nationality,
+        classTeacher: req.body.classTeacher,
+        fatherName: req.body.fatherName,
+        fatherPhone: req.body.fatherPhone,
+        fatherOccupation: req.body.fatherOccupation,
+        motherName: req.body.motherName,
+        motherPhone: req.body.motherPhone,
+        motherOccupation: req.body.motherOccupation,
       },
       {
         new: true,
