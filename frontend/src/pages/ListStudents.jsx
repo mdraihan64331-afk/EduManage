@@ -40,16 +40,14 @@ function ListStudents() {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
   const [deleteStudent, setDeleteStudent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [viewStudent, setViewStudent] = useState(null)
-  const [showStudentModal, setShowStudentModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);  
   const sectionName = ["A", "B", "C"];
   const dispatch = useDispatch();
   const { studentData = [] } = useSelector((state) => state.student);
   const displayStudents = isFiltered ? filteredStudents : studentData;
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => {     
     const fetchStudents = async () => {
       const result = await axios.get(`${serverURL}/api/student/all-students`, {
         withCredentials: true,
@@ -359,8 +357,7 @@ function ListStudents() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() => {
-                              setViewStudent(student);
-                              setShowStudentModal(true);
+                              navigate(`/students/student-details/${student._id}`)
                             }}
                           >
                             <FaRegEye size={18} />

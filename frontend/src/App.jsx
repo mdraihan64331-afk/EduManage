@@ -32,6 +32,7 @@ import AddTeachers from "./pages/AddTeachers.jsx";
 import TeachersList from "./pages/TeachersList.jsx";
 import useGetTeacher from "./hooks/useGetTeacher.jsx";
 import EditTeacher from "./pages/EditTeacher.jsx";
+import StudentDetails from "./pages/StudentDetails.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -61,6 +62,7 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/students/add-student" element={<AddStudent />} />
         <Route path="/students/edit-student/:id" element={<EditStudent />} />
+        <Route path="/students/student-details/:id" element={<StudentDetails />} />
         <Route path="/students/list-student" element={<ListStudents />} />
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
