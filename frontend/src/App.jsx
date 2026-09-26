@@ -32,7 +32,6 @@ import TeachersList from "./pages/TeachersList.jsx";
 import useGetTeacher from "./hooks/useGetTeacher.jsx";
 import EditTeacher from "./pages/EditTeacher.jsx";
 import StudentDetails from "./pages/StudentDetails.jsx";
-import AddClass from "./pages/AddClass.jsx";
 import ClassList from "./pages/ClassList.jsx";
 
 export const serverURL = "http://localhost:8000";
@@ -68,7 +67,6 @@ function App() {
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
-        <Route path="/classes/add-class" element={<AddClass />} />
         <Route path="/classes/class-list" element={<ClassList />} />
         <Route path="/attendances" element={<Attendance />} />
         <Route path="/results" element={<Result />} />

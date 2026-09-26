@@ -66,11 +66,6 @@ export const adminCatagories = [
     path: "/classes",
     subMenu: [
       {
-        icon: <SiGoogleclassroom />,
-        subMenuName: "Add Class",
-        path: "/classes/add-class",
-      },
-      {
         icon: <GiGraduateCap />,
         subMenuName: "Class List",
         path: "/classes/class-list",
