@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { SiGoogleclassroom } from "react-icons/si";
@@ -6,9 +6,71 @@ import { MdEventAvailable } from "react-icons/md";
 import { GiBlackBook, GiGraduateCap } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { serverURL } from "../App";
+import axios from "axios";
 
 function ClassList() {
   const { teacherData } = useSelector((state) => state.teacher);
+  const { studentData } = useSelector((state) => state.student);
+  const [classes, setClasses] = useState([]);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const result = await axios.get(`${serverURL}/api/classes/all-classes`, {
+          withCredentials: true,
+        });
+
+        setClasses(result.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchClasses();
+  }, []);
+
+  const classNames = [
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+  ];
+
+  const classList = classNames.map((className) => {
+    const students = studentData.filter(
+      (student) => student.className === className,
+    );
+
+    const sections = ["A", "B", "C"].map((section) => {
+      const count = students.filter(
+        (student) => student.section === section,
+      ).length;
+
+      return {
+        section,
+        students: count,
+      };
+    });
+
+    const classTeacher = teacherData.find(
+      (teacher) => teacher.classTeacher === className,
+    );
+
+    return {
+      className,
+      totalStudents: students.length,
+      sections,
+      classTeacher,
+    };
+  });
+
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -106,55 +168,67 @@ function ClassList() {
                 </tr>
               </thead>
               <tbody>
-                {teacherData.map((e) => (
-                  <>
-                    <tr
-                      key={e._id}
-                      className="bg-white border border-gray-200 rounded-t-[8px] font-semibold p-2"
-                    >
-                      <td className="py-2 px-3">  
-                        <h6>{e.classTeacher}</h6>
-                      </td>
-                      <td className="py-2 px-3">
-                        <div className="flex gap-2 items-center">
-                          <div className="bg-blue-50 py-2 px-3 text-slate-600 border border-gray-200 rounded-[8px]">A</div>
-                          <div className="bg-blue-50 py-2 px-3 text-slate-600 border border-gray-200 rounded-[8px]">B</div>
-                          <div className="bg-blue-50 py-2 px-3 text-slate-600 border border-gray-200 rounded-[8px]">C</div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-3">
-                        <h6>78</h6>
-                      </td>
-                      <td className="py-2 px-3">
-                        <div>{e.assignedClass}</div>
-                      </td>
-                      <td className="py-2 px-3">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10">
-                            {e.image ? (
-                              <img
-                                src={e.image}
-                                alt=""
-                                className="h-full w-full rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="h-10 w-10 rounded-full flex items-center justify-center bg-purple-700 text-white">
-                                <h1>{e.fullName.slice(0, 1).toUpperCase()}</h1>
-                              </div>
-                            )}
+                {classList.map((e) => (
+                  <tr
+                    key={e.className}
+                    className="bg-white border border-gray-200 font-semibold"
+                  >
+                    {/* Class */}
+                    <td className="py-2 px-3">{e.className}</td>
+
+                    {/* Sections */}
+                    <td className="py-2 px-3">
+                      <div className="flex gap-2 items-center">
+                        {e.sections.map((section) => (
+                          <div
+                            key={section.section}
+                            className="bg-blue-50 py-2 px-3 text-slate-600 border border-gray-200 rounded-[8px]"
+                          >
+                            {section.section}
                           </div>
-                          <div>
-                            <h1 className="text-slate-700 capitalize">
-                              {e.fullName}
-                            </h1>
-                            <p className="text-gray-600 text-xs capitalize">
-                              ({e.subject})
-                            </p>
-                          </div>
+                        ))}
+                      </div>
+                    </td>
+
+                    {/* Total Students */}
+                    <td className="py-2 px-3">{e.totalStudents}</td>
+
+                    {/* Assigned Class */}
+                    <td className="py-2 px-3">
+                      {e.classTeacher?.assignedClass}
+                    </td>
+
+                    {/* Class Teacher */}
+                    <td className="py-2 px-3">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10">
+                          {e.classTeacher?.image ? (
+                            <img
+                              src={e.classTeacher.image}
+                              alt=""
+                              className="h-full w-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full flex items-center justify-center bg-purple-700 text-white">
+                              {e.classTeacher?.fullName
+                                ?.slice(0, 1)
+                                .toUpperCase()}
+                            </div>
+                          )}
                         </div>
-                      </td>
-                    </tr>
-                  </>
+
+                        <div>
+                          <h1 className="text-slate-700 capitalize">
+                            {e.classTeacher?.fullName}
+                          </h1>
+
+                          <p className="text-gray-600 text-xs capitalize">
+                            ({e.classTeacher?.subject})
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>

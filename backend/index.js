@@ -10,6 +10,7 @@ import { authRouter } from "./routes/auth.route.js";
 import { userRouter } from "./routes/user.route.js";
 import { studentRoute } from "./routes/addStudent.route.js";
 import { teacherRouter } from "./routes/teacher.route.js";
+import { classesRouter } from "./routes/class.route.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -28,6 +29,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/student", studentRoute);
 app.use("/api/teacher", teacherRouter);
+app.use("/api/classes", classesRouter)
 
 app.listen(port, () => {
   connectDB();

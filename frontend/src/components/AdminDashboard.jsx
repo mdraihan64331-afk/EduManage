@@ -36,24 +36,6 @@ function AdminDashboard() {
     );
   }).length;
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const result = await axios.get(
-          `${serverURL}/api/student/all-students`,
-          {
-            withCredentials: true,
-          },
-        );
-
-        dispatch(setStudentData(result.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchStudents();
-  }, [dispatch]);
   return (
     <div className="flex bg-blue-50">
       <Menu />

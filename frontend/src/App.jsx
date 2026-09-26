@@ -33,11 +33,13 @@ import useGetTeacher from "./hooks/useGetTeacher.jsx";
 import EditTeacher from "./pages/EditTeacher.jsx";
 import StudentDetails from "./pages/StudentDetails.jsx";
 import ClassList from "./pages/ClassList.jsx";
+import useGetStudent from "./hooks/useGetStudent.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
   useGetCurrentUser();
   useGetTeacher()
+  useGetStudent()
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
   return (

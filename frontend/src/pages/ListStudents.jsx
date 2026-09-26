@@ -47,17 +47,7 @@ function ListStudents() {
   const displayStudents = isFiltered ? filteredStudents : studentData;
   const navigate = useNavigate();
 
-  useEffect(() => {     
-    const fetchStudents = async () => {
-      const result = await axios.get(`${serverURL}/api/student/all-students`, {
-        withCredentials: true,
-      });
 
-      dispatch(setStudentData(result.data));
-    };
-
-    fetchStudents();
-  }, []);
 
   const today = new Date().toISOString().split("T")[0];
 
