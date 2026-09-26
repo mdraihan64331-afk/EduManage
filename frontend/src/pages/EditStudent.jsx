@@ -34,6 +34,7 @@ function EditStudent() {
     "Class 7",
     "Class 8",
     "Class 9",
+    "Class 10"
   ];
 
   const sectionName = ["A", "B", "C"];

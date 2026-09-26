@@ -324,7 +324,7 @@ function ListStudents() {
 
                       <td className="py-3 px-2">
                         <div>
-                          <h1 className="font-semibold">{student.fullName}</h1>
+                          <h1 className="font-semibold capitalize">{student.fullName}</h1>
 
                           <p className="text-xs text-gray-500">
                             {student.email}
@@ -435,7 +435,7 @@ function ListStudents() {
 
                       <div className="text-sm">
                         <div>
-                          <h3 className="font-bold text-lg">
+                          <h3 className="font-bold text-lg capitalize">
                             {deleteStudent.fullName}
                           </h3>
                         </div>

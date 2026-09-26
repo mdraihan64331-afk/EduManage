@@ -35,6 +35,7 @@ const AddStudentSchema = new mongoose.Schema(
         "Class 7",
         "Class 8",
         "Class 9",
+        "Class 10"
       ],
       required: true,
     },

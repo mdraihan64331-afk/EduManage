@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Classes from "./components/Classes";
 import Attendance from "./components/Attendance";
 import Result from "./components/Result";
 import Performance from "./components/Performance";
@@ -33,6 +32,8 @@ import TeachersList from "./pages/TeachersList.jsx";
 import useGetTeacher from "./hooks/useGetTeacher.jsx";
 import EditTeacher from "./pages/EditTeacher.jsx";
 import StudentDetails from "./pages/StudentDetails.jsx";
+import AddClass from "./pages/AddClass.jsx";
+import ClassList from "./pages/ClassList.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -67,7 +68,8 @@ function App() {
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
-        <Route path="/classes" element={<Classes />} />
+        <Route path="/classes/add-class" element={<AddClass />} />
+        <Route path="/classes/class-list" element={<ClassList />} />
         <Route path="/attendances" element={<Attendance />} />
         <Route path="/results" element={<Result />} />
         <Route path="/performances" element={<Performance />} />

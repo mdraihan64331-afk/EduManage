@@ -31,6 +31,7 @@ function AddStudent() {
     "Class 7",
     "Class 8",
     "Class 9",
+    "Class 10"
   ];
   const [section, setSection] = useState("");
   const sectionName = ["A", "B", "C"];
@@ -620,7 +621,7 @@ function AddStudent() {
                       Guardian Address <span className="text-red-500">*</span>
                     </label>
                     <textarea
-                      placeholder="Enter student address"
+                      placeholder="Enter guardian address"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       rows="2"

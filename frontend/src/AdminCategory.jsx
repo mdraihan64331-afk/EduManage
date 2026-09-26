@@ -14,6 +14,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
+import { GiGraduateCap } from "react-icons/gi";
 
 export const adminCatagories = [
   {
@@ -58,7 +59,24 @@ export const adminCatagories = [
       },
     ],
   },
-  { id: 4, icon: <SiGoogleclassroom />, menu: "Classes", path: "/classes" },
+  {
+    id: 4,
+    icon: <SiGoogleclassroom />,
+    menu: "Classes",
+    path: "/classes",
+    subMenu: [
+      {
+        icon: <SiGoogleclassroom />,
+        subMenuName: "Add Class",
+        path: "/classes/add-class",
+      },
+      {
+        icon: <GiGraduateCap />,
+        subMenuName: "Class List",
+        path: "/classes/class-list",
+      },
+    ],
+  },
   {
     id: 5,
     icon: <MdEventAvailable />,

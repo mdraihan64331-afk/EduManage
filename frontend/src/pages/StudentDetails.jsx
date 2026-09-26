@@ -244,16 +244,16 @@ function StudentDetails() {
                   <div>:</div>
                 </div>
                 <div>
-                  <p>{student?.fullName}</p>
+                  <p className="capitalize">{student?.fullName}</p>
                   <p>{student?.studentId}</p>
                   <p>{new Date(student?.dob).toLocaleDateString()}</p>
                   <p>{student?.gender}</p>
                   <p>{student?.bloodGroup}</p>
                   <p>{student?.religion}</p>
-                  <p>{student?.nationality}</p>
+                  <p className="capitalize">{student?.nationality}</p>
                   <p>{student?.phone}</p>
                   <p>{student?.email}</p>
-                  <p>{student?.address}</p>
+                  <p className="capitalize">{student?.address}</p>
                 </div>
               </div>
             </div>
@@ -286,11 +286,9 @@ function StudentDetails() {
                   <p>{student?.section}</p>
                   <p>{student?.rollNumber}</p>
                   <p>{new Date(student?.admissionDate).toLocaleDateString()}</p>
-                  <p>{student?.classTeacher}</p>
+                  <p className="capitalize">{student?.classTeacher}</p>
                   <p>{student?.guardianPhone}</p>
-                  <p></p>
-                  <p></p>
-                  <p>{student?.guardianName}</p>
+                  <p className="capitalize">{student?.guardianName}</p>
                 </div>
               </div>
             </div>
@@ -319,13 +317,13 @@ function StudentDetails() {
                   <div>:</div>
                 </div>
                 <div>
-                  <p>{student?.fatherName}</p>
+                  <p className="capitalize">{student?.fatherName}</p>
                   <p>{student?.fatherPhone}</p>
-                  <p>{student?.fatherOccupation}</p>
-                  <p>{student?.motherName}</p>
+                  <p className="capitalize">{student?.fatherOccupation}</p>
+                  <p className="capitalize">{student?.motherName}</p>
                   <p>{student?.motherPhone}</p>
-                  <p>{student?.motherOccupation}</p>
-                  <p>{student?.address}</p>
+                  <p className="capitalize">{student?.motherOccupation}</p>
+                  <p className="capitalize">{student?.address}</p>
                 </div>
               </div>
             </div>
