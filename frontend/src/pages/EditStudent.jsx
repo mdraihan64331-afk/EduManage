@@ -15,6 +15,7 @@ import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
 import { ClipLoader } from "react-spinners";
+import { useSelector } from "react-redux";
 
 function EditStudent() {
   const { id } = useParams();
@@ -34,7 +35,7 @@ function EditStudent() {
     "Class 7",
     "Class 8",
     "Class 9",
-    "Class 10"
+    "Class 10",
   ];
 
   const sectionName = ["A", "B", "C"];
@@ -68,6 +69,7 @@ function EditStudent() {
   const [motherName, setMotherName] = useState("");
   const [motherPhone, setMotherPhone] = useState("");
   const [motherOccupation, setMotherOccupation] = useState("");
+  const { teacherData } = useSelector((state) => state.teacher);
 
   const [err, setErr] = useState("");
 
@@ -818,13 +820,18 @@ function EditStudent() {
                     <label htmlFor="" className="font-semibold">
                       Class Teacher <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Enter class teacher"
+                    <select
                       value={classTeacher}
                       onChange={(e) => setClassTeacher(e.target.value)}
-                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
-                    />
+                      className="w-50 border border-gray-300  rounded-lg px-2 py-1 outline-none"
+                    >
+                      <option value="">Select Teacher</option>
+                      {teacherData?.map((teacher) => (
+                        <option key={teacher._id} value={teacher._id}>
+                          {teacher.fullName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>

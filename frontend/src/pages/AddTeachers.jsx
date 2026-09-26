@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { GoAlertFill } from "react-icons/go";
 
 function AddTeachers() {
-  const [fullName, setFullName] = useState();
-  const [teacherId, setTeacherId] = useState();
-  const [subject, setSubject] = useState();
+  const [fullName, setFullName] = useState("");
+  const [teacherId, setTeacherId] = useState("");
+  const [subject, setSubject] = useState("");
   const selectSubject = [
     "Bangle",
     "English",
@@ -29,10 +29,10 @@ function AddTeachers() {
     "ICT",
     "Religion and Moral Education",
   ];
-  const [assignedClass, setAssignedClass] = useState();
-  const [phone, setPhone] = useState();
-  const [email, setEmail] = useState();
-  const [teacherRole, setTeacherRole] = useState();
+  const [assignedClass, setAssignedClass] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [teacherRole, setTeacherRole] = useState("");
   const selectTeacherRole = [
     "Head Teacher",
     "Assistant Teacher",
@@ -40,11 +40,24 @@ function AddTeachers() {
     "Junior Teacher",
     "Accounting Teacher",
   ];
-  const [gender, setGender] = useState();
-  const [aboutTeacher, setAboutTeacher] = useState();
-  const [qualification, setQualification] = useState();
-  const [backendImage, setBackendImage] = useState();
-  const [frontendImage, setFrontendImage] = useState();
+  const [gender, setGender] = useState("");
+  const [aboutTeacher, setAboutTeacher] = useState("");
+  const [qualification, setQualification] = useState("");
+  const [backendImage, setBackendImage] = useState(null);
+  const [frontendImage, setFrontendImage] = useState("");
+  const [classTeacher, setClassTeacher] = useState("");
+  const selectClassTeacher = [
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+  ];
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -69,6 +82,7 @@ function AddTeachers() {
       formData.append("email", email);
       formData.append("aboutTeacher", aboutTeacher);
       formData.append("qualification", qualification);
+      formData.append("classTeacher", classTeacher);
       if (backendImage) {
         formData.append("profile", backendImage);
       }
@@ -107,6 +121,7 @@ function AddTeachers() {
     setTeacherRole("");
     setAboutTeacher("");
     setQualification("");
+    setClassTeacher("");
   };
 
   const handleImage = async (e) => {
@@ -338,8 +353,27 @@ function AddTeachers() {
                     />
                   </div>
                 </div>
+                <div className="flex gap-4 items-center mt-3">
+                  {/* class Teacher */}
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="">
+                      Class Teacher <span className="text-red-500">*</span>
+                    </label>
+
+                    <select
+                      value={classTeacher}
+                      onChange={(e) => setClassTeacher(e.target.value)}
+                      className=" border w-50 border-gray-300 rounded-lg px-2 py-1 outline-none"
+                    >
+                      <option value="">Select Class Teacher</option>
+                      {selectClassTeacher.map((e, index) => (
+                        <option key={index}>{e}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className="w-[1px] h-70 bg-gray-300"></div>
+              <div className="w-[1px] h-85 bg-gray-300"></div>
               <div className="p-4">
                 <h4 className="flex items-center gap-3 font-semibold">
                   <RxPeople /> Teacher Photo

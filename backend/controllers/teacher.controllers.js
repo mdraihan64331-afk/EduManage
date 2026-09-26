@@ -15,6 +15,7 @@ export const addTeacher = async (req, res) => {
       gender,
       aboutTeacher,
       qualification,
+      classTeacher
     } = req.body;
 
     let image;
@@ -45,6 +46,7 @@ export const addTeacher = async (req, res) => {
       gender,
       aboutTeacher,
       qualification,
+      classTeacher,
       image,
     });
 
@@ -100,6 +102,7 @@ export const editTeacher = async (req, res) => {
         gender: req.body.gender,
         aboutTeacher: req.body.aboutTeacher,
         qualification: req.body.qualification,
+        classTeacher: req.body.classTeacher,
         image,
       },
       { new: true },
