@@ -90,7 +90,8 @@ const AddStudentSchema = new mongoose.Schema(
       required: true,
     },
     classTeacher: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher",
       required: true,
     },
     fatherName:{

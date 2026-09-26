@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
 import logoimage from "../assets/login-logo.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { RxPeople } from "react-icons/rx";
 import { IoPerson } from "react-icons/io5";
@@ -17,6 +17,7 @@ import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
 import { ClipLoader } from "react-spinners";
+import { useEffect } from "react";
 
 function AddStudent() {
   const [gender, setGender] = useState("");
@@ -31,7 +32,7 @@ function AddStudent() {
     "Class 7",
     "Class 8",
     "Class 9",
-    "Class 10"
+    "Class 10",
   ];
   const [section, setSection] = useState("");
   const sectionName = ["A", "B", "C"];
@@ -63,6 +64,7 @@ function AddStudent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const { teacherData } = useSelector((state) => state.teacher);
 
   const [admissionDate, setAdmissionDate] = useState(
     new Date().toISOString().split("T")[0],
@@ -672,13 +674,18 @@ function AddStudent() {
                     <label htmlFor="" className="font-semibold">
                       Class Teacher <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Enter class teacher"
+                    <select
                       value={classTeacher}
                       onChange={(e) => setClassTeacher(e.target.value)}
-                      className="border border-gray-300 w-43 outline-none px-2 py-1 rounded-[8px]"
-                    />
+                      className="w-50 border border-gray-300  rounded-lg px-2 py-1 outline-none"
+                    >
+                      <option value="">Select Teacher</option>
+                      {teacherData?.map((teacher) => (
+                        <option key={teacher._id} value={teacher._id}>
+                          {teacher.fullName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
