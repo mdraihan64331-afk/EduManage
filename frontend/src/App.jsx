@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Attendance from "./components/Attendance";
 import Result from "./components/Result";
 import Performance from "./components/Performance";
 import Homework from "./components/Homework";
@@ -34,6 +33,8 @@ import EditTeacher from "./pages/EditTeacher.jsx";
 import StudentDetails from "./pages/StudentDetails.jsx";
 import ClassList from "./pages/ClassList.jsx";
 import useGetStudent from "./hooks/useGetStudent.jsx";
+import MarkAttendance from "./pages/MarkAttendance.jsx";
+import AttendanceReport from "./pages/AttendanceReport.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -70,7 +71,8 @@ function App() {
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
         <Route path="/classes/class-list" element={<ClassList />} />
-        <Route path="/attendances" element={<Attendance />} />
+        <Route path="/attendances/mark-attendance" element={<MarkAttendance />} />
+        <Route path="/attendances/attendance-report" element={<AttendanceReport />} />
         <Route path="/results" element={<Result />} />
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />

@@ -705,7 +705,7 @@ function AddStudent() {
 
             {/* add button */}
             <button
-              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
+              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
               onClick={handleAddStudent}
               disabled={loading}
             >

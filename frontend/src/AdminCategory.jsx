@@ -77,6 +77,18 @@ export const adminCatagories = [
     icon: <MdEventAvailable />,
     menu: "Attendance",
     path: "/attendances",
+    subMenu: [
+      {
+        icon: <MdEventAvailable />,
+        subMenuName: "Mark Attendance",
+        path: "/attendances/mark-attendance"
+      },
+      {
+        icon: <MdEventAvailable />,
+        subMenuName: "Attendance Report",
+        path: "/attendances/attendance-report"
+      }
+    ]
   },
   { id: 6, icon: <FaChartBar />, menu: "Results", path: "/results" },
   {
