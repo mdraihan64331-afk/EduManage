@@ -493,14 +493,14 @@ function TeachersList() {
                       <div className="p-3 flex rounded-[8px] justify-between bg-[linear-gradient(to_right,#067080,#0b9788,#058294,#30a2af)]">
                         <div className="flex gap-4">
                           <div className="h-20 w-20 rounded-full">
-                            {viewTeacher ? (
+                            {viewTeacher?.image ? (
                               <img
                                 src={viewTeacher.image}
                                 alt={viewTeacher.fullName}
                                 className="h-full w-full rounded-full object-cover border border-white"
                               />
                             ) : (
-                              <div className="w-full h-full rounded-[8px] bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
+                              <div className="w-full h-full rounded-full border border-white bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
                                 <h1>
                                   {viewTeacher.fullName
                                     ?.slice(0, 1)

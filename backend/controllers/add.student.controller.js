@@ -162,9 +162,7 @@ export const editStudent = async (req, res) => {
         motherPhone: req.body.motherPhone,
         motherOccupation: req.body.motherOccupation,
       },
-      {
-        new: true,
-      },
+      { returnDocument: "after" },
     );
 
     return res.status(200).json(updatedStudent);

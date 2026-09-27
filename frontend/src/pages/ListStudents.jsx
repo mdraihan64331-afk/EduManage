@@ -34,6 +34,7 @@ function ListStudents() {
     "Class 7",
     "Class 8",
     "Class 9",
+    "Class 10"
   ];
   const [section, setSection] = useState("");
   const [input, setInput] = useState("");
@@ -81,7 +82,7 @@ function ListStudents() {
   //   );
 
   //   setFilteredStudents(newList);
-  // }, [studentData, input]);
+  // }, [studentData, input]);  
 
   // reset button
   const handleReset = () => {

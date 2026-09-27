@@ -15,7 +15,8 @@ import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
 import { ClipLoader } from "react-spinners";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpdateStudent } from "../redux/studentSlice";
 
 function EditStudent() {
   const { id } = useParams();
@@ -70,6 +71,7 @@ function EditStudent() {
   const [motherPhone, setMotherPhone] = useState("");
   const [motherOccupation, setMotherOccupation] = useState("");
   const { teacherData } = useSelector((state) => state.teacher);
+  const dispatch = useDispatch()
 
   const [err, setErr] = useState("");
 
@@ -218,7 +220,7 @@ function EditStudent() {
         },
       );
 
-      console.log("UPDATED STUDENT:", result.data);
+      dispatch(setUpdateStudent(result.data))
       setLoading(false);
       navigate("/students/list-student");
     } catch (error) {

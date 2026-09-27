@@ -17,11 +17,13 @@ import { GiGraduateCap } from "react-icons/gi";
 import { BsFillPeopleFill } from "react-icons/bs";
 import AcademicOverview from "../components/AcademicOverview ";
 import { IoStatsChartSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 function StudentDetails() {
   const { id } = useParams();
 
   const [student, setStudent] = useState(null);
+  const { teacherData } = useSelector((state) => state.teacher);
   const navigate = useNavigate();
   const performance = [
     { subject: "Mathematics", marks: 95, grade: "A+" },
@@ -56,6 +58,10 @@ function StudentDetails() {
     };
     fatchStudent();
   }, [id]);
+
+  const classTeacherName = teacherData.find(
+    (teacher) => teacher._id === student?.classTeacher,
+  )?.fullName;
 
   return (
     <div className="flex bg-blue-50">
@@ -286,7 +292,9 @@ function StudentDetails() {
                   <p>{student?.section}</p>
                   <p>{student?.rollNumber}</p>
                   <p>{new Date(student?.admissionDate).toLocaleDateString()}</p>
-                  <p className="capitalize">{student?.classTeacher}</p>
+                  <p className="capitalize">
+                    {classTeacherName || "Not Assigned"}
+                  </p>
                   <p>{student?.guardianPhone}</p>
                   <p className="capitalize">{student?.guardianName}</p>
                 </div>
@@ -333,33 +341,53 @@ function StudentDetails() {
           <div className="mt-3 flex justify-between">
             {/* class performance */}
             <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h2 className="flex items-center gap-3 text-xl"> <IoStatsChartSharp /> Class Performance</h2>
-              <tbody className="divide-y divide-slate-100">
-                {performance.map((item) => (
-                  <tr
-                    key={item.subject}
-                    className="transition hover:bg-slate-50"
-                  >
-                    <td className="px-4 py-3 font-medium text-slate-700">
-                      {item.subject}
-                    </td>
+              <h2 className="flex items-center gap-3 text-xl mb-4">
+                <IoStatsChartSharp />
+                Class Performance
+              </h2>
 
-                    <td className="px-4 py-3 font-semibold text-slate-800">
-                      {item.marks}
-                    </td>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      <th className="px-4 py-3 font-semibold text-slate-500">
+                        Subject
+                      </th>
 
-                    <td className="px-4 py-3">
-                      <span
-                        className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
-                          item.grade === "A+"
-                        }`}
+                      <th className="px-4 py-3 font-semibold text-slate-500">
+                        Marks
+                      </th>
+
+                      <th className="px-4 py-3 font-semibold text-slate-500">
+                        Grade
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody className="divide-y divide-slate-100">
+                    {performance.map((item) => (
+                      <tr
+                        key={item.subject}
+                        className="transition hover:bg-slate-50"
                       >
-                        {item.grade}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                        <td className="px-4 py-3 font-medium text-slate-700">
+                          {item.subject}
+                        </td>
+
+                        <td className="px-4 py-3 font-semibold text-slate-800">
+                          {item.marks}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          <span className="rounded-md bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
+                            {item.grade}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* attendance summary */}

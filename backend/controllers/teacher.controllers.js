@@ -105,7 +105,7 @@ export const editTeacher = async (req, res) => {
         classTeacher: req.body.classTeacher,
         image,
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     return res.status(200).json(updatedTeacher);

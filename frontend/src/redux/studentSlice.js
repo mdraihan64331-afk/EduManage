@@ -9,8 +9,17 @@ const studentSlice = createSlice({
     setStudentData: (state, action) => {
       state.studentData = action.payload;
     },
+    setUpdateStudent: (state, action) => {
+      const index = state.studentData.findIndex(
+        (student) => student._id === action.payload._id,
+      );
+
+      if (index !== -1) {
+        state.studentData[index] = action.payload;
+      }
+    },
   },
 });
 
-export const { setStudentData } = studentSlice.actions;
+export const { setStudentData, setUpdateStudent } = studentSlice.actions;
 export default studentSlice.reducer;

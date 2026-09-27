@@ -136,13 +136,13 @@ function AddStudent() {
       formData.append("bloodGroup", selectBloodGroup);
       formData.append("religion", selectReligion);
       formData.append("nationality", nationality);
-      formData.append("classTeacher", classTeacher);
       formData.append("fatherName", fatherName);
       formData.append("fatherPhone", fatherPhone);
       formData.append("fatherOccupation", fatherOccupation);
       formData.append("motherName", motherName);
       formData.append("motherPhone", motherPhone);
       formData.append("motherOccupation", motherOccupation);
+      formData.append("classTeacher", classTeacher);
 
       if (backendImage) {
         formData.append("profile", backendImage);
