@@ -46,8 +46,15 @@ export const addAttendance = async (req, res) => {
 
 export const getAllAttencande = async (req, res) => {
   try {
-    const attendance = await Attendance.find();
+    const attendance = await Attendance.find().populate("student");
 
-    return res.status(200).json(attendance);
-  } catch (error) {}
+    res.status(200).json(attendance);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to get attendance",
+      error: error.message,
+    });
+  }
 };

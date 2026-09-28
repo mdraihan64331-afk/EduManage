@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/AdminHeader";
 import Menu from "./Menu";
 import { IoCalendarNumber } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
-import { GoDotFill } from "react-icons/go";
+import { GoAlertFill, GoDotFill } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegSave } from "react-icons/fa";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -12,6 +12,7 @@ import { serverURL } from "../App";
 import { setStudentData } from "../redux/studentSlice";
 import { useNavigate } from "react-router-dom";
 import { setAttendanceData } from "../redux/attendanceSlice";
+import { RxCross2 } from "react-icons/rx";
 
 function MarkAttendance() {
   const [selectClass, setSelectClass] = useState("");
@@ -31,12 +32,29 @@ function MarkAttendance() {
   const sectionName = ["A", "B", "C"];
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const statusName = ["Present", "Absent", "Late"];
-  const [status, setStatus] = useState("");
-  const [remark, setRemark] = useState("");
+  const [err, setErr] = useState("");
   const [markedAttendance, setMarkedAttendance] = useState({});
   const { studentData } = useSelector((state) => state.student);
+  const { attendanceData } = useSelector((state) => state.attendance);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!attendanceData || attendanceData.length === 0) return;
+
+    const savedAttendance = {};
+
+    attendanceData.forEach((attendance) => {
+      if (!attendance.student) return;
+
+      savedAttendance[attendance.student._id] = {
+        status: attendance.status,
+        remark: attendance.remark || "",
+      };
+    });
+
+    setMarkedAttendance(savedAttendance);
+  }, [attendanceData]);
 
   const handleSave = async () => {
     try {
@@ -57,19 +75,17 @@ function MarkAttendance() {
         },
       );
 
-      dispatch(setAttendanceData(result.data.attendance))
-      navigate("/attendances/attendance-report")
+      setErr("");
+      dispatch(setAttendanceData(result.data.attendance));
+      navigate("/attendances/attendance-report");
     } catch (error) {
       console.log(error.response?.data || error.message);
+      setErr(error.response?.data?.message);
     }
   };
 
   const handleLoadStudents = async () => {
     try {
-      if (!selectClass || !section) {
-        return alert("Please select class and section");
-      }
-
       const result = await axios.get(`${serverURL}/api/student/all-students`, {
         withCredentials: true,
       });
@@ -87,6 +103,26 @@ function MarkAttendance() {
     } catch (error) {
       console.log(error.response?.data || error.message);
     }
+  };
+
+  const handleLoadReset = async () => {
+    try {
+      setSelectClass("");
+      setSection("");
+      setMarkedAttendance({});
+
+      const result = await axios.get(`${serverURL}/api/student/all-students`, {
+        withCredentials: true,
+      });
+
+      dispatch(setStudentData(result.data));
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  };
+
+  const handleReset = () => {
+    setMarkedAttendance({});
   };
 
   return (
@@ -157,15 +193,27 @@ function MarkAttendance() {
 
             {/* load students */}
             <div>
-              <button
-                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                onClick={handleLoadStudents}
-              >
-                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  <TfiReload /> Load Students
-                </span>
-                <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                  onClick={handleLoadStudents}
+                >
+                  <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                    <TfiReload /> Load Students
+                  </span>
+                  <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+                </button>
+                {/* reset button */}
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                  onClick={handleLoadReset}
+                >
+                  <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                    <RiResetLeftFill /> Reset
+                  </span>
+                  <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+                </button>
+              </div>
               <p className="text-gray-500 text-[13px]">
                 Click to load students of selected
               </p>
@@ -208,7 +256,7 @@ function MarkAttendance() {
               {/* table body */}
               {studentData.map((student, index) => (
                 <tbody key={student._id}>
-                  <tr bg-white border border-gray-200 font-semibold>
+                  <tr className="bg-white border border-gray-200 font-semibold">
                     <td className="py-3 px-2">{index + 1}</td>
                     <td className="py-3 px-2 flex items-center gap-4">
                       <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">
@@ -223,13 +271,14 @@ function MarkAttendance() {
                           </div>
                         )}
                       </div>
-                      <h1>{student.fullName}</h1>
+                      <h1 className="capitalize">{student.fullName}</h1>
                     </td>
                     <td className="py-3 px-2">{student.className}</td>
                     <td className="py-3 px-2">{student.rollNumber}</td>
                     <td className="py-3 px-2">
                       <select
                         value={markedAttendance[student._id]?.status || ""}
+                        className={`w-30 border border-gray-300  rounded-lg px-3 py-1 outline-none ${markedAttendance[student._id]?.status === "Present" ? "bg-green-100 text-green-700 font-semibold " : markedAttendance[student._id]?.status === "Absent" ? "bg-red-100 text-red-600 font-semibold" : markedAttendance[student._id]?.status === "Late" ? "bg-amber-100 text-amber-600 font-semibold border border-amber-200" : "bg-white"}`}
                         onChange={(e) =>
                           setMarkedAttendance((prev) => ({
                             ...prev,
@@ -253,6 +302,7 @@ function MarkAttendance() {
                       <input
                         type="text"
                         placeholder="Write remark..."
+                        className="w-30 border border-gray-300  rounded-lg px-2 py-1 outline-none"
                         value={markedAttendance[student._id]?.remark || ""}
                         onChange={(e) =>
                           setMarkedAttendance((prev) => ({
@@ -270,10 +320,10 @@ function MarkAttendance() {
               ))}
             </table>
 
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-5">
               <button
-                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-                // onClick={handleReset}
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                onClick={handleReset}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                   <RiResetLeftFill /> Reset
@@ -281,16 +331,51 @@ function MarkAttendance() {
                 <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
               </button>
               <button
-                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
                 onClick={handleSave}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                   <FaRegSave /> Save Attendance
                 </span>
 
-                <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+                <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
               </button>
             </div>
+            {err && (
+              <>
+                <div className="fixed z-20 inset-0 bg-black/50 flex justify-center items-center">
+                  <div className="bg-white p-5 rounded-[8px]">
+                    <div
+                      className="flex justify-end text-gray-600 cursor-pointer"
+                      onClick={() => setErr("")}
+                    >
+                      <RxCross2 />
+                    </div>
+                    <div className="flex flex-col justify-center items-center gap-2">
+                      <div className=" p-3 rounded-full bg-red-100 text-red-500">
+                        <GoAlertFill size={30} />
+                      </div>
+                      <h1 className="text-xl font-bold">
+                        Something went wrong
+                      </h1>
+                      <p className="text-gray-500">Please try again latet.</p>
+                      <div className="bg-red-100 border border-red-700 w-full p-4 rounded-[8px]">
+                        <div className="flex items-center gap-3 text-red-500">
+                          <GoAlertFill size={30} />
+                          {err}
+                        </div>
+                      </div>
+                      <button
+                        className="bg-red-600 cursor-pointer px-15 text-white py-2 rounded-[8px]"
+                        onClick={() => setErr("")}
+                      >
+                        OK
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
