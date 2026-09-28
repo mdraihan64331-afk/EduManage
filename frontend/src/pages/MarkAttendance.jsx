@@ -4,6 +4,11 @@ import Menu from "./Menu";
 import { IoCalendarNumber } from "react-icons/io5";
 import { TfiReload } from "react-icons/tfi";
 import { GoDotFill } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegSave } from "react-icons/fa";
+import { RiResetLeftFill } from "react-icons/ri";
+import axios from "axios";
+import { serverURL } from "../App";
 
 function MarkAttendance() {
   const [selectClass, setSelectClass] = useState("");
@@ -22,6 +27,63 @@ function MarkAttendance() {
   const [section, setSection] = useState("");
   const sectionName = ["A", "B", "C"];
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const statusName = ["Present", "Absent", "Late"];
+  const [status, setStatus] = useState("");
+  const [remark, setRemark] = useState("");
+  const [attendanceData, setAttendanceData] = useState({});
+  const { studentData } = useSelector((state) => state.student);
+  const dispatch = useDispatch();
+
+  const handleSave = async () => {
+    try {
+      const attendance = studentData.map((student) => ({
+        student: student._id,
+        date,
+        status: attendanceData[student._id]?.status || "Absent",
+        remark: attendanceData[student._id]?.remark || "",
+      }));
+
+      console.log(attendance);
+
+      const result = await axios.post(
+        `${serverURL}/api/attendance/add-attendance`,
+        attendance,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log(result.data);
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  };
+
+  const handleLoadStudents = async () => {
+    try {
+      if (!selectClass || !section) {
+        return alert("Please select class and section");
+      }
+
+      const result = await axios.get(`${serverURL}/api/student/all-students`, {
+        withCredentials: true,
+      });
+
+      const students = result.data;
+
+      const filteredStudents = students.filter(
+        (student) =>
+          student.className === selectClass && student.section === section,
+      );
+
+      dispatch(setStudentData(filteredStudents));
+
+      console.log(filteredStudents);
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  };
+
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -90,7 +152,10 @@ function MarkAttendance() {
 
             {/* load students */}
             <div>
-              <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group">
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                onClick={handleLoadStudents}
+              >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                   <TfiReload /> Load Students
                 </span>
@@ -123,11 +188,12 @@ function MarkAttendance() {
 
             {/* head line */}
             <table className="w-full min-w-[700px] mt-3">
-                {/* table head */}
+              {/* table head */}
               <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
                 <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
                   <th className="text-left py-3 px-2">#</th>
                   <th className="text-left py-3 px-2">Student Name</th>
+                  <th className="text-left py-3 px-2">Class</th>
                   <th className="text-left py-3 px-2">Roll No</th>
                   <th className="text-left py-3 px-2">Status</th>
                   <th className="text-left py-3 px-2">Remark</th>
@@ -135,19 +201,93 @@ function MarkAttendance() {
               </thead>
 
               {/* table body */}
-              <tbody>
-                <tr bg-white border border-gray-200 font-semibold>
-                    <td className="py-3 px-2">1</td>
+              {studentData.map((student, index) => (
+                <tbody key={student._id}>
+                  <tr bg-white border border-gray-200 font-semibold>
+                    <td className="py-3 px-2">{index + 1}</td>
                     <td className="py-3 px-2 flex items-center gap-4">
-                        <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">R</div>
-                        <h1>Raihan Ahmed</h1>
+                      <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">
+                        {student.image ? (
+                          <img
+                            src={student.image}
+                            className="h-full w-full object-cover rounded-full"
+                          />
+                        ) : (
+                          <div>
+                            {student.fullName.slice(0, 1).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <h1>{student.fullName}</h1>
                     </td>
-                    <td className="py-3 px-2">01</td>
-                    <td className="py-3 px-2">Present</td>
-                    <td className="py-3 px-2">Remark</td>
-                </tr>
-              </tbody>
+                    <td className="py-3 px-2">{student.className}</td>
+                    <td className="py-3 px-2">{student.rollNumber}</td>
+                    <td className="py-3 px-2">
+                      <select
+                        value={attendanceData[student._id]?.status || ""}
+                        onChange={(e) =>
+                          setAttendanceData((prev) => ({
+                            ...prev,
+                            [student._id]: {
+                              ...prev[student._id],
+                              status: e.target.value,
+                            },
+                          }))
+                        }
+                        className="w-30 border border-gray-300 rounded-lg px-2 py-1 outline-none"
+                      >
+                        <option value="">Status</option>
+
+                        {statusName.map((status, index) => (
+                          <option key={index} value={status}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="py-3 px-2">
+                      <input
+                        type="text"
+                        placeholder="Write remark..."
+                        value={attendanceData[student._id]?.remark || ""}
+                        onChange={(e) =>
+                          setAttendanceData((prev) => ({
+                            ...prev,
+                            [student._id]: {
+                              ...prev[student._id],
+                              remark: e.target.value,
+                            },
+                          }))
+                        }
+                        className="w-40 border border-gray-300 rounded-lg px-3 py-1 outline-none"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
             </table>
+
+            <div className="flex justify-between items-center">
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                // onClick={handleReset}
+              >
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <RiResetLeftFill /> Reset
+                </span>
+                <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                onClick={handleSave}
+              >
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <FaRegSave /> Save Attendance
+                </span>
+
+                <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
