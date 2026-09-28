@@ -35,12 +35,15 @@ import ClassList from "./pages/ClassList.jsx";
 import useGetStudent from "./hooks/useGetStudent.jsx";
 import MarkAttendance from "./pages/MarkAttendance.jsx";
 import AttendanceReport from "./pages/AttendanceReport.jsx";
+import useGetAttendance from "./hooks/useGetAttendance.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
   useGetCurrentUser();
   useGetTeacher()
   useGetStudent()
+  useGetAttendance()
+
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
   return (

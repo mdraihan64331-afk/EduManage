@@ -9,6 +9,9 @@ import { FaRegSave } from "react-icons/fa";
 import { RiResetLeftFill } from "react-icons/ri";
 import axios from "axios";
 import { serverURL } from "../App";
+import { setStudentData } from "../redux/studentSlice";
+import { useNavigate } from "react-router-dom";
+import { setAttendanceData } from "../redux/attendanceSlice";
 
 function MarkAttendance() {
   const [selectClass, setSelectClass] = useState("");
@@ -30,17 +33,18 @@ function MarkAttendance() {
   const statusName = ["Present", "Absent", "Late"];
   const [status, setStatus] = useState("");
   const [remark, setRemark] = useState("");
-  const [attendanceData, setAttendanceData] = useState({});
+  const [markedAttendance, setMarkedAttendance] = useState({});
   const { studentData } = useSelector((state) => state.student);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     try {
       const attendance = studentData.map((student) => ({
         student: student._id,
         date,
-        status: attendanceData[student._id]?.status || "Absent",
-        remark: attendanceData[student._id]?.remark || "",
+        status: markedAttendance[student._id]?.status || "Absent",
+        remark: markedAttendance[student._id]?.remark || "",
       }));
 
       console.log(attendance);
@@ -53,7 +57,8 @@ function MarkAttendance() {
         },
       );
 
-      console.log(result.data);
+      dispatch(setAttendanceData(result.data.attendance))
+      navigate("/attendances/attendance-report")
     } catch (error) {
       console.log(error.response?.data || error.message);
     }
@@ -224,9 +229,9 @@ function MarkAttendance() {
                     <td className="py-3 px-2">{student.rollNumber}</td>
                     <td className="py-3 px-2">
                       <select
-                        value={attendanceData[student._id]?.status || ""}
+                        value={markedAttendance[student._id]?.status || ""}
                         onChange={(e) =>
-                          setAttendanceData((prev) => ({
+                          setMarkedAttendance((prev) => ({
                             ...prev,
                             [student._id]: {
                               ...prev[student._id],
@@ -234,7 +239,6 @@ function MarkAttendance() {
                             },
                           }))
                         }
-                        className="w-30 border border-gray-300 rounded-lg px-2 py-1 outline-none"
                       >
                         <option value="">Status</option>
 
@@ -249,9 +253,9 @@ function MarkAttendance() {
                       <input
                         type="text"
                         placeholder="Write remark..."
-                        value={attendanceData[student._id]?.remark || ""}
+                        value={markedAttendance[student._id]?.remark || ""}
                         onChange={(e) =>
-                          setAttendanceData((prev) => ({
+                          setMarkedAttendance((prev) => ({
                             ...prev,
                             [student._id]: {
                               ...prev[student._id],
@@ -259,7 +263,6 @@ function MarkAttendance() {
                             },
                           }))
                         }
-                        className="w-40 border border-gray-300 rounded-lg px-3 py-1 outline-none"
                       />
                     </td>
                   </tr>

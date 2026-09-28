@@ -10,29 +10,44 @@ export const addAttendance = async (req, res) => {
       });
     }
 
-    const attendance = await Attendance.insertMany(attendanceData);
+    const operations = attendanceData.map((attendance) => ({
+      updateOne: {
+        filter: {
+          student: attendance.student,
+          date: attendance.date,
+        },
 
-    res.status(201).json({
-      message: "Attendance added successfully",
-      attendance,
+        update: {
+          $set: {
+            status: attendance.status,
+            remark: attendance.remark || "",
+          },
+        },
+
+        upsert: true,
+      },
+    }));
+
+    const result = await Attendance.bulkWrite(operations);
+
+    res.status(200).json({
+      message: "Attendance saved successfully",
+      result,
     });
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      message: "Failed to add attendance",
+      message: "Failed to save attendance",
       error: error.message,
     });
   }
 };
 
-// export const editAttendance = async (req, res) => {
-//     try {
-//         const {id} = req.params
+export const getAllAttencande = async (req, res) => {
+  try {
+    const attendance = await Attendance.find();
 
-//         const student = await
-//     } catch (error) {
-
-//     }
-
-// }
+    return res.status(200).json(attendance);
+  } catch (error) {}
+};

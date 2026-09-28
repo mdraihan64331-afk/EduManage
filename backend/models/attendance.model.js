@@ -30,10 +30,9 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-// Same student same date হলে duplicate আটকাবে
-// attendanceSchema.index(
-//   { student: 1, date: 1 },
-//   { unique: true }
-// );
+attendanceSchema.index(
+  { student: 1, date: 1 },
+  { unique: true }
+);
 
 export const Attendance = mongoose.model("Attendance", attendanceSchema);
