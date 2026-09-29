@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import logoimage from "../assets/login-logo.png";
 import AdminHeader from "../components/AdminHeader";
 import Menu from "./Menu";
 import { IoCalendarNumber } from "react-icons/io5";
@@ -13,6 +14,7 @@ import { setStudentData } from "../redux/studentSlice";
 import { useNavigate } from "react-router-dom";
 import { setAttendanceData } from "../redux/attendanceSlice";
 import { RxCross2 } from "react-icons/rx";
+import { ClipLoader } from "react-spinners";
 
 function MarkAttendance() {
   const [selectClass, setSelectClass] = useState("");
@@ -33,6 +35,7 @@ function MarkAttendance() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const statusName = ["Present", "Absent", "Late"];
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
   const [markedAttendance, setMarkedAttendance] = useState({});
   const { studentData } = useSelector((state) => state.student);
   const { attendanceData } = useSelector((state) => state.attendance);
@@ -40,23 +43,33 @@ function MarkAttendance() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!attendanceData || attendanceData.length === 0) return;
+    if (!attendanceData || attendanceData.length === 0) {
+      setMarkedAttendance({});
+      return;
+    }
 
     const savedAttendance = {};
 
     attendanceData.forEach((attendance) => {
       if (!attendance.student) return;
 
-      savedAttendance[attendance.student._id] = {
-        status: attendance.status,
-        remark: attendance.remark || "",
-      };
+      const attendanceDate = new Date(attendance.date)
+        .toISOString()
+        .split("T")[0];
+
+      if (attendanceDate === date) {
+        savedAttendance[attendance.student._id] = {
+          status: attendance.status,
+          remark: attendance.remark || "",
+        };
+      }
     });
 
     setMarkedAttendance(savedAttendance);
-  }, [attendanceData]);
+  }, [attendanceData, date]);
 
   const handleSave = async () => {
+    setLoading(true);
     try {
       const attendance = studentData.map((student) => ({
         student: student._id,
@@ -77,10 +90,12 @@ function MarkAttendance() {
 
       setErr("");
       dispatch(setAttendanceData(result.data.attendance));
+      setLoading(false);
       navigate("/attendances/attendance-report");
     } catch (error) {
       console.log(error.response?.data || error.message);
       setErr(error.response?.data?.message);
+      setLoading(false);
     }
   };
 
@@ -333,14 +348,23 @@ function MarkAttendance() {
               <button
                 className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
                 onClick={handleSave}
+                disabled={loading}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  <FaRegSave /> Save Attendance
+                  {loading ? (
+                    <ClipLoader />
+                  ) : (
+                    <>
+                      <FaRegSave /> Save Atte ndance
+                    </>
+                  )}
                 </span>
 
                 <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
               </button>
             </div>
+
+            {/* error */}
             {err && (
               <>
                 <div className="fixed z-20 inset-0 bg-black/50 flex justify-center items-center">
@@ -375,6 +399,38 @@ function MarkAttendance() {
                   </div>
                 </div>
               </>
+            )}
+
+            {loading && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                {/* Loading Card */}
+                <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+                  {/* Spinner + Logo */}
+                  <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+                    {/* Spinner */}
+                    <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                    {/* Logo Circle */}
+                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                      <img
+                        src={logoimage}
+                        alt="EduManage"
+                        className="h-20 w-20 object-contain"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-3xl font-bold text-[#102A5C]">
+                    Please wait...
+                  </h2>
+
+                  {/* Description */}
+                  <p className="mt-3 text-base text-slate-500">
+                    Create the student profile.
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>
