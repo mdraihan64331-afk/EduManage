@@ -24,6 +24,7 @@ function StudentDetails() {
 
   const [student, setStudent] = useState(null);
   const { teacherData } = useSelector((state) => state.teacher);
+  const { attendanceData } = useSelector((state) => state.attendance);
   const navigate = useNavigate();
   const performance = [
     { subject: "Mathematics", marks: 95, grade: "A+" },
@@ -34,14 +35,44 @@ function StudentDetails() {
     { subject: "Bangla", marks: 88, grade: "A" },
   ];
 
-  const attendanceSummary = [
-    { month: "January", present: 22, absent: 1, leave: 0, late: 0 },
-    { month: "February", present: 21, absent: 2, leave: 1, late: 0 },
-    { month: "March", present: 20, absent: 3, leave: 1, late: 1 },
-    { month: "April", present: 22, absent: 1, leave: 0, late: 0 },
-    { month: "May", present: 21, absent: 2, leave: 1, late: 0 },
-    { month: "June", present: 20, absent: 3, leave: 1, late: 0 },
-  ];
+  const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
+
+  const attendanceSummary = Array.from({ length: 12 }, (_, index) => {
+    const monthAttendance = attendanceList.filter((attendance) => {
+      if (!attendance.student || !attendance.date) return false;
+
+      const studentId =
+        typeof attendance.student === "object"
+          ? attendance.student._id
+          : attendance.student;
+
+      const attendanceDate = new Date(attendance.date);
+
+      return (
+        studentId === id &&
+        attendanceDate.getMonth() === index &&
+        attendanceDate.getFullYear() === new Date().getFullYear()
+      );
+    });
+
+    return {
+      month: new Date(new Date().getFullYear(), index).toLocaleString(
+        "default",
+        {
+          month: "long",
+        },
+      ),
+
+      present: monthAttendance.filter((item) => item.status === "Present")
+        .length,
+
+      absent: monthAttendance.filter((item) => item.status === "Absent").length,
+
+      leave: monthAttendance.filter((item) => item.status === "Leave").length,
+
+      late: monthAttendance.filter((item) => item.status === "Late").length,
+    };
+  });
 
   useEffect(() => {
     const fatchStudent = async () => {
@@ -398,10 +429,10 @@ function StudentDetails() {
                 </h3>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-h-[300px]">
                 <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-200">
+                  <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                    <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
                       <th className="px-3 py-3 font-semibold text-slate-500">
                         Month
                       </th>
@@ -412,10 +443,6 @@ function StudentDetails() {
 
                       <th className="px-3 py-3 text-center font-semibold text-slate-500">
                         Absent
-                      </th>
-
-                      <th className="px-3 py-3 text-center font-semibold text-slate-500">
-                        Leave
                       </th>
 
                       <th className="px-3 py-3 text-center font-semibold text-slate-500">
@@ -440,10 +467,6 @@ function StudentDetails() {
                         </td>
 
                         <td className="px-3 py-3 text-center text-slate-600">
-                          {item.leave}
-                        </td>
-
-                        <td className="px-3 py-3 text-center text-slate-600">
                           {item.late}
                         </td>
                       </tr>
@@ -455,7 +478,7 @@ function StudentDetails() {
 
             {/* academic Overview */}
             <div>
-              <AcademicOverview />
+              <AcademicOverview studentId={id}/>
             </div>
           </div>
         </div>

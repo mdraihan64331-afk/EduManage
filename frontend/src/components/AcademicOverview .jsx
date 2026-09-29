@@ -5,38 +5,76 @@ import {
   UserX,
   CalendarDays,
 } from "lucide-react";
+import { useSelector } from "react-redux";
 
-const AcademicOverview = () => {
+const AcademicOverview = ({ studentId }) => {
+  const { attendanceData } = useSelector(
+    (state) => state.attendance
+  );
+
+  const attendanceList = Array.isArray(attendanceData)
+    ? attendanceData
+    : [];
+
+  const studentAttendance = attendanceList.filter((attendance) => {
+    if (!attendance.student) return false;
+
+    const attendanceStudentId =
+      typeof attendance.student === "object"
+        ? attendance.student._id
+        : attendance.student;
+
+    return attendanceStudentId === studentId;
+  });
+
+  // Attendance count
+  const present = studentAttendance.filter(
+    (item) => item.status === "Present"
+  ).length;
+
+  const absent = studentAttendance.filter(
+    (item) => item.status === "Absent"
+  ).length;
+
+  const late = studentAttendance.filter(
+    (item) => item.status === "Late"
+  ).length;
+
+  const totalClasses = studentAttendance.length;
+
+  // Attendance percentage
+  const attendancePercentage =
+    totalClasses > 0
+      ? ((present / totalClasses) * 100).toFixed(1)
+      : 0;
+
+  // Donut chart percentage
+  const presentDegree =
+    totalClasses > 0
+      ? (present / totalClasses) * 360
+      : 0;
+
   const attendance = [
     {
       label: "Present",
-      value: 83,
-      color: "bg-emerald-500",
-      dot: "bg-emerald-500",
+      value: present,
+      dot: "bg-green-600",
     },
     {
       label: "Absent",
-      value: 6,
-      color: "bg-indigo-600",
-      dot: "bg-indigo-600",
-    },
-    {
-      label: "Leave",
-      value: 2,
-      color: "bg-rose-500",
-      dot: "bg-rose-500",
+      value: absent,
+      dot: "bg-red-600",
     },
     {
       label: "Late",
-      value: 1,
-      color: "bg-violet-600",
-      dot: "bg-violet-600",
+      value: late,
+      dot: "bg-orange-400",
     },
   ];
 
   return (
     <div className="w-full rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
-      
+
       {/* Header */}
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center text-emerald-600">
@@ -50,32 +88,35 @@ const AcademicOverview = () => {
 
       {/* Chart + Attendance */}
       <div className="flex items-center justify-between gap-4">
-        
+
         {/* Donut Chart */}
         <div className="relative flex h-[120px] w-[120px] shrink-0 items-center justify-center">
-          
+
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              background:
-                "conic-gradient(#059669 0deg 332deg, #e2e8f0 332deg 360deg)",
+              background: `conic-gradient(
+                #059669 0deg ${presentDegree}deg,
+                #e2e8f0 ${presentDegree}deg 360deg
+              )`,
             }}
           />
 
           {/* Inner circle */}
           <div className="absolute inset-[9px] flex flex-col items-center justify-center rounded-full bg-white">
             <span className="text-[24px] font-semibold leading-none text-slate-800">
-              92.3%
+              {attendancePercentage}%
             </span>
 
             <span className="mt-2 text-[11px] text-slate-500">
-              Overall GPA
+              Attendance
             </span>
           </div>
         </div>
 
         {/* Attendance Details */}
         <div className="flex flex-1 flex-col gap-[13px]">
+
           {attendance.map((item) => (
             <div
               key={item.label}
@@ -96,12 +137,13 @@ const AcademicOverview = () => {
               </span>
             </div>
           ))}
+
         </div>
       </div>
 
       {/* Bottom Statistics */}
       <div className="mt-5 grid grid-cols-3 border-t border-slate-100 pt-4">
-        
+
         {/* Total Classes */}
         <div className="border-r border-slate-100 px-2 first:pl-0">
           <div className="mb-1 flex items-center gap-1.5">
@@ -117,7 +159,7 @@ const AcademicOverview = () => {
 
           <p className="text-[13px] font-semibold text-slate-700">
             <span className="mr-1 text-yellow-500">●</span>
-            92
+            {totalClasses}
           </p>
         </div>
 
@@ -135,8 +177,8 @@ const AcademicOverview = () => {
           </div>
 
           <p className="text-[13px] font-semibold text-slate-700">
-            <span className="mr-1 text-emerald-400">●</span>
-            83
+            <span className="mr-1 text-green-600">●</span>
+            {present}
           </p>
         </div>
 
@@ -154,10 +196,11 @@ const AcademicOverview = () => {
           </div>
 
           <p className="text-[13px] font-semibold text-slate-700">
-            <span className="mr-1 text-slate-400">●</span>
-            6
+            <span className="mr-1 text-red-600">●</span>
+            {absent}
           </p>
         </div>
+
       </div>
     </div>
   );
