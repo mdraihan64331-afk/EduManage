@@ -7,14 +7,12 @@ import Overview from "../pages/Overview";
 import Menu from "../pages/Menu";
 import AdminHeader from "./AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { setStudentData } from "../redux/studentSlice";
-import { serverURL } from "../App";
-import axios from "axios";
 
 function AdminDashboard() {
   const { studentData } = useSelector((state) => state.student);
   const { userData } = useSelector((state) => state.user);
   const { teacherData } = useSelector((state) => state.teacher);
+  const { attendanceData } = useSelector((state) => state.attendance);
   const dispatch = useDispatch();
   const now = new Date();
 
@@ -35,6 +33,27 @@ function AdminDashboard() {
       joiningDate.getFullYear() === now.getFullYear()
     );
   }).length;
+
+  const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const todayAttendance = attendanceList.filter((attendance) => {
+    const attendanceDate = new Date(attendance.date)
+      .toISOString()
+      .split("T")[0];
+
+    return attendanceDate === today;
+  });
+
+  const totalToday = todayAttendance.length;
+
+  const presentToday = todayAttendance.filter(
+    (attendance) => attendance.status === "Present",
+  ).length;
+
+  const attendancePercentage =
+    totalToday > 0 ? ((presentToday / totalToday) * 100).toFixed(1) : 0;
 
   return (
     <div className="flex bg-blue-50">
@@ -82,7 +101,9 @@ function AdminDashboard() {
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400">Total Teachers</p>
                     <h1 className="font-bold text-2xl">{teacherData.length}</h1>
-                    <p className="text-xs text-green-600">+{thisMonthTeacherJoined} this month</p>
+                    <p className="text-xs text-green-600">
+                      +{thisMonthTeacherJoined} this month
+                    </p>
                   </div>
                 </div>
 
@@ -106,7 +127,9 @@ function AdminDashboard() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400">Today's Attendence</p>
-                    <h1 className="font-bold text-2xl">92.5%</h1>
+                    <h1 className="font-bold text-2xl">
+                      {attendancePercentage}%
+                    </h1>
                     <p className="text-xs text-green-600">Present</p>
                   </div>
                 </div>

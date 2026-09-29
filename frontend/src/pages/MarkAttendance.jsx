@@ -43,7 +43,7 @@ function MarkAttendance() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!attendanceData || attendanceData.length === 0) {
+    if (!Array.isArray(attendanceData) || attendanceData.length === 0) {
       setMarkedAttendance({});
       return;
     }
@@ -51,14 +51,19 @@ function MarkAttendance() {
     const savedAttendance = {};
 
     attendanceData.forEach((attendance) => {
-      if (!attendance.student) return;
+      if (!attendance?.student) return;
 
       const attendanceDate = new Date(attendance.date)
         .toISOString()
         .split("T")[0];
 
       if (attendanceDate === date) {
-        savedAttendance[attendance.student._id] = {
+        const studentId =
+          typeof attendance.student === "object"
+            ? attendance.student._id
+            : attendance.student;
+
+        savedAttendance[studentId] = {
           status: attendance.status,
           remark: attendance.remark || "",
         };
@@ -70,6 +75,7 @@ function MarkAttendance() {
 
   const handleSave = async () => {
     setLoading(true);
+
     try {
       const attendance = studentData.map((student) => ({
         student: student._id,
@@ -78,9 +84,8 @@ function MarkAttendance() {
         remark: markedAttendance[student._id]?.remark || "",
       }));
 
-      console.log(attendance);
-
-      const result = await axios.post(
+      // 1. Save attendance
+      await axios.post(
         `${serverURL}/api/attendance/add-attendance`,
         attendance,
         {
@@ -88,13 +93,27 @@ function MarkAttendance() {
         },
       );
 
+      // 2. Get latest attendance
+      const attendanceResult = await axios.get(
+        `${serverURL}/api/attendance/get-all-attendance`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      // 3. Update Redux
+      dispatch(setAttendanceData(attendanceResult.data));
+
       setErr("");
-      dispatch(setAttendanceData(result.data.attendance));
       setLoading(false);
+
+      // 4. Then navigate
       navigate("/attendances/attendance-report");
     } catch (error) {
       console.log(error.response?.data || error.message);
-      setErr(error.response?.data?.message);
+
+      setErr(error.response?.data?.message || "Something went wrong");
+
       setLoading(false);
     }
   };
