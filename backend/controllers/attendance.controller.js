@@ -58,3 +58,44 @@ export const getAllAttencande = async (req, res) => {
     });
   }
 };
+
+export const editAttendance = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, remark } = req.body;
+
+    const attendance = await Attendance.findById(id);
+
+    if (!attendance) {
+      return res.status(404).json({
+        message: "Attendance not found!",
+      });
+    }
+
+    const updateAttendance = await Attendance.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          status,
+          remark: remark || "",
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).populate("student");
+
+    res.status(200).json({
+      message: "Attendance updated successfully",
+      attendance: updateAttendance,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to update attendance",
+      error: error.message,
+    });
+  }
+};

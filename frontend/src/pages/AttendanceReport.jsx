@@ -338,6 +338,7 @@ function AttendanceReport() {
                     <th className="text-left py-3 px-2">Photo</th>
                     <th className="text-left py-3 px-2">Student Name</th>
                     <th className="text-left py-3 px-2">Roll No</th>
+                    <th className="text-left py-3 px-2">Section</th>
                     <th className="text-left py-3 px-2">Class</th>
                     <th className="text-left py-3 px-2">Status</th>
                     <th className="text-left py-3 px-2">Remark</th>
@@ -384,7 +385,7 @@ function AttendanceReport() {
                         </td>
 
                         <td className="py-3 px-2">{student?.rollNumber}</td>
-
+                        <td className="py-3 px-2">{student?.section}</td>
                         <td className="py-3 px-2">{student?.className}</td>
 
                         <td className="py-3 px-2">

@@ -4,9 +4,9 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 
 function AdminHeader() {
-      const { userData } = useSelector((state) => state.user);
+  const { userData } = useSelector((state) => state.user);
   return (
-    <div className="flex justify-end gap-5 items-center bg-white p-2">
+    <div className="flex justify-end gap-5 items-center bg-white p-2 sticky top-0 left-0">
       <div className="flex items-center gap-2 border border-gray-400 rounded-[5px] p-1">
         <IoSearchOutline />
         <input

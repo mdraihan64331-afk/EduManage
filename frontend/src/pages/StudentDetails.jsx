@@ -68,7 +68,7 @@ function StudentDetails() {
     }
 
     if (status === "Late") {
-      return "text-orange-400 text-white";
+      return "bg-orange-400 text-white";
     }
 
     return "bg-white text-slate-700 hover:bg-slate-50";
@@ -443,7 +443,7 @@ function StudentDetails() {
               {/* Calendar Header */}
               <div className="flex items-center gap-2 justify-between mb-5">
                 <h3 className="flex items-center gap-3">
-                  <FaRegCalendarAlt className="text-green-700"/>
+                  <FaRegCalendarAlt className="text-green-700" />
                   Attendance Calendar
                 </h3>
 
@@ -484,7 +484,7 @@ function StudentDetails() {
                 </div>
 
                 <div className="flex items-center gap-1">
-                  <span className="w-3 h-3 rounded-full text-orange-400"></span>
+                  <span className="w-3 h-3 rounded-full bg-orange-400"></span>
                   Late
                 </div>
               </div>
@@ -524,13 +524,7 @@ function StudentDetails() {
                   return (
                     <div
                       key={day}
-                      className={`
-            h-10 rounded-lg flex items-center justify-center
-            text-sm font-semibold cursor-pointer
-            transition
-            ${getStatusClass(status)}
-            ${isToday ? "ring-2 ring-blue-500 ring-offset-1" : ""}
-          `}
+                      className={`h-10 rounded-lg flex items-center justify-center text-sm font-semibold cursor-pointer transition ${getStatusClass(status)} ${isToday ? "ring-2 ring-blue-500 ring-offset-1" : ""} `}
                       title={status || "No attendance"}
                     >
                       {day}
