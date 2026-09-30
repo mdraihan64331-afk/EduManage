@@ -11,12 +11,13 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { FaCalendarDays } from "react-icons/fa6";
-import { data } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { RiResetLeftFill } from "react-icons/ri";
 import { TfiReload } from "react-icons/tfi";
 import { IoPerson } from "react-icons/io5";
 import { GoDotFill } from "react-icons/go";
 import { useSelector } from "react-redux";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 function AttendanceReport() {
   const [selectClass, setSelectClass] = useState("");
@@ -37,6 +38,7 @@ function AttendanceReport() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const { attendanceData } = useSelector((state) => state.attendance);
   const { studentData } = useSelector((state) => state.student);
+  const navigate = useNavigate()
   const now = new Date();
 
   // ============ new this month ==============
@@ -266,6 +268,7 @@ function AttendanceReport() {
 
           {/* all student attendance*/}
           <div className="mt-3 bg-white rounded-[8px] shadow p-2">
+            {/* status color */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BsPeopleFill size={25} className="text-green-700" />
@@ -286,6 +289,84 @@ function AttendanceReport() {
                   <p>Late</p>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <table className="w-full min-w-[700px] mt-3">
+                {/* table head */}
+                <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                  <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
+                    <th className="text-left py-3 px-2">#</th>
+                    <th className="text-left py-3 px-2">Photo</th>
+                    <th className="text-left py-3 px-2">Student Name</th>
+                    <th className="text-left py-3 px-2">Roll No</th>
+                    <th className="text-left py-3 px-2">Class</th>
+                    <th className="text-left py-3 px-2">Status</th>
+                    <th className="text-left py-3 px-2">Remark</th>
+                    <th className="text-left py-3 px-2">Action</th>
+                  </tr>
+                </thead>
+
+                {/* table body */}
+                {todayAttendance.map((attendance, index) => (
+                  <tbody key={index}>
+                    <tr className="bg-white border border-gray-200 font-semibold">
+                      <td className="py-3 px-2">{index + length}</td>
+                      <td className="py-3 px-2">
+                        <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">
+                          {attendance?.student?.image ? (
+                            <img
+                              src={attendance?.student?.image}
+                              className="h-full w-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <div>
+                              {attendance?.student?.fullName
+                                .slice(0, 1)
+                                .toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3 px-2 capitalize">
+                        {attendance?.student?.fullName}
+                      </td>
+                      <td className="py-3 px-2">
+                        {attendance?.student?.rollNumber}
+                      </td>
+                      <td className="py-3 px-2">
+                        {attendance?.student?.className}
+                      </td>
+                      <td className="py-3 px-2">
+                        <div
+                          className={`py-1.5 px-2 rounded-[8px] text-center ${(attendance?.status === "Present" && "bg-green-100 text-green-700 font-semibold") || (attendance?.status === "Absent" && "bg-red-100 text-red-600 font-semibold") || (attendance?.status === "Late" && "bg-amber-100 text-amber-600 font-semibold border border-amber-200")}`}
+                        >
+                          {attendance?.status}
+                        </div>
+                      </td>
+                      <td className="py-3 px-2">
+                        {attendance.remark ? (
+                          <div>{attendance?.remark} </div>
+                        ) : (
+                          <div>-</div>
+                        )}
+                      </td>
+                      <td>
+                        <div>
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            onClick={() =>
+                              navigate(`/attendances/edit-mark-attendance/${attendance._id}`)
+                            }
+                          >
+                            <MdOutlineModeEdit size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                ))}
+              </table>
             </div>
           </div>
         </div>

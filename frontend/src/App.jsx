@@ -36,6 +36,7 @@ import useGetStudent from "./hooks/useGetStudent.jsx";
 import MarkAttendance from "./pages/MarkAttendance.jsx";
 import AttendanceReport from "./pages/AttendanceReport.jsx";
 import useGetAttendance from "./hooks/useGetAttendance.jsx";
+import EditMarkAttendance from "./pages/EditMarkAttendance.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -76,6 +77,7 @@ function App() {
         <Route path="/classes/class-list" element={<ClassList />} />
         <Route path="/attendances/mark-attendance" element={<MarkAttendance />} />
         <Route path="/attendances/attendance-report" element={<AttendanceReport />} />
+        <Route path="/attendances/edit-mark-attendance/:id" element={<EditMarkAttendance />} />
         <Route path="/results" element={<Result />} />
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />
