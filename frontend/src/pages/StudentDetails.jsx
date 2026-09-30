@@ -3,11 +3,7 @@ import Menu from "./Menu";
 import { useNavigate, useParams } from "react-router-dom";
 import { serverURL } from "../App";
 import axios from "axios";
-import {
-  IoNotificationsOutline,
-  IoPerson,
-  IoSearchOutline,
-} from "react-icons/io5";
+import { IoNotificationsOutline, IoPerson } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -34,45 +30,49 @@ function StudentDetails() {
     { subject: "Biology", marks: 85, grade: "A" },
     { subject: "Bangla", marks: 88, grade: "A" },
   ];
-
+  const [currentDate, setCurrentDate] = useState(new Date());
   const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
 
-  const attendanceSummary = Array.from({ length: 12 }, (_, index) => {
-    const monthAttendance = attendanceList.filter((attendance) => {
-      if (!attendance.student || !attendance.date) return false;
+  const studentAttendance = attendanceList.filter((attendance) => {
+    if (!attendance.student || !attendance.date) return false;
 
-      const studentId =
-        typeof attendance.student === "object"
-          ? attendance.student._id
-          : attendance.student;
+    const studentId =
+      typeof attendance.student === "object"
+        ? attendance.student._id
+        : attendance.student;
 
-      const attendanceDate = new Date(attendance.date);
+    return studentId === id;
+  });
+
+  const getAttendanceStatus = (date) => {
+    const attendance = studentAttendance.find((item) => {
+      const attendanceDate = new Date(item.date);
 
       return (
-        studentId === id &&
-        attendanceDate.getMonth() === index &&
-        attendanceDate.getFullYear() === new Date().getFullYear()
+        attendanceDate.getFullYear() === date.getFullYear() &&
+        attendanceDate.getMonth() === date.getMonth() &&
+        attendanceDate.getDate() === date.getDate()
       );
     });
 
-    return {
-      month: new Date(new Date().getFullYear(), index).toLocaleString(
-        "default",
-        {
-          month: "long",
-        },
-      ),
+    return attendance?.status || null;
+  };
 
-      present: monthAttendance.filter((item) => item.status === "Present")
-        .length,
+  const getStatusClass = (status) => {
+    if (status === "Present") {
+      return "bg-green-600 text-white";
+    }
 
-      absent: monthAttendance.filter((item) => item.status === "Absent").length,
+    if (status === "Absent") {
+      return "bg-red-600 text-white";
+    }
 
-      leave: monthAttendance.filter((item) => item.status === "Leave").length,
+    if (status === "Late") {
+      return "text-orange-400 text-white";
+    }
 
-      late: monthAttendance.filter((item) => item.status === "Late").length,
-    };
-  });
+    return "bg-white text-slate-700 hover:bg-slate-50";
+  };
 
   useEffect(() => {
     const fatchStudent = async () => {
@@ -94,6 +94,23 @@ function StudentDetails() {
     (teacher) => teacher._id === student?.classTeacher,
   )?.fullName;
 
+  // calandar
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const previousMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+  };
+
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -114,7 +131,7 @@ function StudentDetails() {
               </h1>
             )}
             <div>
-              <h1 className="font-semibold">{student?.fullName}</h1>
+              <h1 className="font-semibold capitalize">{student?.fullName}</h1>
               <p className="text-gray-400 text-xs">Student</p>
             </div>
           </div>
@@ -197,7 +214,7 @@ function StudentDetails() {
                   <p className="text-gray-500">
                     Class{" "}
                     <span className="font-semibold text-gray-700">
-                      {student?.className?.slice(6, 7)}
+                      {student?.className?.slice(6, 8)}
                     </span>
                   </p>
                   <span className="w-[1px] h-3 bg-gray-400"></span>
@@ -319,7 +336,7 @@ function StudentDetails() {
                   <div>:</div>
                 </div>
                 <div>
-                  <p>{student?.className?.slice(6, 7)}</p>
+                  <p>{student?.className?.slice(6, 8)}</p>
                   <p>{student?.section}</p>
                   <p>{student?.rollNumber}</p>
                   <p>{new Date(student?.admissionDate).toLocaleDateString()}</p>
@@ -421,64 +438,111 @@ function StudentDetails() {
               </div>
             </div>
 
-            {/* attendance summary */}
+            {/* attendance calendar */}
             <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="mb-5">
-                <h3 className="text-xl flex items-center gap-3">
-                  <FaRegCalendarAlt /> Attendance Summary
+              {/* Calendar Header */}
+              <div className="flex items-center gap-2 justify-between mb-5">
+                <h3 className="flex items-center gap-3">
+                  <FaRegCalendarAlt className="text-green-700"/>
+                  Attendance Calendar
                 </h3>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={previousMonth}
+                    className="w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-100"
+                  >
+                    ‹
+                  </button>
+
+                  <h4 className="font-semibold text-slate-700 min-w-[130px] text-center">
+                    {currentDate.toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </h4>
+
+                  <button
+                    onClick={nextMonth}
+                    className="w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-100"
+                  >
+                    ›
+                  </button>
+                </div>
               </div>
 
-              <div className="overflow-x-auto max-h-[300px]">
-                <table className="w-full text-left text-sm">
-                  <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
-                    <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
-                      <th className="px-3 py-3 font-semibold text-slate-500">
-                        Month
-                      </th>
+              {/* Status Legend */}
+              <div className="flex items-center gap-4 mb-4 text-xs">
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-green-600"></span>
+                  Present
+                </div>
 
-                      <th className="px-3 py-3 text-center font-semibold text-slate-500">
-                        Present
-                      </th>
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full bg-red-600"></span>
+                  Absent
+                </div>
 
-                      <th className="px-3 py-3 text-center font-semibold text-slate-500">
-                        Absent
-                      </th>
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-full text-orange-400"></span>
+                  Late
+                </div>
+              </div>
 
-                      <th className="px-3 py-3 text-center font-semibold text-slate-500">
-                        Late
-                      </th>
-                    </tr>
-                  </thead>
+              {/* Week Days */}
+              <div className="grid grid-cols-7 gap-1 mb-1">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day) => (
+                    <div
+                      key={day}
+                      className="text-center text-xs font-semibold text-slate-500 py-2"
+                    >
+                      {day}
+                    </div>
+                  ),
+                )}
+              </div>
 
-                  <tbody className="divide-y divide-slate-100">
-                    {attendanceSummary.map((item) => (
-                      <tr key={item.month}>
-                        <td className="px-3 py-3 font-medium text-slate-700">
-                          {item.month}
-                        </td>
+              {/* Calendar Days */}
+              <div className="grid grid-cols-7 gap-1">
+                {/* Empty spaces before first day */}
+                {Array.from({ length: firstDayOfMonth }).map((_, index) => (
+                  <div key={`empty-${index}`} className="h-10"></div>
+                ))}
 
-                        <td className="px-3 py-3 text-center font-semibold text-emerald-600">
-                          {item.present}
-                        </td>
+                {/* Days */}
+                {Array.from({ length: daysInMonth }, (_, index) => {
+                  const day = index + 1;
 
-                        <td className="px-3 py-3 text-center text-slate-600">
-                          {item.absent}
-                        </td>
+                  const date = new Date(currentYear, currentMonth, day);
 
-                        <td className="px-3 py-3 text-center text-slate-600">
-                          {item.late}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  const status = getAttendanceStatus(date);
+
+                  const isToday =
+                    new Date().toDateString() === date.toDateString();
+
+                  return (
+                    <div
+                      key={day}
+                      className={`
+            h-10 rounded-lg flex items-center justify-center
+            text-sm font-semibold cursor-pointer
+            transition
+            ${getStatusClass(status)}
+            ${isToday ? "ring-2 ring-blue-500 ring-offset-1" : ""}
+          `}
+                      title={status || "No attendance"}
+                    >
+                      {day}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             {/* academic Overview */}
             <div>
-              <AcademicOverview studentId={id}/>
+              <AcademicOverview studentId={id} />
             </div>
           </div>
         </div>
