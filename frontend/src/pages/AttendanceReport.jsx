@@ -11,10 +11,9 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { FaCalendarDays } from "react-icons/fa6";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RiResetLeftFill } from "react-icons/ri";
 import { TfiReload } from "react-icons/tfi";
-import { IoPerson } from "react-icons/io5";
 import { GoDotFill } from "react-icons/go";
 import { useSelector } from "react-redux";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -38,12 +37,16 @@ function AttendanceReport() {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const { attendanceData } = useSelector((state) => state.attendance);
   const { studentData } = useSelector((state) => state.student);
-  const navigate = useNavigate()
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const navigate = useNavigate();
   const now = new Date();
+
+  const displayStudents =
+    selectClass || section ? filteredStudents : studentData;
 
   // ============ new this month ==============
 
-  const thisMonthStudentJoined = studentData.filter((student) => {
+  const thisMonthStudentJoined = displayStudents.filter((student) => {
     const admissionDate = new Date(student.admissionDate);
 
     return (
@@ -54,16 +57,29 @@ function AttendanceReport() {
 
   // ============ present, absent and late =================
   const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
+
   const today = new Date().toISOString().split("T")[0];
-  const todayAttendance = attendanceList.filter((attendance) => {
+
+  const selectedStudentIds = new Set(
+    displayStudents.map((student) => student._id),
+  );
+
+  const selectedAttendance = attendanceList.filter((attendance) => {
+    const studentId =
+      typeof attendance.student === "object"
+        ? attendance.student?._id
+        : attendance.student;
+
+    return selectedStudentIds.has(studentId);
+  });
+
+  const todayAttendance = selectedAttendance.filter((attendance) => {
     const attendanceDate = new Date(attendance.date)
       .toISOString()
       .split("T")[0];
 
     return attendanceDate === today;
   });
-
-  const totalToday = todayAttendance.length;
 
   const presentToday = todayAttendance.filter(
     (attendance) => attendance?.status === "Present",
@@ -77,14 +93,16 @@ function AttendanceReport() {
     (attendance) => attendance?.status === "Late",
   ).length;
 
+  const totalToday = presentToday + absentToday + lateToday;
+
   const attendancePresentPercentage =
-    totalToday > 0 ? (presentToday / totalToday) * 100 : 0;
+    totalToday > 0 ? ((presentToday / totalToday) * 100).toFixed(1) : 0;
 
   const attendanceAbsentPercentage =
-    totalToday > 0 ? (absentToday / totalToday) * 100 : 0;
+    totalToday > 0 ? ((absentToday / totalToday) * 100).toFixed(1) : 0;
 
   const attendanceLatePercentage =
-    totalToday > 0 ? (lateToday / totalToday) * 100 : 0;
+    totalToday > 0 ? ((lateToday / totalToday) * 100).toFixed(1) : 0;
 
   // ============ present, absent and late =================
 
@@ -94,7 +112,7 @@ function AttendanceReport() {
   const currentYear = now.getFullYear();
 
   const totalSchoolDays = new Set(
-    attendanceList
+    selectedAttendance
       .filter((attendance) => {
         const attendanceDate = new Date(attendance.date);
 
@@ -107,6 +125,26 @@ function AttendanceReport() {
         (attendance) => new Date(attendance.date).toISOString().split("T")[0],
       ),
   ).size;
+
+  // ===============handleLoadStudent==============
+  const handleLoadStudents = () => {
+    const filtered = studentData.filter((student) => {
+      const classMatch = selectClass ? student.className === selectClass : true;
+
+      const sectionMatch = section ? student.section === section : true;
+
+      return classMatch && sectionMatch;
+    });
+
+    setFilteredStudents(filtered);
+  };
+
+  // ===============handleLoadStudent==============
+  const handleLoadReset = () => {
+    setSelectClass("");
+    setSection("");
+    setFilteredStudents([]);
+  };
 
   return (
     <div className="flex bg-blue-50">
@@ -135,7 +173,7 @@ function AttendanceReport() {
               </div>
               <div className="flex flex-col gap-1">
                 <p className="font-semibold text-[13px]">Total Student</p>
-                <h1 className="font-bold text-2xl">{studentData.length}</h1>
+                <h1 className="font-bold text-2xl">{displayStudents.length}</h1>
                 <p className="text-[10px] font-semibold text-green-400 flex items-center gap-1">
                   <FaArrowUp /> +{thisMonthStudentJoined} new this month
                 </p>
@@ -223,7 +261,7 @@ function AttendanceReport() {
                 value={section}
                 className="w-50 border border-gray-300  rounded-lg px-2 py-1 outline-none"
               >
-                <option value="">Select Class</option>
+                <option value="">Select Section</option>
                 {sectionName.map((e, index) => (
                   <option key={index}>{e}</option>
                 ))}
@@ -245,7 +283,7 @@ function AttendanceReport() {
               <div className="flex items-center gap-4">
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  // onClick={handleLoadStudents}
+                  onClick={handleLoadStudents}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <TfiReload /> Load Students
@@ -255,7 +293,7 @@ function AttendanceReport() {
                 {/* reset button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-                  // onClick={handleLoadReset}
+                  onClick={handleLoadReset}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <RiResetLeftFill /> Reset
@@ -272,7 +310,7 @@ function AttendanceReport() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BsPeopleFill size={25} className="text-green-700" />
-                <h4>Student Attendance ({studentData.length})</h4>
+                <h4>Student Attendance ({displayStudents.length})</h4>
               </div>
               {/* present, absent and late */}
               <div className="flex items-center justify-end gap-5">
@@ -308,64 +346,91 @@ function AttendanceReport() {
                 </thead>
 
                 {/* table body */}
-                {todayAttendance.map((attendance, index) => (
-                  <tbody key={index}>
-                    <tr className="bg-white border border-gray-200 font-semibold">
-                      <td className="py-3 px-2">{index + length}</td>
-                      <td className="py-3 px-2">
-                        <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">
-                          {attendance?.student?.image ? (
-                            <img
-                              src={attendance?.student?.image}
-                              className="h-full w-full object-cover rounded-full"
-                            />
-                          ) : (
-                            <div>
-                              {attendance?.student?.fullName
-                                .slice(0, 1)
-                                .toUpperCase()}
+                <tbody>
+                  {displayStudents.map((student, index) => {
+                    const attendance = todayAttendance.find((item) => {
+                      const studentId =
+                        typeof item.student === "object"
+                          ? item.student?._id
+                          : item.student;
+
+                      return studentId === student._id;
+                    });
+
+                    return (
+                      <tr
+                        key={student._id}
+                        className="bg-white border border-gray-200 font-semibold"
+                      >
+                        <td className="py-3 px-2">{index + 1}</td>
+
+                        <td className="py-3 px-2">
+                          <div className="h-10 w-10 flex items-center justify-center text-white rounded-full bg-purple-700">
+                            {student?.image ? (
+                              <img
+                                src={student.image}
+                                className="h-full w-full object-cover rounded-full"
+                              />
+                            ) : (
+                              <div>
+                                {student?.fullName?.slice(0, 1).toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2 capitalize">
+                          {student?.fullName}
+                        </td>
+
+                        <td className="py-3 px-2">{student?.rollNumber}</td>
+
+                        <td className="py-3 px-2">{student?.className}</td>
+
+                        <td className="py-3 px-2">
+                          {attendance ? (
+                            <div
+                              className={`py-1.5 px-2 rounded-[8px] text-center ${
+                                attendance.status === "Present"
+                                  ? "bg-green-100 text-green-700 font-semibold"
+                                  : attendance.status === "Absent"
+                                    ? "bg-red-100 text-red-600 font-semibold"
+                                    : attendance.status === "Late"
+                                      ? "bg-amber-100 text-amber-600 font-semibold border border-amber-200"
+                                      : ""
+                              }`}
+                            >
+                              {attendance.status}
                             </div>
+                          ) : (
+                            <div className="text-gray-400">-</div>
                           )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-2 capitalize">
-                        {attendance?.student?.fullName}
-                      </td>
-                      <td className="py-3 px-2">
-                        {attendance?.student?.rollNumber}
-                      </td>
-                      <td className="py-3 px-2">
-                        {attendance?.student?.className}
-                      </td>
-                      <td className="py-3 px-2">
-                        <div
-                          className={`py-1.5 px-2 rounded-[8px] text-center ${(attendance?.status === "Present" && "bg-green-100 text-green-700 font-semibold") || (attendance?.status === "Absent" && "bg-red-100 text-red-600 font-semibold") || (attendance?.status === "Late" && "bg-amber-100 text-amber-600 font-semibold border border-amber-200")}`}
-                        >
-                          {attendance?.status}
-                        </div>
-                      </td>
-                      <td className="py-3 px-2">
-                        {attendance.remark ? (
-                          <div>{attendance?.remark} </div>
-                        ) : (
-                          <div>-</div>
-                        )}
-                      </td>
-                      <td>
-                        <div>
-                          <button
-                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                            onClick={() =>
-                              navigate(`/attendances/edit-mark-attendance/${attendance._id}`)
-                            }
-                          >
-                            <MdOutlineModeEdit size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                ))}
+                        </td>
+
+                        <td className="py-3 px-2">
+                          {attendance?.remark || "-"}
+                        </td>
+
+                        <td>
+                          {attendance ? (
+                            <button
+                              className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                              onClick={() =>
+                                navigate(
+                                  `/attendances/edit-mark-attendance/${attendance._id}`,
+                                )
+                              }
+                            >
+                              <MdOutlineModeEdit size={18} />
+                            </button>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
               </table>
             </div>
           </div>
