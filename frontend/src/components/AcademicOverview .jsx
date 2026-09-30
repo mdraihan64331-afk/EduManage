@@ -1,20 +1,11 @@
 import React from "react";
-import {
-  Users,
-  UserCheck,
-  UserX,
-  CalendarDays,
-} from "lucide-react";
+import { Users, UserCheck, UserX, CalendarDays } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const AcademicOverview = ({ studentId }) => {
-  const { attendanceData } = useSelector(
-    (state) => state.attendance
-  );
+  const { attendanceData } = useSelector((state) => state.attendance);
 
-  const attendanceList = Array.isArray(attendanceData)
-    ? attendanceData
-    : [];
+  const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
 
   const studentAttendance = attendanceList.filter((attendance) => {
     if (!attendance.student) return false;
@@ -29,30 +20,29 @@ const AcademicOverview = ({ studentId }) => {
 
   // Attendance count
   const present = studentAttendance.filter(
-    (item) => item.status === "Present"
+    (item) => item.status === "Present",
   ).length;
 
   const absent = studentAttendance.filter(
-    (item) => item.status === "Absent"
+    (item) => item.status === "Absent",
   ).length;
 
   const late = studentAttendance.filter(
-    (item) => item.status === "Late"
+    (item) => item.status === "Late",
   ).length;
 
   const totalClasses = studentAttendance.length;
 
   // Attendance percentage
   const attendancePercentage =
-    totalClasses > 0
-      ? ((present / totalClasses) * 100).toFixed(1)
-      : 0;
+    totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(1) : 0;
 
   // Donut chart percentage
-  const presentDegree =
-    totalClasses > 0
-      ? (present / totalClasses) * 360
-      : 0;
+  const presentDegree = totalClasses > 0 ? (present / totalClasses) * 360 : 0;
+
+  const absentDegree = totalClasses > 0 ? (absent / totalClasses) * 360 : 0;
+
+  const lateDegree = totalClasses > 0 ? (late / totalClasses) * 360 : 0;
 
   const attendance = [
     {
@@ -74,7 +64,6 @@ const AcademicOverview = ({ studentId }) => {
 
   return (
     <div className="w-full rounded-xl border border-slate-100 bg-white p-5 shadow-sm">
-
       {/* Header */}
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center text-emerald-600">
@@ -88,17 +77,16 @@ const AcademicOverview = ({ studentId }) => {
 
       {/* Chart + Attendance */}
       <div className="flex items-center justify-between gap-4">
-
         {/* Donut Chart */}
         <div className="relative flex h-[120px] w-[120px] shrink-0 items-center justify-center">
-
           <div
             className="absolute inset-0 rounded-full"
             style={{
               background: `conic-gradient(
                 #059669 0deg ${presentDegree}deg,
-                #e2e8f0 ${presentDegree}deg 360deg
-              )`,
+                #dc2626 ${presentDegree}deg ${presentDegree + absentDegree}deg,
+                #fb923c ${presentDegree + absentDegree}deg 360deg
+                )`,
             }}
           />
 
@@ -108,28 +96,18 @@ const AcademicOverview = ({ studentId }) => {
               {attendancePercentage}%
             </span>
 
-            <span className="mt-2 text-[11px] text-slate-500">
-              Attendance
-            </span>
+            <span className="mt-2 text-[11px] text-slate-500">Attendance</span>
           </div>
         </div>
 
         {/* Attendance Details */}
         <div className="flex flex-1 flex-col gap-[13px]">
-
           {attendance.map((item) => (
-            <div
-              key={item.label}
-              className="flex items-center justify-between"
-            >
+            <div key={item.label} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span
-                  className={`h-[9px] w-[9px] rounded-full ${item.dot}`}
-                />
+                <span className={`h-[9px] w-[9px] rounded-full ${item.dot}`} />
 
-                <span className="text-[12px] text-slate-600">
-                  {item.label}
-                </span>
+                <span className="text-[12px] text-slate-600">{item.label}</span>
               </div>
 
               <span className="text-[12px] font-semibold text-slate-700">
@@ -137,24 +115,17 @@ const AcademicOverview = ({ studentId }) => {
               </span>
             </div>
           ))}
-
         </div>
       </div>
 
       {/* Bottom Statistics */}
       <div className="mt-5 grid grid-cols-3 border-t border-slate-100 pt-4">
-
         {/* Total Classes */}
         <div className="border-r border-slate-100 px-2 first:pl-0">
           <div className="mb-1 flex items-center gap-1.5">
-            <CalendarDays
-              size={10}
-              className="text-slate-400"
-            />
+            <CalendarDays size={10} className="text-slate-400" />
 
-            <span className="text-[9px] text-slate-400">
-              Total Classes
-            </span>
+            <span className="text-[9px] text-slate-400">Total Classes</span>
           </div>
 
           <p className="text-[13px] font-semibold text-slate-700">
@@ -163,17 +134,12 @@ const AcademicOverview = ({ studentId }) => {
           </p>
         </div>
 
-        {/* Attended */}
+        {/* present */}
         <div className="border-r border-slate-100 px-3">
           <div className="mb-1 flex items-center gap-1.5">
-            <UserCheck
-              size={10}
-              className="text-slate-400"
-            />
+            <UserCheck size={10} className="text-slate-400" />
 
-            <span className="text-[9px] text-slate-400">
-              Attended
-            </span>
+            <span className="text-[9px] text-slate-400">Present</span>
           </div>
 
           <p className="text-[13px] font-semibold text-slate-700">
@@ -185,14 +151,9 @@ const AcademicOverview = ({ studentId }) => {
         {/* Absent */}
         <div className="px-3 pr-0">
           <div className="mb-1 flex items-center gap-1.5">
-            <UserX
-              size={10}
-              className="text-slate-400"
-            />
+            <UserX size={10} className="text-slate-400" />
 
-            <span className="text-[9px] text-slate-400">
-              Absent
-            </span>
+            <span className="text-[9px] text-slate-400">Absent</span>
           </div>
 
           <p className="text-[13px] font-semibold text-slate-700">
@@ -200,7 +161,6 @@ const AcademicOverview = ({ studentId }) => {
             {absent}
           </p>
         </div>
-
       </div>
     </div>
   );
