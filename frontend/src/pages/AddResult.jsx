@@ -3,6 +3,11 @@ import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { BsPersonAdd } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { MdDelete } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { RiResetLeftFill } from "react-icons/ri";
+import { ClipLoader } from "react-spinners";
+import { FaRegSave } from "react-icons/fa";
 
 function AddResult() {
   const [selectClass, setSelectClass] = useState("");
@@ -37,6 +42,7 @@ function AddResult() {
     "Viva Exam",
   ];
   const [academicYear, setAcademicYear] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { studentData } = useSelector((state) => state.student);
   const [filteredStudent, setFilteredStudents] = useState([]);
@@ -60,7 +66,7 @@ function AddResult() {
 
         <div className="p-2">
           {/* tital */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             <BsPersonAdd size={35} className="text-green-700" />
             <div>
               <h1 className="text-2xl font-bold">Add New Result</h1>
@@ -71,8 +77,8 @@ function AddResult() {
             </div>
           </div>
 
-          <div className="mt-4">
-            <div className="bg-white rounded-[8px] p-2">
+          <div className="mt-4 flex justify-between">
+            <div className="bg-white rounded-[8px] p-2 shadow">
               <h3 className="font-semibold">
                 1. Select student & Exam Details
               </h3>
@@ -112,7 +118,7 @@ function AddResult() {
                 </div>
 
                 {/* select student, exam type and academic year */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mt-4">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="">
                       Student <span className="text-red-500">*</span>
@@ -121,18 +127,9 @@ function AddResult() {
                       <option value="">Select Class</option>
                       {filteredStudent.map((e, index) => (
                         <option key={index} className="flex items-center gap-2">
-                          {e.image ? (
-                            <img
-                              src={e.image}
-                              alt={e.fullName}
-                              className="h-10 w-10 object-cover rounded-full"
-                            />
-                          ) : (
-                            <span className="h-10 w-10 bg-purple-700 rounded-full">
-                              {e?.fullName.slice(0, 1).toUpperCase}
-                            </span>
-                          )}
-                          <h1 className="capitalize">{e?.fullName}</h1>
+                          <h1>
+                            {e?.fullName} ({e?.studentId})
+                          </h1>
                         </option>
                       ))}
                     </select>
@@ -141,7 +138,7 @@ function AddResult() {
                     <label htmlFor="">
                       Exam Type <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]">
+                    <select className="w-40 border border-gray-300 px-2 py-1 rounded-[8px]">
                       <option value="">Select Section</option>
                       {examName.map((e, index) => (
                         <option key={index}>{e}</option>
@@ -155,7 +152,7 @@ function AddResult() {
                     <input
                       type="text"
                       placeholder="2025-2026"
-                      className="w-50 border border-gray-300 px-2 py-1 rounded-[8px] outline-none"
+                      className="w-40 border border-gray-300 px-2 py-1 rounded-[8px] outline-none"
                       value={academicYear}
                       onChange={(e) => setAcademicYear(e.target.value)}
                     />
@@ -163,6 +160,124 @@ function AddResult() {
                 </div>
               </div>
             </div>
+
+            {/* add mark */}
+            <div className="bg-white p-2 rounded-[8px] shadow">
+              <h3 className="font-semibold">2. Add Marks</h3>
+              <div className="mt-3">
+                <table>
+                  <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                    <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
+                      <th className="text-left py-3 px-2">Subject</th>
+                      <th className="text-left py-3 px-2">Total Marks</th>
+                      <th className="text-left py-3 px-2">Obtained Marks</th>
+                      <th className="text-left py-3 px-2">Grade</th>
+                      <th className="text-left py-3 px-2"></th>
+                    </tr>
+                  </thead>
+
+                  {/* body */}
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                          Methematics
+                        </p>
+                      </td>
+                      <td>
+                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                          100
+                        </p>
+                      </td>
+                      <td>
+                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                          89
+                        </p>
+                      </td>
+                      <td>
+                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 text-center mt-3">
+                          A+
+                        </p>
+                      </td>
+                      <td className=" rounded-[8px] py-3 px-2">
+                        <MdDelete size={18} className="text-red-500" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-3">
+                <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group">
+                  <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                    <FaPlus /> Add Subject
+                  </span>
+                  <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-3 bg-white rounded-[8px] p-2 w-[560px] shadow">
+            <h3 className="font-semibold">3. Calculate & Save</h3>
+            <div className="mt-4 flex items-center gap-2">
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
+                <p className="text-xs">Total Marks</p>
+                <h2 className="font-bold text-xl">500</h2>
+              </div>
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
+                <p className="text-xs">Obtained Marks</p>
+                <h2 className="font-bold text-xl">423</h2>
+              </div>
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
+                <p className="text-xs">Average Marks</p>
+                <h2 className="font-bold text-xl">86.45</h2>
+              </div>
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
+                <p className="text-xs">GPA</p>
+                <h2 className="font-bold text-xl">4.5</h2>
+              </div>
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
+                <p className="text-xs">Grade</p>
+                <h2 className="font-bold text-xl">A+</h2>
+              </div>
+              <div className="bg-green-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
+                <p className="text-sx bg-green-300 text-green-600 px-2 py-1 rounded-xl font-semibold">
+                  Pass
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label htmlFor="">Remarks (Optional)</label>
+              <textarea
+                rows={3}
+                placeholder="Enter Remarks about the student's performance..."
+                className="border border-gray-300 rounded-[8px] p-2 w-full resize-none outline-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between w-[560px] mt-3 bg-white p-2 rounded-[8px] shadow">
+            <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group">
+              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                <RiResetLeftFill /> Reset
+              </span>
+              <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+            </button>
+
+            <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group">
+              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                {loading ? (
+                  <ClipLoader color="white" />
+                ) : (
+                  <>
+                    <FaRegSave /> Save Result
+                  </>
+                )}
+              </span>
+              <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+            </button>
           </div>
         </div>
       </div>

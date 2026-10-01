@@ -487,7 +487,7 @@ function TeachersList() {
 
               {showTeacherModal && viewTeacher && (
                 <>
-                  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-110">
                     <div className="bg-white rounded-xl w-[600px] h-[550px]">
                       {/* view teacher header */}
                       <div className="p-3 flex rounded-[8px] justify-between bg-[linear-gradient(to_right,#067080,#0b9788,#058294,#30a2af)]">
