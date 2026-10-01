@@ -2,7 +2,11 @@ import { IoCalendarNumber, IoHomeOutline } from "react-icons/io5";
 import { RxPeople } from "react-icons/rx";
 import { SlPeople } from "react-icons/sl";
 import { SiGoogleclassroom } from "react-icons/si";
-import { MdEventAvailable, MdOutlineModeEdit } from "react-icons/md";
+import {
+  MdEventAvailable,
+  MdOutlineModeEdit,
+  MdOutlinePreview,
+} from "react-icons/md";
 import { FaChartBar } from "react-icons/fa";
 import { RiLineChartLine } from "react-icons/ri";
 import { RiBookletLine } from "react-icons/ri";
@@ -16,6 +20,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
 import { GiGraduateCap } from "react-icons/gi";
 import { TbReportAnalytics } from "react-icons/tb";
+import { BsPersonAdd } from "react-icons/bs";
 
 export const adminCatagories = [
   {
@@ -82,16 +87,33 @@ export const adminCatagories = [
       {
         icon: <IoCalendarNumber />,
         subMenuName: "Mark Attendance",
-        path: "/attendances/mark-attendance"
+        path: "/attendances/mark-attendance",
       },
       {
         icon: <TbReportAnalytics />,
         subMenuName: "Attendance Report",
-        path: "/attendances/attendance-report"
-      }
-    ]
+        path: "/attendances/attendance-report",
+      },
+    ],
   },
-  { id: 6, icon: <FaChartBar />, menu: "Results", path: "/results" },
+  {
+    id: 6,
+    icon: <FaChartBar />,
+    menu: "Results",
+    path: "/results",
+    subMenu: [
+      {
+        icon: <BsPersonAdd />,
+        subMenuName: "Add Result",
+        path: "/result/add-result",
+      },
+      {
+        icon: <MdOutlinePreview />,
+        subMenuName: "Result List",
+        path: "/result/view-result",
+      },
+    ],
+  },
   {
     id: 7,
     icon: <RiLineChartLine />,
