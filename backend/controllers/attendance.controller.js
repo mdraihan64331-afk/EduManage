@@ -81,7 +81,7 @@ export const editAttendance = async (req, res) => {
         },
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     ).populate("student");

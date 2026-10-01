@@ -1,8 +1,8 @@
-import { IoHomeOutline } from "react-icons/io5";
+import { IoCalendarNumber, IoHomeOutline } from "react-icons/io5";
 import { RxPeople } from "react-icons/rx";
 import { SlPeople } from "react-icons/sl";
 import { SiGoogleclassroom } from "react-icons/si";
-import { MdEventAvailable } from "react-icons/md";
+import { MdEventAvailable, MdOutlineModeEdit } from "react-icons/md";
 import { FaChartBar } from "react-icons/fa";
 import { RiLineChartLine } from "react-icons/ri";
 import { RiBookletLine } from "react-icons/ri";
@@ -15,6 +15,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
 import { GiGraduateCap } from "react-icons/gi";
+import { TbReportAnalytics } from "react-icons/tb";
 
 export const adminCatagories = [
   {
@@ -79,12 +80,12 @@ export const adminCatagories = [
     path: "/attendances",
     subMenu: [
       {
-        icon: <MdEventAvailable />,
+        icon: <IoCalendarNumber />,
         subMenuName: "Mark Attendance",
         path: "/attendances/mark-attendance"
       },
       {
-        icon: <MdEventAvailable />,
+        icon: <TbReportAnalytics />,
         subMenuName: "Attendance Report",
         path: "/attendances/attendance-report"
       }
