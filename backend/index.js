@@ -12,6 +12,7 @@ import { studentRoute } from "./routes/addStudent.route.js";
 import { teacherRouter } from "./routes/teacher.route.js";
 import { classesRouter } from "./routes/class.route.js";
 import { attendanceRouter } from "./routes/attendance.route.js";
+import { resultRouter } from "./routes/result.route.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,8 +31,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/student", studentRoute);
 app.use("/api/teacher", teacherRouter);
-app.use("/api/classes", classesRouter)
-app.use("/api/attendance", attendanceRouter)
+app.use("/api/classes", classesRouter);
+app.use("/api/attendance", attendanceRouter);
+app.use("/api/result", resultRouter);
 
 app.listen(port, () => {
   connectDB();

@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa6";
 import { RiResetLeftFill } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
 import { FaRegSave } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 
 function AddResult() {
   const [selectClass, setSelectClass] = useState("");
@@ -43,6 +44,13 @@ function AddResult() {
   ];
   const [academicYear, setAcademicYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const [subjectForm, setSubjectForm] = useState({
+    subject: "",
+    totalMark: "",
+    obtainedMark: "",
+  });
+  const [showAddSubject, setShowAddSubject] = useState(false);
 
   const { studentData } = useSelector((state) => state.student);
   const [filteredStudent, setFilteredStudents] = useState([]);
@@ -57,6 +65,101 @@ function AddResult() {
     });
     setFilteredStudents(filtered);
   }, [studentData, selectClass, section]);
+
+  const handleAddSubject = () => {
+    const { subject, totalMark, obtainedMark } = subjectForm;
+
+    if (!subject || !totalMark || !obtainedMark) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (Number(obtainedMark) > Number(totalMark)) {
+      alert("Obtained mark cannot be greater than total mark");
+      return;
+    }
+
+    const percentage = (Number(obtainedMark) / Number(totalMark)) * 100;
+
+    let grade;
+
+    if (percentage >= 80) grade = "A+";
+    else if (percentage >= 70) grade = "A";
+    else if (percentage >= 60) grade = "A-";
+    else if (percentage >= 50) grade = "B";
+    else if (percentage >= 40) grade = "C";
+    else if (percentage >= 33) grade = "D";
+    else grade = "F";
+
+    const newSubject = {
+      subject,
+      totalMark: Number(totalMark),
+      obtainedMark: Number(obtainedMark),
+      grade,
+    };
+
+    setSubjects((prev) => [...prev, newSubject]);
+
+    setSubjectForm({
+      subject: "",
+      totalMark: "",
+      obtainedMark: "",
+    });
+    console.log(subjectForm);
+
+    setShowAddSubject(false);
+  };
+
+  const handleDeleteSubject = (index) => {
+    setSubjects((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const totalMarks = subjects.reduce(
+    (total, item) => total + Number(item.totalMark),
+    0,
+  );
+
+  const totalObtainedMark = subjects.reduce(
+    (total, item) => total + Number(item.obtainedMark),
+    0,
+  );
+
+  const averageMarks =
+    totalMarks > 0 ? ((totalObtainedMark / totalMarks) * 100).toFixed(2) : 0;
+
+  const gradePoint = {
+    "A+": 5.0,
+    A: 4.0,
+    "A-": 3.5,
+    B: 3.0,
+    C: 2.0,
+    D: 1.0,
+    F: 0.0,
+  };
+
+  const gpa =
+    subjects.length > 0
+      ? (
+          subjects.reduce(
+            (total, item) => total + (gradePoint[item.grade] || 0),
+            0,
+          ) / subjects.length
+        ).toFixed(2)
+      : "0.00";
+
+  const calulateOverallGrade = (percentage) => {
+    if (percentage >= 80) return "A+";
+    if (percentage >= 70) return "A-";
+    if (percentage >= 60) return "A";
+    if (percentage >= 50) return "B";
+    if (percentage >= 40) return "C";
+    if (percentage >= 33) return "D";
+    return "F";
+  };
+
+  const overallMark = calulateOverallGrade(Number(averageMarks));
+
+  const resultStatus = Number(averageMarks) >= 33 ? "Pass" : "Fail";
 
   return (
     <div className="flex bg-blue-50">
@@ -162,7 +265,7 @@ function AddResult() {
             </div>
 
             {/* add mark */}
-            <div className="bg-white p-2 rounded-[8px] shadow">
+            <div className="bg-white p-2 rounded-[8px] w-[449px] shadow">
               <h3 className="font-semibold">2. Add Marks</h3>
               <div className="mt-3">
                 <table>
@@ -178,43 +281,151 @@ function AddResult() {
 
                   {/* body */}
                   <tbody>
-                    <tr>
-                      <td>
-                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
-                          Methematics
-                        </p>
-                      </td>
-                      <td>
-                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
-                          100
-                        </p>
-                      </td>
-                      <td>
-                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
-                          89
-                        </p>
-                      </td>
-                      <td>
-                        <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 text-center mt-3">
-                          A+
-                        </p>
-                      </td>
-                      <td className=" rounded-[8px] py-3 px-2">
-                        <MdDelete size={18} className="text-red-500" />
-                      </td>
-                    </tr>
+                    {subjects.map((e, index) => (
+                      <tr key={index}>
+                        <td>
+                          <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                            {e.subject}
+                          </p>
+                        </td>
+                        <td>
+                          <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                            {e.totalMark}
+                          </p>
+                        </td>
+                        <td>
+                          <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 mt-3">
+                            {e.obtainedMark}
+                          </p>
+                        </td>
+                        <td>
+                          <p className="rounded-[8px] border border-gray-300 py-3 px-1 mx-1 text-center mt-3">
+                            {e.grade}
+                          </p>
+                        </td>
+                        <td className=" rounded-[8px] py-3 px-2">
+                          <button
+                            className="cursor-pointer"
+                            onClick={() => handleDeleteSubject(index)}
+                          >
+                            <MdDelete size={18} className="text-red-500" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
 
               <div className="mt-3">
-                <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group">
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                  onClick={() => {
+                    setShowAddSubject(true);
+                  }}
+                >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <FaPlus /> Add Subject
                   </span>
                   <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
                 </button>
               </div>
+
+              {/* add subject popup */}
+              {showAddSubject && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                  <div className="bg-white p-4 rounded-[8px] shadow">
+                    <div className="flex items-center justify-between">
+                      <h1 className="font-bold text-xl">Add New Subject</h1>
+                      <button
+                        className="flex items-end cursor-pointer"
+                        onClick={() => {
+                          setShowAddSubject(false);
+                        }}
+                      >
+                        <RxCross2 />
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-3 mt-4">
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="">
+                          Subject Name<span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter subject name"
+                          value={subjectForm.subject}
+                          onChange={(e) =>
+                            setSubjectForm({
+                              ...subjectForm,
+                              subject: e.target.value,
+                            })
+                          }
+                          className="w-80 border border-gray-300 outline-none px-2 py-1 rounded-[8px]"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="">
+                          Total Marks<span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Enter total marks"
+                          value={subjectForm.totalMark}
+                          onChange={(e) =>
+                            setSubjectForm({
+                              ...subjectForm,
+                              totalMark: e.target.value,
+                            })
+                          }
+                          className="w-80 border border-gray-300 outline-none px-2 py-1 rounded-[8px]"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label htmlFor="">
+                          Obtained Marks<span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Enter obtained marks"
+                          value={subjectForm.obtainedMark}
+                          onChange={(e) =>
+                            setSubjectForm({
+                              ...subjectForm,
+                              obtainedMark: e.target.value,
+                            })
+                          }
+                          className="w-80 border border-gray-300 outline-none px-2 py-1 rounded-[8px]"
+                        />
+                      </div>
+                      <button
+                        className="relative w-full overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                        onClick={handleAddSubject}
+                      >
+                        <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                          {loading ? (
+                            <ClipLoader color="white" />
+                          ) : (
+                            <>
+                              <FaRegSave /> Save Result
+                            </>
+                          )}
+                        </span>
+                        <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+                      </button>
+
+                      <button
+                        className="w-full border border-gray-300 rounded-[8px] py-1 px-2 cursor-pointer"
+                        onClick={() => {
+                          setShowAddSubject(false);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -223,27 +434,27 @@ function AddResult() {
             <div className="mt-4 flex items-center gap-2">
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
                 <p className="text-xs">Total Marks</p>
-                <h2 className="font-bold text-xl">500</h2>
+                <h2 className="font-bold text-xl">{totalMarks}</h2>
               </div>
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
                 <p className="text-xs">Obtained Marks</p>
-                <h2 className="font-bold text-xl">423</h2>
+                <h2 className="font-bold text-xl">{totalObtainedMark}</h2>
               </div>
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
                 <p className="text-xs">Average Marks</p>
-                <h2 className="font-bold text-xl">86.45</h2>
+                <h2 className="font-bold text-xl">{averageMarks}</h2>
               </div>
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
                 <p className="text-xs">GPA</p>
-                <h2 className="font-bold text-xl">4.5</h2>
+                <h2 className="font-bold text-xl">{gpa}</h2>
               </div>
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 shadow">
                 <p className="text-xs">Grade</p>
-                <h2 className="font-bold text-xl">A+</h2>
+                <h2 className="font-bold text-xl">{overallMark}</h2>
               </div>
               <div className="bg-green-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
                 <p className="text-sx bg-green-300 text-green-600 px-2 py-1 rounded-xl font-semibold">
-                  Pass
+                  {resultStatus}
                 </p>
               </div>
             </div>
