@@ -3,26 +3,49 @@ import { Result } from "../models/result.model.js";
 
 export const addResult = async (req, res) => {
   try {
-    const { student, examType, subject, academicYear, remark } = req.body;
+    const {
+      student,
+      examType,
+      subject,
+      academicYear,
+      totalMarks,
+      totalObtainedMarks,
+      averageMark,
+      gpa,
+      grade,
+      resultStatus, // ✅ এটা অবশ্যই থাকতে হবে
+      remark,
+    } = req.body;
+
+    console.log("RESULT BODY:", req.body);
 
     if (!student || !examType || !subject || !academicYear) {
       return res.status(400).json({
-        messange: "student, exam type, subject, academic year are required",
+        message:
+          "Student, exam type, subject and academic year are required",
       });
     }
 
     if (!Array.isArray(subject) || subject.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "At least one sunject is required" });
+      return res.status(400).json({
+        message: "At least one subject is required",
+      });
     }
 
     if (!mongoose.Types.ObjectId.isValid(student)) {
-      return res.status(400).json({ message: "Invalid student ID" });
+      return res.status(400).json({
+        message: "Invalid student ID",
+      });
+    }
+
+    if (!resultStatus) {
+      return res.status(400).json({
+        message: "Result status is required",
+      });
     }
 
     for (const item of subject) {
-      if (item.obtainedMark > item.totalMark) {
+      if (Number(item.obtainedMark) > Number(item.totalMark)) {
         return res.status(400).json({
           message: `${item.subject}: Obtained mark cannot be greater than total mark.`,
         });
@@ -36,9 +59,9 @@ export const addResult = async (req, res) => {
     });
 
     if (existingResult) {
-      return res
-        .status(400)
-        .json({ message: "Result already exists for this exam." });
+      return res.status(400).json({
+        message: "Result already exists for this exam.",
+      });
     }
 
     const newResult = await Result.create({
@@ -46,15 +69,29 @@ export const addResult = async (req, res) => {
       examType,
       subject,
       academicYear,
+      totalMarks,
+      totalObtainedMarks,
+      averageMark,
+      gpa,
+      grade,
+      resultStatus, // ✅ এটা অবশ্যই থাকতে হবে
       remark: remark || "",
     });
 
-    const populateResult = await Result.findOne(newResult._id).populate(
+    const populateResult = await Result.findById(newResult._id).populate(
       "student",
     );
 
-    return res.status(201).json({ populateResult });
+    return res.status(201).json({
+      message: "Result added successfully",
+      result: populateResult,
+    });
   } catch (error) {
-    return res.status(400).json({ error });
+    console.log("ADD RESULT ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to add result",
+      error: error.message,
+    });
   }
 };

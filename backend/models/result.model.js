@@ -33,7 +33,7 @@ const resultSchema = new mongoose.Schema(
   {
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "addStudent",
+      ref: "AddStudent",
       required: true,
     },
 
@@ -62,6 +62,36 @@ const resultSchema = new mongoose.Schema(
     },
 
     academicYear: {
+      type: String,
+      required: true,
+    },
+
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
+
+    totalObtainedMarks: {
+      type: Number,
+      required: true,
+    },
+
+    averageMark: {
+      type: Number,
+      required: true,
+    },
+
+    gpa: {
+      type: Number,
+      required: true,
+    },
+
+    grade: {
+      type: String,
+      required: true,
+    },
+
+    resultStatus: {
       type: String,
       required: true,
     },
