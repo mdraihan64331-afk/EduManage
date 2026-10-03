@@ -3,6 +3,7 @@ import userSlice from "./userSlice";
 import studentSlice from "./studentSlice";
 import teacherSlice from "./teacherSlice";
 import attendanceSlice from "./attendanceSlice";
+import resultSlice from "./resultSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     student: studentSlice,
     teacher: teacherSlice,
     attendance: attendanceSlice,
+    result: resultSlice,
   },
 });

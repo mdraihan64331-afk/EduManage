@@ -13,7 +13,7 @@ export const addResult = async (req, res) => {
       averageMark,
       gpa,
       grade,
-      resultStatus, // ✅ এটা অবশ্যই থাকতে হবে
+      resultStatus,
       remark,
     } = req.body;
 
@@ -21,8 +21,7 @@ export const addResult = async (req, res) => {
 
     if (!student || !examType || !subject || !academicYear) {
       return res.status(400).json({
-        message:
-          "Student, exam type, subject and academic year are required",
+        message: "Student, exam type, subject and academic year are required",
       });
     }
 
@@ -74,7 +73,7 @@ export const addResult = async (req, res) => {
       averageMark,
       gpa,
       grade,
-      resultStatus, // ✅ এটা অবশ্যই থাকতে হবে
+      resultStatus,
       remark: remark || "",
     });
 
@@ -93,5 +92,19 @@ export const addResult = async (req, res) => {
       message: "Failed to add result",
       error: error.message,
     });
+  }
+};
+
+export const getResult = async (req, res) => {
+  try {
+    const result = await Result.find().populate("student");
+
+    if (result.length === 0) {
+      return res.statue(400).json({ message: "Result is not found!" });
+    }
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { BsPersonAdd } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -12,6 +12,7 @@ import { RxCross2 } from "react-icons/rx";
 import { serverURL } from "../App";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setResultData } from "../redux/resultSlice";
 
 function AddResult() {
   const [selectClass, setSelectClass] = useState("");
@@ -59,6 +60,7 @@ function AddResult() {
 
   const { studentData } = useSelector((state) => state.student);
   const [filteredStudent, setFilteredStudents] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -219,9 +221,7 @@ function AddResult() {
         { withCredentials: true },
       );
 
-      console.log("Result saved:", result.data);
-
-      alert("Result saved successfully");
+      dispatch(setResultData(result.data));
       navigate("/result/view-result");
     } catch (error) {
       console.log("FULL ERROR:", error);

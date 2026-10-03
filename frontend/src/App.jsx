@@ -38,6 +38,7 @@ import useGetAttendance from "./hooks/useGetAttendance.jsx";
 import EditMarkAttendance from "./pages/EditMarkAttendance.jsx";
 import AddResult from "./pages/AddResult.jsx";
 import ResultList from "./pages/ResultList.jsx";
+import useGetResult from "./hooks/useGetResult.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -45,6 +46,7 @@ function App() {
   useGetTeacher()
   useGetStudent()
   useGetAttendance()
+  useGetResult()
 
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
