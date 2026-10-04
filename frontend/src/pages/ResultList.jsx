@@ -52,6 +52,7 @@ function ResultList() {
   const [academic, setAcademicYear] = useState("");
 
   const navigate = useNavigate();
+
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -161,7 +162,7 @@ function ResultList() {
               >
                 <option>Select Class</option>
                 {className.map((e, index) => (
-                  <option>{e}</option>
+                  <option key={index}>{e}</option>
                 ))}
               </select>
             </div>
@@ -179,7 +180,7 @@ function ResultList() {
               >
                 <option>Select Section</option>
                 {sectionName.map((e, index) => (
-                  <option>{e}</option>
+                  <option key={index}>{e}</option>
                 ))}
               </select>
             </div>
@@ -197,7 +198,7 @@ function ResultList() {
               >
                 <option>Exam Type</option>
                 {examTypeName.map((e, index) => (
-                  <option>{e}</option>
+                  <option key={index}>{e}</option>
                 ))}
               </select>
             </div>
@@ -240,6 +241,96 @@ function ResultList() {
               <RiResetLeftFill />
               Reset
             </button>
+          </div>
+
+          {/* student list */}
+          <div className="mt-3 w-full overflow-auto max-h-[400px]">
+            <table className="w-full min-w-[700px]">
+              {/* table head */}
+              <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
+                  <th className="text-left py-3 px-2 text-xs">#</th>
+                  <th className="text-left py-3 px-2 text-xs">Student Info</th>
+                  <th className="text-left py-3 px-2 text-xs">Class</th>
+                  <th className="text-left py-3 px-2 text-xs">Section</th>
+                  <th className="text-left py-3 px-2 text-xs">Exam Type</th>
+                  <th className="text-left py-3 px-2 text-xs">Academic Year</th>
+                  <th className="text-left py-3 px-2 text-xs">Total Marks</th>
+                  <th className="text-left py-3 px-2 text-xs">
+                    Obtained Marks
+                  </th>
+                  <th className="text-left py-3 px-2 text-xs">Percentage</th>
+                  <th className="text-left py-3 px-2 text-xs">Grade</th>
+                  <th className="text-left py-3 px-2 text-xs">GPA</th>
+                  <th className="text-left py-3 px-2 text-xs">Status</th>
+                  <th className="text-left py-3 px-2 text-xs">Action</th>
+                </tr>
+              </thead>
+
+              {/* table body */}
+              <tbody>
+                {results.map((result, index) => (
+                  <tr
+                    key={result._id}
+                    className="bg-white border border-gray-200 font-semibold"
+                  >
+                    <td className="py-3 px-2 text-[14px]">{index + 1}</td>
+                    <td className="flex items-center gap-2 py-3 px-2 text-[14px]">
+                      <div>
+                        {result?.student?.image ? (
+                          <img
+                            src={result.student?.image}
+                            alt={result.student?.fullName}
+                            className="h-10 w-10 rounded-full object-cover"
+                          />
+                        ) : (
+                          <span className="h-10 w-10 rounded-full text-white bg-purple-700 flex items-center justify-center">
+                            {result.student?.fullName.slice(0, 1).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="capitalize">
+                          {result.student?.fullName}
+                        </h4>
+                        <p className="text-xs">
+                          Roll No. {result.student?.rollNumber}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="py-3 px-2 text-xs">
+                      {result.student?.className}
+                    </td>
+                    <td className="py-3 px-2 text-xs">
+                      {result.student?.section}
+                    </td>
+                    <td className="py-3 px-2 text-xs">{result.examType}</td>
+                    <td className="py-3 px-2 text-xs">{result.academicYear}</td>
+                    <td className="py-3 px-2 text-xs">{result.totalMarks}</td>
+                    <td className="py-3 px-2 text-xs">
+                      {result.totalObtainedMarks}
+                    </td>
+                    <td className="py-3 px-2 text-xs">{result.averageMark}%</td>
+                    <td className="py-3 px-2 text-xs">
+                      <p
+                        className={`py-1 px-2 text-xs text-center ${["A+", "A", "A-"].includes(result.grade) ? "text-green-700 bg-green-100 rounded-[8px]" : ["B", "C", "D"].includes(result.grade) ? "text-orange-900 bg-orange-100 rounded-[8px]" : result.grade === "F" ? "text-red-600 bg-red-100 rounded-[8px]" : ""}`}
+                      >
+                        {result.grade}
+                      </p>
+                    </td>
+                    <td className="py-3 px-2 text-xs">{result.gpa}</td>
+                    <td className="py-3 px-2 text-xs">
+                      <p
+                      className={`py-1 px-2 text-xs text-center ${result.resultStatus === "Pass" ? "bg-green-100 text-green-700 rounded-[8px]" : result.resultStatus === "Fail" ? "bg-red-100 text-red-600 rounded-[8px]" : ""}`}
+                      >
+                      {result.resultStatus}
+                      </p>
+                      </td>
+                    <td></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
