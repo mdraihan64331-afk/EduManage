@@ -25,7 +25,7 @@ function AdminHeader() {
           />
         ) : (
           <h1 className="font-semibold bg-purple-800 flex justify-center items-center text-white w-[40px] h-[40px] rounded-full">
-            {userData?.fullName?.slice(0, 2).toUpperCase()}
+            {userData?.fullName?.slice(0, 1).toUpperCase()}
           </h1>
         )}
         <h1 className="font-semibold">{userData?.fullName}</h1>

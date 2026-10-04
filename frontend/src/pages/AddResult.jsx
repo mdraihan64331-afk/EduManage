@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import logoimage from "../assets/login-logo.png";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { BsPersonAdd } from "react-icons/bs";
@@ -13,6 +14,7 @@ import { serverURL } from "../App";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setResultData } from "../redux/resultSlice";
+import { GoAlertFill } from "react-icons/go";
 
 function AddResult() {
   const [selectClass, setSelectClass] = useState("");
@@ -48,6 +50,7 @@ function AddResult() {
   ];
   const [academicYear, setAcademicYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [subjectForm, setSubjectForm] = useState({
     subject: "",
@@ -75,47 +78,56 @@ function AddResult() {
   }, [studentData, selectClass, section]);
 
   const handleAddSubject = () => {
-    const { subject, totalMark, obtainedMark } = subjectForm;
+    try {
+      const { subject, totalMark, obtainedMark } = subjectForm;
 
-    if (!subject || !totalMark || !obtainedMark) {
-      alert("Please fill all fields");
-      return;
+      if (!subject || !totalMark || !obtainedMark) {
+        setErr("Please fill all fields");
+        return;
+      }
+
+      if (Number(totalMark) > 100) {
+        return setErr("Total mark cannot be greater than 100 mark");
+      }
+
+      if (Number(obtainedMark) > Number(totalMark)) {
+        setErr("Obtained mark cannot be greater than total mark");
+        return;
+      }
+
+      const percentage = (Number(obtainedMark) / Number(totalMark)) * 100;
+
+      let grade;
+
+      if (percentage >= 80) grade = "A+";
+      else if (percentage >= 70) grade = "A";
+      else if (percentage >= 60) grade = "A-";
+      else if (percentage >= 50) grade = "B";
+      else if (percentage >= 40) grade = "C";
+      else if (percentage >= 33) grade = "D";
+      else grade = "F";
+
+      const newSubject = {
+        subject,
+        totalMark: Number(totalMark),
+        obtainedMark: Number(obtainedMark),
+        grade,
+      };
+
+      setSubjects((prev) => [...prev, newSubject]);
+
+      setSubjectForm({
+        subject: "",
+        totalMark: "",
+        obtainedMark: "",
+      });
+      console.log(subjectForm);
+      setErr("");
+      setShowAddSubject(false);
+    } catch (error) {
+      console.log(error);
+      setErr(error.response?.data?.message);
     }
-
-    if (Number(obtainedMark) > Number(totalMark)) {
-      alert("Obtained mark cannot be greater than total mark");
-      return;
-    }
-
-    const percentage = (Number(obtainedMark) / Number(totalMark)) * 100;
-
-    let grade;
-
-    if (percentage >= 80) grade = "A+";
-    else if (percentage >= 70) grade = "A";
-    else if (percentage >= 60) grade = "A-";
-    else if (percentage >= 50) grade = "B";
-    else if (percentage >= 40) grade = "C";
-    else if (percentage >= 33) grade = "D";
-    else grade = "F";
-
-    const newSubject = {
-      subject,
-      totalMark: Number(totalMark),
-      obtainedMark: Number(obtainedMark),
-      grade,
-    };
-
-    setSubjects((prev) => [...prev, newSubject]);
-
-    setSubjectForm({
-      subject: "",
-      totalMark: "",
-      obtainedMark: "",
-    });
-    console.log(subjectForm);
-
-    setShowAddSubject(false);
   };
 
   const handleDeleteSubject = (index) => {
@@ -158,7 +170,8 @@ function AddResult() {
     : calculateOverallGrade(Number(averageMarks));
 
   // Result Status
-  const resultStatus = hasFailedSubject ? "Fail" : "Pass";
+  const resultStatus =
+    subjects.length === 0 || hasFailedSubject ? "Fail" : "Pass";
 
   // GPA
   const gradePoint = {
@@ -196,9 +209,10 @@ function AddResult() {
   const handleSaveResult = async () => {
     try {
       if (subjects.length === 0) {
-        return alert("please add at least one subject");
+        return setErr("please add at least one subject");
       }
-
+      
+      setLoading(true);
       const resultData = {
         student,
         examType,
@@ -213,8 +227,6 @@ function AddResult() {
         remark,
       };
 
-      console.log("SENDING RESULT:", resultData);
-
       const result = await axios.post(
         `${serverURL}/api/result/add-result`,
         resultData,
@@ -222,16 +234,23 @@ function AddResult() {
       );
 
       dispatch(setResultData(result.data));
+      setLoading(false);
+      setErr("");
       navigate("/result/view-result");
     } catch (error) {
-      console.log("FULL ERROR:", error);
-      console.log("BACKEND ERROR:", error.response?.data);
-
-      alert(
-        error.response?.data?.message ||
-          "Something went wrong while saving result",
-      );
+      setLoading(false);
+      setErr(error.response?.data?.message);
     }
+  };
+
+  const hangleReset = () => {
+    setSelectClass("");
+    setSection("");
+    setStudent("");
+    SetExamType("");
+    setAcademicYear("");
+    setSubjects([]);
+    setRemark("");
   };
 
   return (
@@ -257,7 +276,7 @@ function AddResult() {
             <div className=" w-[560px]">
               <div className="bg-white rounded-[8px] p-2 shadow">
                 <h3 className="font-semibold">
-                  1. Select student & Exam Details
+                  1. Select Student & Exam Details
                 </h3>
                 <div className="mt-3">
                   {/* select class and section */}
@@ -374,15 +393,15 @@ function AddResult() {
                     <p className="text-xs">Grade</p>
                     <h2 className="font-bold text-xl">{overallMark}</h2>
                   </div>
-                  {resultStatus === "Pass" ? (
-                    <div className="bg-green-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
-                      <p className="text-sx bg-green-300 text-green-600 px-2 py-1 rounded-xl font-semibold">
+                  {resultStatus === "Fail" ? (
+                    <div className="bg-red-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
+                      <p className="text-sx bg-red-300 text-red-600 px-2 py-1 rounded-xl font-semibold">
                         {resultStatus}
                       </p>
                     </div>
                   ) : (
-                    <div className="bg-red-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
-                      <p className="text-sx bg-red-300 text-red-600 px-2 py-1 rounded-xl font-semibold">
+                    <div className="bg-green-100 h-[73px] rounded-[8px] p-3 flex items-center justify-center shadow">
+                      <p className="text-sx bg-green-300 text-green-600 px-2 py-1 rounded-xl font-semibold">
                         {resultStatus}
                       </p>
                     </div>
@@ -402,7 +421,10 @@ function AddResult() {
               </div>
 
               <div className="flex items-center justify-between w-[560px] mt-3 bg-white p-2 rounded-[8px] shadow">
-                <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group">
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                  onClick={hangleReset}
+                >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <RiResetLeftFill /> Reset
                   </span>
@@ -427,10 +449,10 @@ function AddResult() {
               </div>
             </div>
             {/* add mark */}
-            <div className="bg-white p-2 rounded-[8px] w-[449px] shadow">
+            <div className="bg-white p-2 rounded-[8px] w-[445px] shadow">
               <h3 className="font-semibold">2. Add Marks</h3>
               <div className="mt-3">
-                <table>
+                <table className="w-full">
                   <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
                     <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
                       <th className="text-left py-3 px-2">Subject</th>
@@ -585,6 +607,73 @@ function AddResult() {
                         Cancel
                       </button>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* add error popup */}
+              {err && (
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-110">
+                  <div className="bg-white p-5 rounded-[8px]">
+                    <div
+                      className="flex justify-end text-gray-600 cursor-pointer"
+                      onClick={() => setErr("")}
+                    >
+                      <RxCross2 />
+                    </div>
+                    <div className="flex flex-col justify-center items-center gap-2">
+                      <div className=" p-3 rounded-full bg-red-100 text-red-500">
+                        <GoAlertFill size={30} />
+                      </div>
+                      <h1 className="text-xl font-bold">
+                        Something went wrong
+                      </h1>
+                      <p className="text-gray-500">Please try again latet.</p>
+                      <div className="bg-red-100 border border-red-700 w-full p-4 rounded-[8px]">
+                        <div className="flex items-center gap-3 text-red-500">
+                          <GoAlertFill size={30} />
+                          {err}
+                        </div>
+                      </div>
+                      <button
+                        className="bg-red-600 cursor-pointer px-15 text-white py-2 rounded-[8px]"
+                        onClick={() => setErr("")}
+                      >
+                        OK
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {loading && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                  {/* Loading Card */}
+                  <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+                    {/* Spinner + Logo */}
+                    <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+                      {/* Spinner */}
+                      <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                      {/* Logo Circle */}
+                      <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                        <img
+                          src={logoimage}
+                          alt="EduManage"
+                          className="h-20 w-20 object-contain"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-3xl font-bold text-[#102A5C]">
+                      Please wait...
+                    </h2>
+
+                    {/* Description */}
+                    <p className="mt-3 text-base text-slate-500">
+                      Create the student result.
+                    </p>
                   </div>
                 </div>
               )}

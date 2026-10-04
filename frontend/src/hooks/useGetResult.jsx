@@ -16,8 +16,7 @@ function useGetResult() {
 
         dispatch(setResultData(result.data));
       } catch (error) {
-        console.log("🔥 GET RESULT ERROR:", error);
-        console.log("🔥 Backend:", error.response?.data);
+        console.log(error)
       }
     };
 
