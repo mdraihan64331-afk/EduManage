@@ -82,6 +82,7 @@ function StudentDetails() {
           { withCredentials: true },
         );
 
+        console.log(result.data)
         setStudent(result.data);
       } catch (error) {
         console.log(error);
@@ -266,13 +267,13 @@ function StudentDetails() {
           </div>
 
           {/* information */}
-          <div className="mt-4 flex justify-between flex-wrap gap-3">
+          <div className="mt-4 flex justify-between gap-3">
             {/* personal information */}
             <div className="bg-white shadow rounded-[8px] p-5 ">
               <div className="flex items-center gap-4 text-xl">
                 <IoPerson /> Personal Information
-              </div>
-              <div className="flex mt-3 justify-between">
+              </div>  
+              <div className="flex mt-3 justify-between text-[14px]">
                 <div>
                   <p>Full Name</p>
                   <p>Student ID</p>
@@ -316,7 +317,7 @@ function StudentDetails() {
               <div className="flex items-center gap-4 text-xl">
                 <GiGraduateCap /> Academic Information
               </div>
-              <div className="flex mt-3">
+              <div className="flex mt-3 text-[14px]">
                 <div>
                   <p>Class</p>
                   <p>Section</p>
@@ -353,7 +354,7 @@ function StudentDetails() {
               <div className="flex items-center gap-4 text-xl">
                 <BsFillPeopleFill /> Guardian Information
               </div>
-              <div className="flex mt-3">
+              <div className="flex mt-3 text-[14px]">
                 <div>
                   <p>Father's Name</p>
                   <p>Father's Phone</p>

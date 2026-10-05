@@ -108,3 +108,19 @@ export const getResult = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getResultById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await Result.findById(id).populate("student");
+
+    if (!result) {
+      return res.status(400).json({ message: "Result is not found!" });
+    }
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log(`getResultById error ${error}`);
+    return res.status(400).json({ message: `getResultById error ${error}` });
+  }
+};

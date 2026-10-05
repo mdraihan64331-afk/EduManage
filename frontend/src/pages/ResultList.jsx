@@ -395,11 +395,9 @@ function ResultList() {
                       <div className="flex gap-1">
                         <button
                           className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                          // onClick={() => {
-                          //   navigate(
-                          //     `/students/student-details/${student._id}`,
-                          //   );
-                          // }}
+                          onClick={() => {
+                            navigate(`/result/result-details/${result._id}`);
+                          }}
                         >
                           <FaRegEye />
                         </button>
