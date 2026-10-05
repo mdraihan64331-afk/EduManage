@@ -6,15 +6,16 @@ import { BiSolidReport } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BsFillPeopleFill } from "react-icons/bs";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaRegEye } from "react-icons/fa";
 import { VscPassFilled } from "react-icons/vsc";
 import { ImCross } from "react-icons/im";
 import { LuSearch } from "react-icons/lu";
-import { RiResetLeftFill } from "react-icons/ri";
+import { RiDeleteBin6Line, RiResetLeftFill } from "react-icons/ri";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 function ResultList() {
   const { resultData } = useSelector((state) => state.result);
-  const results = Array.isArray(resultData) ? resultData : [];
+  const { studentData } = useSelector((state) => state.student);
 
   const [selectClass, setSelectClass] = useState("");
   const className = [
@@ -50,8 +51,66 @@ function ResultList() {
   ];
 
   const [academic, setAcademicYear] = useState("");
+  const [search, setSearch] = useState("");
+
+  const [filteredResult, setFilteredResult] = useState([]);
+  const displayResult =
+    selectClass || section || examType || academic || search
+      ? filteredResult
+      : resultData;
+  const results = Array.isArray(displayResult) ? displayResult : [];
 
   const navigate = useNavigate();
+
+  const passCount = results.filter(
+    (pass) => pass.resultStatus === "Pass",
+  ).length;
+
+  const failCount = results.filter(
+    (fail) => fail.resultStatus === "Fail",
+  ).length;
+
+  const studentsWithResult = new Set(
+    results.map((result) => result.student?._id),
+  );
+
+  const totalExamStudents = studentsWithResult.size;
+
+  const handleSearch = () => {
+    const filtered = resultData.filter((result) => {
+      const matchClass = selectClass
+        ? result.student.className === selectClass
+        : true;
+      const matchSection = section ? result.student.section === section : true;
+      const matchExamType = examType ? result.examType === examType : true;
+      const matchAcademicYear = academic
+        ? result.academicYear === academic
+        : true;
+
+      const matchSearch =
+        result.student.fullName?.toLowerCase().includes(search.toLowerCase()) ||
+        result.student.studentId?.toString().includes(search) ||
+        result.student.rollNumber?.toString().includes(search);
+
+      return (
+        matchClass &&
+        matchSection &&
+        matchExamType &&
+        matchAcademicYear &&
+        matchSearch
+      );
+    });
+    setFilteredResult(filtered);
+  };
+
+  const handleReset = () => {
+    setSelectClass("");
+    setSection("");
+    setExamType("");
+    setAcademicYear("");
+    setSearch("");
+    setFilteredResult("");
+  };
 
   return (
     <div className="flex bg-blue-50">
@@ -94,7 +153,7 @@ function ResultList() {
 
               <div className="flex flex-col gap-1">
                 <p>Total Results</p>
-                <h3 className="text-xl font-bold">254</h3>
+                <h3 className="text-xl font-bold">{totalExamStudents}</h3>
                 <p className="flex items-center gap-2 text-xs text-green-500">
                   <FaArrowUp /> 12% this year
                 </p>
@@ -109,7 +168,7 @@ function ResultList() {
 
               <div className="flex flex-col gap-1">
                 <p>Pass</p>
-                <h3 className="text-xl font-bold">212</h3>
+                <h3 className="text-xl font-bold">{passCount}</h3>
                 <p className="flex items-center gap-2 text-xs text-green-500">
                   <FaArrowUp /> 14% this year
                 </p>
@@ -124,7 +183,7 @@ function ResultList() {
 
               <div className="flex flex-col gap-1">
                 <p>Fail</p>
-                <h3 className="text-xl font-bold">33</h3>
+                <h3 className="text-xl font-bold">{failCount}</h3>
                 <p className="flex items-center gap-2 text-xs text-red-500">
                   <FaArrowDown /> 5% this year
                 </p>
@@ -138,8 +197,8 @@ function ResultList() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <p>Total Results</p>
-                <h3 className="text-xl font-bold">254</h3>
+                <p>Total Students</p>
+                <h3 className="text-xl font-bold">{studentData.length}</h3>
                 <p className="flex items-center gap-2 text-xs text-green-500">
                   <FaArrowUp /> 2 new this year
                 </p>
@@ -225,19 +284,25 @@ function ResultList() {
               </div>
               <input
                 type="text"
-                value={academic}
-                onChange={(e) => setAcademicYear(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Name, ID and roll..."
                 className=" outline-none"
               />
             </div>
 
             {/* search button */}
-            <button className="flex items-center gap-2 px-2 py-1 bg-green-600 rounded-[8px] text-white hover:bg-green-700 transition-all cursor-pointer">
+            <button
+              className="flex items-center gap-2 px-2 py-1 bg-green-600 rounded-[8px] text-white hover:bg-green-700 transition-all cursor-pointer"
+              onClick={handleSearch}
+            >
               <LuSearch />
               Search
             </button>
-            <button className="flex items-center gap-2 px-2 py-1 border border-gray-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white text-blue-600  transition-all cursor-pointer rounded-[8px]">
+            <button
+              className="flex items-center gap-2 px-2 py-1 border border-gray-300 hover:bg-blue-600 hover:border-blue-600 hover:text-white text-blue-600  transition-all cursor-pointer rounded-[8px]"
+              onClick={handleReset}
+            >
               <RiResetLeftFill />
               Reset
             </button>
@@ -275,7 +340,7 @@ function ResultList() {
                     className="bg-white border border-gray-200 font-semibold"
                   >
                     <td className="py-3 px-2 text-[14px]">{index + 1}</td>
-                    <td className="flex items-center gap-2 py-3 px-2 text-[14px]">
+                    <td className="flex items-center gap-2 py-3 px-2 text-xs">
                       <div>
                         {result?.student?.image ? (
                           <img
@@ -290,7 +355,7 @@ function ResultList() {
                         )}
                       </div>
                       <div>
-                        <h4 className="capitalize">
+                        <h4 className="capitalize font-semibold">
                           {result.student?.fullName}
                         </h4>
                         <p className="text-xs">
@@ -321,12 +386,43 @@ function ResultList() {
                     <td className="py-3 px-2 text-xs">{result.gpa}</td>
                     <td className="py-3 px-2 text-xs">
                       <p
-                      className={`py-1 px-2 text-xs text-center ${result.resultStatus === "Pass" ? "bg-green-100 text-green-700 rounded-[8px]" : result.resultStatus === "Fail" ? "bg-red-100 text-red-600 rounded-[8px]" : ""}`}
+                        className={`py-1 px-2 text-xs text-center ${result.resultStatus === "Pass" ? "bg-green-100 text-green-700 rounded-[8px]" : result.resultStatus === "Fail" ? "bg-red-100 text-red-600 rounded-[8px]" : ""}`}
                       >
-                      {result.resultStatus}
+                        {result.resultStatus}
                       </p>
-                      </td>
-                    <td></td>
+                    </td>
+                    <td className="py-3 px-2">
+                      <div className="flex gap-1">
+                        <button
+                          className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                          // onClick={() => {
+                          //   navigate(
+                          //     `/students/student-details/${student._id}`,
+                          //   );
+                          // }}
+                        >
+                          <FaRegEye />
+                        </button>
+
+                        <button
+                          className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                          // onClick={() =>
+                          //   navigate(`/students/edit-student/${student._id}`)
+                          // }
+                        >
+                          <MdOutlineModeEdit />
+                        </button>
+                        <button
+                          className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
+                          // onClick={() => {
+                          //   setDeleteStudent(student);
+                          //   setShowDeleteModal(true);
+                          // }}
+                        >
+                          <RiDeleteBin6Line />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
