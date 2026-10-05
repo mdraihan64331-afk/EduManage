@@ -6,7 +6,14 @@ import { BiSolidReport } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BsFillPeopleFill } from "react-icons/bs";
-import { FaArrowDown, FaArrowUp, FaRegEye, FaTrophy } from "react-icons/fa";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaClipboardList,
+  FaRegCalendarAlt,
+  FaRegEye,
+  FaTrophy,
+} from "react-icons/fa";
 import { VscPassFilled } from "react-icons/vsc";
 import { ImCross } from "react-icons/im";
 import { LuScroll, LuSearch } from "react-icons/lu";
@@ -16,6 +23,7 @@ import {
   RiResetLeftFill,
 } from "react-icons/ri";
 import {
+  MdEditDocument,
   MdLocalPhone,
   MdOutlineEmail,
   MdOutlineModeEdit,
@@ -452,14 +460,16 @@ function ResultList() {
               <>
                 <div className="fixed bg-black/40 flex items-center justify-center inset-0 z-110">
                   <div className="bg-blue-50 rounded-[8px] p-3">
-                    <button
-                      className="flex justify-end cursor-pointer"
-                      onClick={() => {
-                        setShowResultModel(false);
-                      }}
-                    >
-                      <RxCross2 />
-                    </button>
+                    <div className="flex justify-end">
+                      <button
+                      className="cursor-pointer"
+                        onClick={() => {
+                          setShowResultModel(false);
+                        }}
+                      >
+                        <RxCross2 />
+                      </button>
+                    </div>
                     <div className="mt-3 flex justify-center gap-3">
                       <div>
                         <div className="bg-white shadow rounded-[8px] p-3 w-[250px]">
@@ -553,20 +563,82 @@ function ResultList() {
                       </div>
                       <div>
                         <div className="bg-white rounded-[8px] shadow p-3">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 text-blue-800 bg-blue-200 rounded-full">
-                              <FaTrophy size={20} />
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 text-blue-800 bg-blue-200 rounded-full">
+                                <FaTrophy size={20} />
+                              </div>
+                              <h2 className="text-xl font-semibold">
+                                Result Details
+                              </h2>
                             </div>
-                            <h2 className="text-xl font-semibold">Result Details</h2>
+                            <p
+                              className={`py-2 px-4 font-semibold rounded-[8px] ${viewResult.resultStatus === "Pass" ? "bg-green-100 text-green-600" : viewResult.resultStatus === "Fail" ? "bg-red-100 text-red-600" : ""}`}
+                            >
+                              {viewResult.resultStatus}
+                            </p>
                           </div>
 
-                          <div>
-                            <div>
-
+                          <div className="flex items-center gap-3">
+                            {/* exam type */}
+                            <div className="flex items-center gap-3 bg-blue-50 shadow p-3 mt-3 rounded-[8px]">
+                              <div className="flex items-center justify-center p-2 bg-purple-200 text-purple-800 rounded-full">
+                                <FaClipboardList size={20} />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Exam Type
+                                </p>
+                                <h1>{viewResult.examType}</h1>
+                              </div>
                             </div>
-                            <div>
-                              <p>Exam Type</p>
-                              <h1>{viewResult.examType}</h1>
+                            {/* academic year */}
+                            <div className="flex items-center gap-3 bg-blue-50 shadow p-3 mt-3 rounded-[8px]">
+                              <div className="flex items-center justify-center p-2 bg-purple-200 text-purple-800 rounded-full">
+                                <FaRegCalendarAlt size={20} />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Acaemic Year
+                                </p>
+                                <h1>{viewResult.academicYear}</h1>
+                              </div>
+                            </div>
+                            {/* total mark */}
+                            <div className="flex items-center gap-3 bg-blue-50 shadow p-3 mt-3 rounded-[8px]">
+                              <div className="flex items-center justify-center p-2 bg-blue-100 text-blue-800 rounded-full">
+                                <MdEditDocument size={20} />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Total Marks
+                                </p>
+                                <h1>{viewResult.totalMarks}</h1>
+                              </div>
+                            </div>
+                            {/* obtained marks */}
+                            <div className="flex items-center gap-3 bg-blue-50 shadow p-3 mt-3 rounded-[8px]">
+                              <div className="flex items-center justify-center p-2 bg-blue-100 text-blue-700 rounded-full">
+                                <MdEditDocument size={20} />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Obtained Mark
+                                </p>
+                                <h1>{viewResult.totalObtainedMarks}</h1>
+                              </div>
+                            </div>
+                            {/* percentage */}
+                            <div className="flex items-center gap-3 bg-blue-50 shadow p-3 mt-3 rounded-[8px]">
+                              <div className="flex items-center justify-center p-2 bg-purple-200 text-purple-800 rounded-full">
+                                <FaClipboardList size={20} />
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-500">
+                                  Percentage
+                                </p>
+                                <h1>{viewResult.averageMark}%</h1>
+                              </div>
                             </div>
                           </div>
                         </div>
