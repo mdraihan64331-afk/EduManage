@@ -39,7 +39,6 @@ import EditMarkAttendance from "./pages/EditMarkAttendance.jsx";
 import AddResult from "./pages/AddResult.jsx";
 import ResultList from "./pages/ResultList.jsx";
 import useGetResult from "./hooks/useGetResult.jsx";
-import ResultDetails from "./pages/ResultDetails.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -84,7 +83,6 @@ function App() {
         <Route path="/attendances/edit-mark-attendance/:id" element={<EditMarkAttendance />} />
         <Route path="/result/add-result" element={<AddResult />} />
         <Route path="/result/view-result" element={<ResultList />} />
-        <Route path="/result/result-details/:id" element={<ResultDetails />} />
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />
         <Route path="/fees-payments" element={<FeesPayment />} />

@@ -6,12 +6,23 @@ import { BiSolidReport } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { BsFillPeopleFill } from "react-icons/bs";
-import { FaArrowDown, FaArrowUp, FaRegEye } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaRegEye, FaTrophy } from "react-icons/fa";
 import { VscPassFilled } from "react-icons/vsc";
 import { ImCross } from "react-icons/im";
-import { LuSearch } from "react-icons/lu";
-import { RiDeleteBin6Line, RiResetLeftFill } from "react-icons/ri";
-import { MdOutlineModeEdit } from "react-icons/md";
+import { LuScroll, LuSearch } from "react-icons/lu";
+import {
+  RiArrowLeftLongLine,
+  RiDeleteBin6Line,
+  RiResetLeftFill,
+} from "react-icons/ri";
+import {
+  MdLocalPhone,
+  MdOutlineEmail,
+  MdOutlineModeEdit,
+} from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+import { SiGoogleclassroom } from "react-icons/si";
+import { BsCalendarDate } from "react-icons/bs";
 
 function ResultList() {
   const { resultData } = useSelector((state) => state.result);
@@ -52,6 +63,8 @@ function ResultList() {
 
   const [academic, setAcademicYear] = useState("");
   const [search, setSearch] = useState("");
+  const [viewResult, setViewResult] = useState(null);
+  const [showResultModel, setShowResultModel] = useState(false);
 
   const [filteredResult, setFilteredResult] = useState([]);
   const displayResult =
@@ -335,96 +348,234 @@ function ResultList() {
               {/* table body */}
               <tbody>
                 {results.map((result, index) => (
-                  <tr
-                    key={result._id}
-                    className="bg-white border border-gray-200 font-semibold"
-                  >
-                    <td className="py-3 px-2 text-[14px]">{index + 1}</td>
-                    <td className="flex items-center gap-2 py-3 px-2 text-xs">
-                      <div>
-                        {result?.student?.image ? (
-                          <img
-                            src={result.student?.image}
-                            alt={result.student?.fullName}
-                            className="h-10 w-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <span className="h-10 w-10 rounded-full text-white bg-purple-700 flex items-center justify-center">
-                            {result.student?.fullName.slice(0, 1).toUpperCase()}
-                          </span>
-                        )}
-                      </div>
-                      <div>
-                        <h4 className="capitalize font-semibold">
-                          {result.student?.fullName}
-                        </h4>
-                        <p className="text-xs">
-                          Roll No. {result.student?.rollNumber}
+                  <>
+                    <tr
+                      key={result._id}
+                      className="bg-white border border-gray-200 font-semibold"
+                    >
+                      <td className="py-3 px-2 text-[14px]">{index + 1}</td>
+                      <td className="flex items-center gap-2 py-3 px-2 text-xs">
+                        <div>
+                          {result?.student?.image ? (
+                            <img
+                              src={result.student?.image}
+                              alt={result.student?.fullName}
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <span className="h-10 w-10 rounded-full text-white bg-purple-700 flex items-center justify-center">
+                              {result.student?.fullName
+                                .slice(0, 1)
+                                .toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="capitalize font-semibold">
+                            {result.student?.fullName}
+                          </h4>
+                          <p className="text-xs">
+                            Roll No. {result.student?.rollNumber}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-3 px-2 text-xs">
+                        {result.student?.className}
+                      </td>
+                      <td className="py-3 px-2 text-xs">
+                        {result.student?.section}
+                      </td>
+                      <td className="py-3 px-2 text-xs">{result.examType}</td>
+                      <td className="py-3 px-2 text-xs">
+                        {result.academicYear}
+                      </td>
+                      <td className="py-3 px-2 text-xs">{result.totalMarks}</td>
+                      <td className="py-3 px-2 text-xs">
+                        {result.totalObtainedMarks}
+                      </td>
+                      <td className="py-3 px-2 text-xs">
+                        {result.averageMark}%
+                      </td>
+                      <td className="py-3 px-2 text-xs">
+                        <p
+                          className={`py-1 px-2 text-xs text-center ${["A+", "A", "A-"].includes(result.grade) ? "text-green-700 bg-green-100 rounded-[8px]" : ["B", "C", "D"].includes(result.grade) ? "text-orange-900 bg-orange-100 rounded-[8px]" : result.grade === "F" ? "text-red-600 bg-red-100 rounded-[8px]" : ""}`}
+                        >
+                          {result.grade}
                         </p>
-                      </div>
-                    </td>
-                    <td className="py-3 px-2 text-xs">
-                      {result.student?.className}
-                    </td>
-                    <td className="py-3 px-2 text-xs">
-                      {result.student?.section}
-                    </td>
-                    <td className="py-3 px-2 text-xs">{result.examType}</td>
-                    <td className="py-3 px-2 text-xs">{result.academicYear}</td>
-                    <td className="py-3 px-2 text-xs">{result.totalMarks}</td>
-                    <td className="py-3 px-2 text-xs">
-                      {result.totalObtainedMarks}
-                    </td>
-                    <td className="py-3 px-2 text-xs">{result.averageMark}%</td>
-                    <td className="py-3 px-2 text-xs">
-                      <p
-                        className={`py-1 px-2 text-xs text-center ${["A+", "A", "A-"].includes(result.grade) ? "text-green-700 bg-green-100 rounded-[8px]" : ["B", "C", "D"].includes(result.grade) ? "text-orange-900 bg-orange-100 rounded-[8px]" : result.grade === "F" ? "text-red-600 bg-red-100 rounded-[8px]" : ""}`}
-                      >
-                        {result.grade}
-                      </p>
-                    </td>
-                    <td className="py-3 px-2 text-xs">{result.gpa}</td>
-                    <td className="py-3 px-2 text-xs">
-                      <p
-                        className={`py-1 px-2 text-xs text-center ${result.resultStatus === "Pass" ? "bg-green-100 text-green-700 rounded-[8px]" : result.resultStatus === "Fail" ? "bg-red-100 text-red-600 rounded-[8px]" : ""}`}
-                      >
-                        {result.resultStatus}
-                      </p>
-                    </td>
-                    <td className="py-3 px-2">
-                      <div className="flex gap-1">
-                        <button
-                          className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                          onClick={() => {
-                            navigate(`/result/result-details/${result._id}`);
-                          }}
+                      </td>
+                      <td className="py-3 px-2 text-xs">{result.gpa}</td>
+                      <td className="py-3 px-2 text-xs">
+                        <p
+                          className={`py-1 px-2 text-xs text-center ${result.resultStatus === "Pass" ? "bg-green-100 text-green-700 rounded-[8px]" : result.resultStatus === "Fail" ? "bg-red-100 text-red-600 rounded-[8px]" : ""}`}
                         >
-                          <FaRegEye />
-                        </button>
+                          {result.resultStatus}
+                        </p>
+                      </td>
+                      <td className="py-3 px-2">
+                        <div className="flex gap-1">
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            onClick={() => {
+                              setShowResultModel(true);
+                              setViewResult(result);
+                            }}
+                          >
+                            <FaRegEye />
+                          </button>
 
-                        <button
-                          className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                          // onClick={() =>
-                          //   navigate(`/students/edit-student/${student._id}`)
-                          // }
-                        >
-                          <MdOutlineModeEdit />
-                        </button>
-                        <button
-                          className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
-                          // onClick={() => {
-                          //   setDeleteStudent(student);
-                          //   setShowDeleteModal(true);
-                          // }}
-                        >
-                          <RiDeleteBin6Line />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                          <button
+                            className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                            // onClick={() =>
+                            //   navigate(`/students/edit-student/${student._id}`)
+                            // }
+                          >
+                            <MdOutlineModeEdit />
+                          </button>
+                          <button
+                            className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
+                            // onClick={() => {
+                            //   setDeleteStudent(student);
+                            //   setShowDeleteModal(true);
+                            // }}
+                          >
+                            <RiDeleteBin6Line />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </>
                 ))}
               </tbody>
             </table>
+            {/* view result */}
+            {viewResult && showResultModel && (
+              <>
+                <div className="fixed bg-black/40 flex items-center justify-center inset-0 z-110">
+                  <div className="bg-blue-50 rounded-[8px] p-3">
+                    <button
+                      className="flex justify-end cursor-pointer"
+                      onClick={() => {
+                        setShowResultModel(false);
+                      }}
+                    >
+                      <RxCross2 />
+                    </button>
+                    <div className="mt-3 flex justify-center gap-3">
+                      <div>
+                        <div className="bg-white shadow rounded-[8px] p-3 w-[250px]">
+                          <div className="flex flex-col items-center">
+                            {viewResult.student?.image ? (
+                              <img
+                                src={viewResult.student?.image}
+                                alt=""
+                                className="h-20 w-20 object-cover rounded-full"
+                              />
+                            ) : (
+                              <div>
+                                <h1 className="text-white h-20 w-20 rounded bg-purple-700 flex items-center justify-center rounded-full text-xl">
+                                  {viewResult.student?.fullName
+                                    .slice(0, 1)
+                                    .toUpperCase()}
+                                </h1>
+                              </div>
+                            )}
+
+                            <h1 className="capitalize font-semibold">
+                              {viewResult.student?.fullName}
+                            </h1>
+                            <p className="text-gray-400 text-xs">
+                              Student Id: {viewResult.student?.studentId}
+                            </p>
+                          </div>
+
+                          <div className="h-[1px] w-full mt-3 bg-gray-300"></div>
+
+                          <div className="mt-3 flex flex-col gap-2">
+                            {/* class */}
+                            <div className="flex items-center gap-3">
+                              <SiGoogleclassroom />
+                              <div className="text-gray-500">
+                                <p>Class</p>
+                                <h5>
+                                  {viewResult.student?.className}-
+                                  {viewResult.student?.section}
+                                </h5>
+                              </div>
+                            </div>
+                            {/* roll */}
+                            <div className="flex items-center gap-3">
+                              <LuScroll />
+                              <div className="text-gray-500">
+                                <p>Roll No</p>
+                                <h5>{viewResult.student?.rollNumber}</h5>
+                              </div>
+                            </div>
+                            {/* date of birth */}
+                            <div className="flex items-center gap-3">
+                              <BsCalendarDate />
+                              <div className="text-gray-500">
+                                <p>Date of Birth</p>
+                                <h5>
+                                  {new Date(
+                                    viewResult.student?.dob,
+                                  ).toLocaleDateString()}
+                                </h5>
+                              </div>
+                            </div>
+                            {/* phone */}
+                            <div className="flex items-center gap-3">
+                              <MdLocalPhone />
+                              <div className="text-gray-500">
+                                <p>Phone</p>
+                                <h5>{viewResult.student?.phone}</h5>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <MdOutlineEmail />
+                              <div className="text-gray-500">
+                                <p>Email</p>
+                                <h5>{viewResult.student?.email} </h5>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          className="relative mt-5 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 bg-white text-blue-600 rounded-lg cursor-pointer group"
+                          onClick={() => {
+                            setShowResultModel(false);
+                          }}
+                        >
+                          <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            <RiArrowLeftLongLine /> Back to Result List
+                          </span>
+                          <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+                        </button>
+                      </div>
+                      <div>
+                        <div className="bg-white rounded-[8px] shadow p-3">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 text-blue-800 bg-blue-200 rounded-full">
+                              <FaTrophy size={20} />
+                            </div>
+                            <h2 className="text-xl font-semibold">Result Details</h2>
+                          </div>
+
+                          <div>
+                            <div>
+
+                            </div>
+                            <div>
+                              <p>Exam Type</p>
+                              <h1>{viewResult.examType}</h1>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
