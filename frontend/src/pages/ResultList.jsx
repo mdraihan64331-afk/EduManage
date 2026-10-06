@@ -20,17 +20,21 @@ import { LuScroll, LuSearch } from "react-icons/lu";
 import {
   RiArrowLeftLongLine,
   RiDeleteBin6Line,
+  RiPrinterLine,
   RiResetLeftFill,
 } from "react-icons/ri";
 import {
   MdEditDocument,
   MdLocalPhone,
+  MdMessage,
   MdOutlineEmail,
   MdOutlineModeEdit,
 } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { SiGoogleclassroom } from "react-icons/si";
 import { BsCalendarDate } from "react-icons/bs";
+import { IoBookSharp } from "react-icons/io5";
+import { TiStarOutline } from "react-icons/ti";
 
 function ResultList() {
   const { resultData } = useSelector((state) => state.result);
@@ -462,7 +466,7 @@ function ResultList() {
                   <div className="bg-blue-50 rounded-[8px] p-3">
                     <div className="flex justify-end">
                       <button
-                      className="cursor-pointer"
+                        className="cursor-pointer"
                         onClick={() => {
                           setShowResultModel(false);
                         }}
@@ -470,7 +474,7 @@ function ResultList() {
                         <RxCross2 />
                       </button>
                     </div>
-                    <div className="mt-3 flex justify-center gap-3">
+                    <div className="mt-2 flex justify-center gap-3">
                       <div>
                         <div className="bg-white shadow rounded-[8px] p-3 w-[250px]">
                           <div className="flex flex-col items-center">
@@ -639,6 +643,121 @@ function ResultList() {
                                 </p>
                                 <h1>{viewResult.averageMark}%</h1>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="bg-white mt-3 p-3 rounded-[8px]">
+                          <h2 className="font-semibold flex items-center gap-3">
+                            <IoBookSharp className="text-blue-600" />{" "}
+                            Subject-wise Marks
+                          </h2>
+
+                          <div className="mt-3 w-full overflow-auto max-h-[200px]">
+                            <table className="w-full min-w-[700px]">
+                              <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                                <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
+                                  <th className="text-left py-3 px-2">#</th>
+                                  <th className="text-left py-3 px-2">
+                                    Subject
+                                  </th>
+                                  <th className="text-left py-3 px-2">
+                                    Total Marks
+                                  </th>
+                                  <th className="text-left py-3 px-2">
+                                    Obtained Marks
+                                  </th>
+                                  <th className="text-left py-3 px-2">Grade</th>
+                                </tr>
+                              </thead>
+
+                              <tbody>
+                                {viewResult.subject.map((subject, index) => (
+                                  <tr
+                                    key={index}
+                                    className="bg-white border border-gray-200 font-semibold"
+                                  >
+                                    <td className="py-3 px-2">{index + 1}</td>
+                                    <td className="py-3 px-2 capitalize">
+                                      {subject.subject}
+                                    </td>
+                                    <td className="py-3 px-2">
+                                      {subject.totalMark}
+                                    </td>
+                                    <td className="py-3 px-2">
+                                      {subject.obtainedMark}
+                                    </td>
+                                    <td className="py-3 px-2">
+                                      <p
+                                        className={`py-1 px-1 rounded-[8px] text-center font-semibold ${["A+", "A", "A-"].includes(subject.grade) ? "bg-green-200" : ["B", "C", "D"].includes(subject.grade) ? "bg-orange-100" : "bg-red-200"}`}
+                                      >
+                                        {subject.grade}
+                                      </p>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div className="mt-2 flex items-center gap-3">
+                            <div className="p-2 bg-green-50 rounded-[8px] shadow">
+                              <h2 className="font-semibold flex items-center gap-3">
+                                <TiStarOutline className="text-green-700" />{" "}
+                                Overall Result
+                              </h2>
+
+                              <div className="px-3 py-1 ">
+                                <div className="flex items-center gap-7">
+                                  <div>
+                                    <p className="text-gray-500">
+                                      Tatal Obtained Marks
+                                    </p>
+                                    <h1 className="text-xl font-semibold">
+                                      {viewResult.totalObtainedMarks}/
+                                      {viewResult.totalMarks}
+                                    </h1>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">
+                                      Average Mark
+                                    </p>
+                                    <h1 className="text-xl font-semibold">
+                                      {viewResult.averageMark}%
+                                    </h1>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">GPA</p>
+                                    <h1 className="text-xl font-semibold">
+                                      {viewResult.gpa}/5.0
+                                    </h1>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">Grade</p>
+                                    <h1
+                                      className={`ext-xl font-semibold py-1 px-2 text-xs text-center ${["A+", "A", "A-"].includes(viewResult.grade) ? "text-green-700 bg-green-100 rounded-[8px]" : ["B", "C", "D"].includes(viewResult.grade) ? "text-orange-900 bg-orange-100 rounded-[8px]" : viewResult.grade === "F" ? "text-red-600 bg-red-100 rounded-[8px]" : ""}`}
+                                    >
+                                      {viewResult.grade}
+                                    </h1>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="bg-[#f2f0fe] rounded-[8px] shadow p-2">
+                                <h2 className="font-semibold flex items-center gap-3">
+                                  <MdMessage className="text-blue-700" />{" "}
+                                  Remarks
+                                </h2>
+                                <div>{viewResult.remark}</div>
+                              </div>
+                              {/* <button
+                                className="relative mt-5 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 bg-white text-blue-600 rounded-lg cursor-pointer group"
+                              >
+                                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                                  <RiPrinterLine /> Print Result
+                                </span>
+                                <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
+                              </button> */}
                             </div>
                           </div>
                         </div>
