@@ -29,9 +29,7 @@ const AcademicOverview = ({ studentId }) => {
     },
   );
 
-  // ================================
   // Previous Month
-  // ================================
   const handlePreviousMonth = () => {
     if (selectedMonth === 0) {
       setSelectedMonth(11);
@@ -41,9 +39,7 @@ const AcademicOverview = ({ studentId }) => {
     }
   };
 
-  // ================================
   // Next Month
-  // ================================
   const handleNextMonth = () => {
     const now = new Date();
 
@@ -61,9 +57,7 @@ const AcademicOverview = ({ studentId }) => {
     }
   };
 
-  // ================================
   // Filter Student Attendance
-  // ================================
   const studentAttendance = useMemo(() => {
     return attendanceList.filter((attendance) => {
       if (!attendance.student || !attendance.date) {
@@ -90,9 +84,7 @@ const AcademicOverview = ({ studentId }) => {
     });
   }, [attendanceList, studentId, selectedMonth, selectedYear]);
 
-  // ================================
   // Attendance Count
-  // ================================
   const present = studentAttendance.filter(
     (item) => item.status === "Present",
   ).length;
@@ -107,24 +99,18 @@ const AcademicOverview = ({ studentId }) => {
 
   const totalClasses = studentAttendance.length;
 
-  // ================================
   // Attendance Percentage
-  // ================================
   const attendancePercentage =
     totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(1) : 0;
 
-  // ================================
   // Donut Chart Degrees
-  // ================================
   const presentDegree = totalClasses > 0 ? (present / totalClasses) * 360 : 0;
 
   const absentDegree = totalClasses > 0 ? (absent / totalClasses) * 360 : 0;
 
   const lateStartDegree = presentDegree + absentDegree;
 
-  // ================================
   // Attendance Items
-  // ================================
   const attendance = [
     {
       label: "Present",

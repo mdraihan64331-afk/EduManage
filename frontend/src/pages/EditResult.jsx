@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import logoimage from "../assets/login-logo.png";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
-import { BsPersonAdd } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
-import { MdDelete } from "react-icons/md";
-import { FaPlus } from "react-icons/fa6";
-import { RiResetLeftFill } from "react-icons/ri";
+import { FaPlus, FaRegEdit, FaRegSave } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { FaRegSave } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { serverURL } from "../App";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { setResultData } from "../redux/resultSlice";
 import { GoAlertFill } from "react-icons/go";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { RiResetLeftFill } from "react-icons/ri";
+import axios from "axios";
+import { serverURL } from "../App";
 
-function AddResult() {
+function EditResult() {
+  const { id } = useParams();
   const [selectClass, setSelectClass] = useState("");
   const className = [
     "Class 1",
@@ -205,13 +205,54 @@ function AddResult() {
 
   const overallMark = calulateOverallGrade(Number(averageMarks));
 
-  const handleSaveResult = async () => {
-    try {
-      if (subjects.length === 0) {
-        return setErr("please add at least one subject");
+  useEffect(() => {
+    const fetchResult = async () => {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          `${serverURL}/api/result/get-result-by-id/${id}`,
+          { withCredentials: true },
+        );
+
+        const result = response.data;
+
+        setStudent(
+          typeof result.student === "object"
+            ? result.student._id
+            : result.student,
+        );
+
+        setSelectClass(result.student?.className || "");
+        setSection(result.student?.section || "");
+        SetExamType(result.examType || "");
+        setAcademicYear(result.academicYear || "");
+        setSubjects(result.subject || []);
+        setRemark(result.remark || "");
+      } catch (error) {
+        console.error("Fetch Result Error:", error);
+        setErr(error.response?.data?.message || "Failed to load result");
+      } finally {
+        setLoading(false);
       }
-      
+    };
+
+    if (id) fetchResult();
+  }, [id]);
+
+  const handleUpdateResult = async () => {
+    try {
+      if (!student || !examType || !academicYear) {
+        return setErr("Please select student, exam type and academic year");
+      }
+
+      if (subjects.length === 0) {
+        return setErr("Please add at least one subject");
+      }
+
       setLoading(true);
+      setErr("");
+
       const resultData = {
         student,
         examType,
@@ -222,23 +263,25 @@ function AddResult() {
         averageMark: Number(averageMarks),
         gpa: Number(gpa),
         grade: overallGrade,
-        resultStatus: resultStatus,
+        resultStatus,
         remark,
       };
 
-      const result = await axios.post(
-        `${serverURL}/api/result/add-result`,
+      const response = await axios.put(
+        `${serverURL}/api/result/edit-result/${id}`,
         resultData,
         { withCredentials: true },
       );
 
-      dispatch(setResultData(result.data));
-      setLoading(false);
-      setErr("");
+      console.log("Updated Result:", response.data);
+
       navigate("/result/view-result");
     } catch (error) {
+      console.error("Update Result Error:", error);
+
+      setErr(error.response?.data?.message || "Failed to update result");
+    } finally {
       setLoading(false);
-      setErr(error.response?.data?.message);
     }
   };
 
@@ -259,11 +302,10 @@ function AddResult() {
         <AdminHeader />
 
         <div className="p-2">
-          {/* tital */}
           <div className="flex items-center gap-3 ">
-            <BsPersonAdd size={35} className="text-green-700" />
+            <FaRegEdit size={35} className="text-green-700" />
             <div>
-              <h1 className="text-2xl font-bold">Add New Result</h1>
+              <h1 className="text-2xl font-bold">Edit Result</h1>
               <p>
                 Enter student marks and generate result. The system will
                 caiculate total marks. GPA and grade automatically.
@@ -432,7 +474,7 @@ function AddResult() {
 
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  onClick={handleSaveResult}
+                  onClick={handleUpdateResult}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     {loading ? (
@@ -684,4 +726,4 @@ function AddResult() {
   );
 }
 
-export default AddResult;
+export default EditResult;

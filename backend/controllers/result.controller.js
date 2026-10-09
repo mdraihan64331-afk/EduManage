@@ -124,3 +124,125 @@ export const getResultById = async (req, res) => {
     return res.status(400).json({ message: `getResultById error ${error}` });
   }
 };
+
+
+export const EditResult = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      student,
+      examType,
+      subject,
+      academicYear,
+      totalMarks,
+      totalObtainedMarks,
+      averageMark,
+      gpa,
+      grade,
+      resultStatus,
+      remark,
+    } = req.body;
+
+    // Validate result ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid result ID",
+      });
+    }
+
+    const result = await Result.findById(id);
+
+    if (!result) {
+      return res.status(404).json({
+        message: "Result not found!",
+      });
+    }
+
+    // Validate student ID
+    if (
+      student !== undefined &&
+      !mongoose.Types.ObjectId.isValid(student)
+    ) {
+      return res.status(400).json({
+        message: "Invalid student ID",
+      });
+    }
+
+    // Validate subjects
+    if (subject !== undefined) {
+      if (!Array.isArray(subject) || subject.length === 0) {
+        return res.status(400).json({
+          message: "At least one subject is required",
+        });
+      }
+
+      for (const item of subject) {
+        if (
+          Number(item.obtainedMark) > Number(item.totalMark)
+        ) {
+          return res.status(400).json({
+            message: `${item.subject}: Obtained mark cannot be greater than total mark.`,
+          });
+        }
+      }
+
+      result.subject = subject;
+    }
+
+    // Check duplicate result
+    const checkStudent = student ?? result.student;
+    const checkExamType = examType ?? result.examType;
+    const checkAcademicYear = academicYear ?? result.academicYear;
+
+    const existingResult = await Result.findOne({
+      student: checkStudent,
+      examType: checkExamType,
+      academicYear: checkAcademicYear,
+      _id: { $ne: id },
+    });
+
+    if (existingResult) {
+      return res.status(400).json({
+        message: "Result already exists for this exam.",
+      });
+    }
+
+    // Update fields
+    if (student !== undefined) result.student = student;
+    if (examType !== undefined) result.examType = examType;
+    if (academicYear !== undefined) {
+      result.academicYear = academicYear;
+    }
+
+    if (totalMarks !== undefined) result.totalMarks = totalMarks;
+    if (totalObtainedMarks !== undefined) {
+      result.totalObtainedMarks = totalObtainedMarks;
+    }
+    if (averageMark !== undefined) result.averageMark = averageMark;
+    if (gpa !== undefined) result.gpa = gpa;
+    if (grade !== undefined) result.grade = grade;
+    if (resultStatus !== undefined) {
+      result.resultStatus = resultStatus;
+    }
+    if (remark !== undefined) result.remark = remark;
+
+    // Save changes to MongoDB
+    await result.save();
+
+    const updatedResult = await Result.findById(id).populate("student");
+
+    return res.status(200).json({
+      message: "Result updated successfully",
+      result: updatedResult,
+    });
+  } catch (error) {
+    console.error("EDIT RESULT ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to update result",
+      error: error.message,
+    });
+  }
+};
+
