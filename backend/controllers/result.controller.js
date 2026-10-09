@@ -125,7 +125,6 @@ export const getResultById = async (req, res) => {
   }
 };
 
-
 export const EditResult = async (req, res) => {
   try {
     const { id } = req.params;
@@ -160,10 +159,7 @@ export const EditResult = async (req, res) => {
     }
 
     // Validate student ID
-    if (
-      student !== undefined &&
-      !mongoose.Types.ObjectId.isValid(student)
-    ) {
+    if (student !== undefined && !mongoose.Types.ObjectId.isValid(student)) {
       return res.status(400).json({
         message: "Invalid student ID",
       });
@@ -178,9 +174,7 @@ export const EditResult = async (req, res) => {
       }
 
       for (const item of subject) {
-        if (
-          Number(item.obtainedMark) > Number(item.totalMark)
-        ) {
+        if (Number(item.obtainedMark) > Number(item.totalMark)) {
           return res.status(400).json({
             message: `${item.subject}: Obtained mark cannot be greater than total mark.`,
           });
@@ -246,3 +240,28 @@ export const EditResult = async (req, res) => {
   }
 };
 
+export const deleteResult = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or missing Result ID!",
+      });
+    }
+
+    const result = await Result.findById(id);
+
+    if (!result) {
+      return res.status(400).json({ message: "Result not found!" });
+    }
+
+    await Result.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Result delete successfully!" });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: error });
+  }
+};

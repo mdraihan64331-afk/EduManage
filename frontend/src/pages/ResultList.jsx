@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiSolidReport } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BsFillPeopleFill } from "react-icons/bs";
 import {
   FaArrowDown,
@@ -35,8 +35,13 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { BsCalendarDate } from "react-icons/bs";
 import { IoBookSharp } from "react-icons/io5";
 import { TiStarOutline } from "react-icons/ti";
+import { IoIosAlert } from "react-icons/io";
+import { serverURL } from "../App";
+import axios from "axios";
+import { setResultData } from "../redux/resultSlice";
 
 function ResultList() {
+  const { id } = useParams();
   const { resultData } = useSelector((state) => state.result);
   const { studentData } = useSelector((state) => state.student);
 
@@ -77,6 +82,8 @@ function ResultList() {
   const [search, setSearch] = useState("");
   const [viewResult, setViewResult] = useState(null);
   const [showResultModel, setShowResultModel] = useState(false);
+  const [deleteResult, setDeleteResult] = useState(null);
+  const [showDeleteModel, setShowDeleteModel] = useState(false);
 
   const [filteredResult, setFilteredResult] = useState([]);
   const displayResult =
@@ -84,7 +91,7 @@ function ResultList() {
       ? filteredResult
       : resultData;
   const results = Array.isArray(displayResult) ? displayResult : [];
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const passCount = results.filter(
@@ -135,6 +142,27 @@ function ResultList() {
     setAcademicYear("");
     setSearch("");
     setFilteredResult("");
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      if (!id) {
+        return;
+      }
+
+      const response = await axios.delete(
+        `${serverURL}/api/result/delete-result/${id}`,
+        { withCredentials: true },
+      );
+
+      const result = await axios.get(`${serverURL}/api/result/get-result`, {
+        withCredentials: true,
+      });
+
+      dispatch(setResultData(result.data));
+    } catch (error) {
+      console.error("Delete error:", error.response?.data || error.message);
+    }
   };
 
   return (
@@ -445,10 +473,10 @@ function ResultList() {
                           </button>
                           <button
                             className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
-                            // onClick={() => {
-                            //   setDeleteStudent(student);
-                            //   setShowDeleteModal(true);
-                            // }}
+                            onClick={() => {
+                              setDeleteResult(result);
+                              setShowDeleteModel(true);
+                            }}
                           >
                             <RiDeleteBin6Line />
                           </button>
@@ -760,6 +788,83 @@ function ResultList() {
                               </button> */}
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* delete popup */}
+            {deleteResult && showDeleteModel && (
+              <>
+                <div className="fixed bg-black/40 flex items-center justify-center inset-0 z-110">
+                  <div className="p-3 bg-white rounded-[8px] shadow w-[440px] max-w-[90%]">
+                    <div className="flex justify-end">
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setShowDeleteModel(false);
+                        }}
+                      >
+                        <RxCross2 />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <div className="text-center flex flex-col gap-2">
+                        <div className="flex items-center justify-center">
+                          <IoIosAlert size={80} className="text-red-500" />
+                        </div>
+                        <h1 className="text-3xl font-bold">Are you sure?</h1>
+                        <div>
+                          <p>Do you really want to delete the result records</p>
+                          <p>
+                            for{" "}
+                            <span className="capitalize font-semibold">
+                              {deleteResult.student?.fullName}
+                            </span>{" "}
+                            <span className="capitalize font-semibold">
+                              (Roll No: {deleteResult.student?.rollNumber})?
+                            </span>
+                          </p>
+                          <p>This action cannot be undone.</p>
+                        </div>
+                        <div className="flex items-center justify-center gap-3 mt-6">
+                          {/* cancel button */}
+                          <button
+                            onClick={() => {
+                              setShowDeleteModel(false);
+                            }}
+                            className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                          >
+                            <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                              Cancel
+                            </span>
+                            <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                          </button>
+
+                          {/* delete button */}
+                          <button
+                            onClick={async () => {
+                              if (!deleteResult?._id) {
+                                console.error("Result ID is missing!");
+                                return;
+                              }
+
+                              await handleDelete(deleteResult._id);
+
+                              setShowDeleteModel(false);
+                              setDeleteResult(null);
+                            }}
+                            className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                          >
+                            <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                              <RiDeleteBin6Line /> Delete Student
+                            </span>
+                            <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                          </button>
                         </div>
                       </div>
                     </div>
