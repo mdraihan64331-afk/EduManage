@@ -210,7 +210,7 @@ function AddResult() {
       if (subjects.length === 0) {
         return setErr("please add at least one subject");
       }
-      
+
       setLoading(true);
       const resultData = {
         student,
@@ -323,7 +323,7 @@ function AddResult() {
                         onChange={(e) => setStudent(e.target.value)}
                         className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
                       >
-                        <option value="">Select Class</option>
+                        <option value="">Select Student</option>
                         {filteredStudent.map((e) => (
                           <option
                             key={e._id}
@@ -346,7 +346,7 @@ function AddResult() {
                         onChange={(e) => SetExamType(e.target.value)}
                         className="w-40 border border-gray-300 px-2 py-1 rounded-[8px]"
                       >
-                        <option value="">Select Section</option>
+                        <option value="">Select Exam Type</option>
                         {examName.map((e, index) => (
                           <option key={index}>{e}</option>
                         ))}

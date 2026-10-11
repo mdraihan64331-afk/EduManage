@@ -21,6 +21,7 @@ import { CiViewList } from "react-icons/ci";
 import { GiGraduateCap } from "react-icons/gi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { BsPersonAdd } from "react-icons/bs";
+import { CircleDollarSign, HandCoins } from "lucide-react";
 
 export const adminCatagories = [
   {
@@ -126,6 +127,18 @@ export const adminCatagories = [
     icon: <RiMoneyDollarCircleLine />,
     menu: "Fees / Payments",
     path: "/fees-payments",
+    subMenu: [
+      {
+        icon: <CircleDollarSign size={14}/>,
+        subMenuName: "Add Fees",
+        path: "/fees-payments/add-fees",
+      },
+      {
+        icon: <HandCoins size={14}/>,
+        subMenuName: "View Payments",
+        path: "/fees-payments/view-payments"
+      },
+    ],
   },
   {
     id: 10,

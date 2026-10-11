@@ -16,6 +16,7 @@ const classFeesShema = mongoose.Schema(
         "Class 9",
         "Class 10",
       ],
+      unique: true,
       required: true,
     },
 
@@ -37,7 +38,7 @@ const classFeesShema = mongoose.Schema(
   { timestamps: true },
 );
 
-export const ClassFees = new mongoose.model("ClassFess", classFeesShema);
+export const ClassFees = new mongoose.model("Class Fess", classFeesShema);
 
 const paymentSchema = new mongoose.Schema({
   student: {

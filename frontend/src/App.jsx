@@ -13,7 +13,6 @@ import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import Performance from "./components/Performance";
 import Homework from "./components/Homework";
-import FeesPayment from "./components/FeesPayment";
 import NoticeAnnouncement from "./components/NoticeAnnouncement.jsx";
 import Rankning from "./components/Rankning";
 import Report from "./components/Report";
@@ -40,14 +39,16 @@ import AddResult from "./pages/AddResult.jsx";
 import ResultList from "./pages/ResultList.jsx";
 import useGetResult from "./hooks/useGetResult.jsx";
 import EditResult from "./pages/EditResult.jsx";
+import AddFees from "./pages/AddFees.jsx";
+import ViewPayment from "./pages/ViewPayment.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
   useGetCurrentUser();
-  useGetTeacher()
-  useGetStudent()
-  useGetAttendance()
-  useGetResult()
+  useGetTeacher();
+  useGetStudent();
+  useGetAttendance();
+  useGetResult();
 
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -73,21 +74,34 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/students/add-student" element={<AddStudent />} />
         <Route path="/students/edit-student/:id" element={<EditStudent />} />
-        <Route path="/students/student-details/:id" element={<StudentDetails />} />
+        <Route
+          path="/students/student-details/:id"
+          element={<StudentDetails />}
+        />
         <Route path="/students/list-student" element={<ListStudents />} />
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
         <Route path="/classes/class-list" element={<ClassList />} />
-        <Route path="/attendances/mark-attendance" element={<MarkAttendance />} />
-        <Route path="/attendances/attendance-report" element={<AttendanceReport />} />
-        <Route path="/attendances/edit-mark-attendance/:id" element={<EditMarkAttendance />} />
+        <Route
+          path="/attendances/mark-attendance"
+          element={<MarkAttendance />}
+        />
+        <Route
+          path="/attendances/attendance-report"
+          element={<AttendanceReport />}
+        />
+        <Route
+          path="/attendances/edit-mark-attendance/:id"
+          element={<EditMarkAttendance />}
+        />
         <Route path="/result/add-result" element={<AddResult />} />
         <Route path="/result/view-result" element={<ResultList />} />
         <Route path="/result/edit-result/:id" element={<EditResult />} />
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />
-        <Route path="/fees-payments" element={<FeesPayment />} />
+        <Route path="/fees-payments/add-fees" element={<AddFees />} />
+        <Route path="/fees-payments/view-payments" element={<ViewPayment />} />
         <Route path="/notice-announcements" element={<NoticeAnnouncement />} />
         <Route path="/ranknings" element={<Rankning />} />
         <Route path="/reports" element={<Report />} />

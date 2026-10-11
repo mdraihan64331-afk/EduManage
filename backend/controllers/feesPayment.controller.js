@@ -2,19 +2,47 @@ import { ClassFees } from "../models/FeesPayment.model.js";
 
 export const addFees = async (req, res) => {
   try {
-    const { className, academicYear, secretKey, totalAmount } = req.body;
+    const { className, academicYear, secretKey, totalAmount } = req.body || {};
 
-    if (secretKey === "eduMange") {
+    if (
+      !className ||
+      !academicYear ||
+      !secretKey ||
+      totalAmount === undefined
+    ) {
+      return res.status(400).json({
+        message: "Please provide all required fields.",
+      });
+    }
+
+    if (secretKey !== "eduManage") {
       return res
         .status(400)
         .json({ message: "Please try again! SecterKey not match." });
+    }
+
+    if (!Number.isFinite(Number(totalAmount)) || Number(totalAmount) <= 0) {
+      return res.status(400).json({
+        message: "Please enter a valid total amount.",
+      });
+    }
+
+    const existingFees = await ClassFees.findOne({
+      className,
+      academicYear,
+    });
+
+    if (existingFees) {
+      return res.status(400).json({
+        message: `${className} fees of ${academicYear} already exist!`,
+      });
     }
 
     const fees = await ClassFees.create({
       className,
       academicYear,
       secretKey,
-      totalAmount,
+      totalAmount: Number(totalAmount),
     });
 
     return res.status(201).json(fees);
