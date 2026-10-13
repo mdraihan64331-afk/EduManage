@@ -6,6 +6,7 @@ export const connectDB = async () => {
         console.log("Database connect successfuly ✅")
     } catch (error) {
         console.log("Database not connect ❌")
+        console.log(error)
     }
     
 }

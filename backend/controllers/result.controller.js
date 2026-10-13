@@ -100,7 +100,7 @@ export const getResult = async (req, res) => {
     const result = await Result.find().populate("student");
 
     if (result.length === 0) {
-      return res.statue(400).json({ message: "Result is not found!" });
+      return res.status(400).json({ message: "Result is not found!" });
     }
 
     return res.status(200).json(result);
