@@ -40,41 +40,46 @@ const classFeesShema = mongoose.Schema(
 
 export const ClassFees = new mongoose.model("Class Fess", classFeesShema);
 
-const paymentSchema = new mongoose.Schema({
-  student: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "AddStudent",
-    required: true,
-  },
+const paymentSchema = new mongoose.Schema(
+  {
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AddStudent",
+      required: true,
+    },
 
-  classFees: {
-    type: [classFeesShema],
-    required: true,
-  },
+    classFees: {
+      type: [classFeesShema],
+      required: true,
+    },
 
-  paidAmount: {
-    type: Number,
-    required: true,
-  },
+    paidAmount: {
+      type: Number,
+      required: true,
+    },
 
-  dueAmount: {
-    type: Number,
-    required: true,
-  },
+    dueAmount: {
+      type: Number,
+      required: true,
+    },
 
-  paidDate: {
-    type: Date,
-    required: true,
-  },
+    paidDate: {
+      type: Date,
+      required: true,
+    },
 
-  Method: {
-    type: String,
-    enum: ["Cash", "Bkash", "Bank Transfer", "Nagad"],
-    required: true,
-  },
+    Method: {
+      type: String,
+      enum: ["Cash", "Bkash", "Bank Transfer", "Nagad"],
+      required: true,
+    },
 
-  status: {
-    type: String,
-    enum: ["Paid", "Partial", "Due"],
+    status: {
+      type: String,
+      enum: ["Paid", "Partial", "Due"],
+    },
   },
-});
+  { timestamps: true },
+);
+
+export const Payment = new mongoose.model("Payment", paymentSchema);

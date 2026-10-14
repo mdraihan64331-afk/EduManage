@@ -50,3 +50,13 @@ export const addFees = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getAllFees = async (req, res) => {
+  try {
+    const getAllFees = await ClassFees.find();
+
+    return res.status(200).json(getAllFees);
+  } catch (error) {
+    return res.status(400).json({ message: "Failed to get Fees" });
+  }
+};

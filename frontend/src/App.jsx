@@ -41,6 +41,7 @@ import useGetResult from "./hooks/useGetResult.jsx";
 import EditResult from "./pages/EditResult.jsx";
 import AddFees from "./pages/AddFees.jsx";
 import ViewPayment from "./pages/ViewPayment.jsx";
+import useGetFeesPayment from "./hooks/useGetFeesPayment.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -49,6 +50,7 @@ function App() {
   useGetStudent();
   useGetAttendance();
   useGetResult();
+  useGetFeesPayment();
 
   const { userData } = useSelector((state) => state.user);
   const navigate = useNavigate();

@@ -12,6 +12,7 @@ import axios from "axios";
 function ClassList() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { studentData } = useSelector((state) => state.student);
+  const { feesPaymentData } = useSelector((state) => state.feesPayment);
   const [classes, setClasses] = useState([]);
   const [selectSection, setSelectSection] = useState({});
 
@@ -64,13 +65,20 @@ function ClassList() {
       (teacher) => teacher.classTeacher === className,
     );
 
+    const classFees = feesPaymentData.find(
+      (fees) => fees.className === className,
+    );
+
     return {
       className,
       totalStudents: students.length,
       sections,
       classTeacher,
+      classFees,
     };
   });
+
+  // const classTotalFees =
 
   return (
     <div className="flex bg-blue-50">
@@ -165,6 +173,7 @@ function ClassList() {
                     <th className="text-left py-3 px-2">Sections</th>
                     <th className="text-left py-3 px-2">Total Students</th>
                     <th className="text-left py-3 px-2">Assigned Class</th>
+                    <th className="text-left py-3 px-2">Fees/Payment</th>
                     <th className="text-left py-3 px-2">Class Teacher</th>
                   </tr>
                 </thead>
@@ -218,6 +227,18 @@ function ClassList() {
                       {/* Assigned Class */}
                       <td className="py-2 px-3">
                         {e.classTeacher?.assignedClass}
+                      </td>
+
+                      {/* total amount */}
+                      <td className="py-2 px-3">
+                        {e.classFees ? (
+                          <div className="text-green-600">
+                            <span className="font-extrabold text-xl">৳</span> {" "}
+                            {Number(e.classFees?.totalAmount).toLocaleString("en-BD")}
+                          </div>
+                        ) : (
+                          <div>Not Set</div>  
+                        )}
                       </td>
 
                       {/* Class Teacher */}
