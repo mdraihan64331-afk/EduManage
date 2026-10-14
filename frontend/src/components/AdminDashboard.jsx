@@ -6,14 +6,13 @@ import { MdEventAvailable } from "react-icons/md";
 import Overview from "../pages/Overview";
 import Menu from "../pages/Menu";
 import AdminHeader from "./AdminHeader";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function AdminDashboard() {
   const { studentData } = useSelector((state) => state.student);
   const { userData } = useSelector((state) => state.user);
   const { teacherData } = useSelector((state) => state.teacher);
   const { attendanceData } = useSelector((state) => state.attendance);
-  const dispatch = useDispatch();
   const now = new Date();
 
   const thisMonthStudentJoined = studentData.filter((student) => {

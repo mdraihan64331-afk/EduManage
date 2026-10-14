@@ -71,13 +71,6 @@ export const adminCatagories = [
     icon: <SiGoogleclassroom />,
     menu: "Classes",
     path: "/classes",
-    subMenu: [
-      {
-        icon: <GiGraduateCap />,
-        subMenuName: "Class List",
-        path: "/classes/class-list",
-      },
-    ],
   },
   {
     id: 5,
@@ -127,18 +120,6 @@ export const adminCatagories = [
     icon: <RiMoneyDollarCircleLine />,
     menu: "Fees / Payments",
     path: "/fees-payments",
-    subMenu: [
-      {
-        icon: <CircleDollarSign size={14}/>,
-        subMenuName: "Add Fees",
-        path: "/fees-payments/add-fees",
-      },
-      {
-        icon: <HandCoins size={14}/>,
-        subMenuName: "View Payments",
-        path: "/fees-payments/view-payments"
-      },
-    ],
   },
   {
     id: 10,

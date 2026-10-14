@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { SiGoogleclassroom } from "react-icons/si";
-import { MdEventAvailable } from "react-icons/md";
 import { GiBlackBook, GiGraduateCap } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { serverURL } from "../App";
 import axios from "axios";
 
-function ClassList() {
+function Classes() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { studentData } = useSelector((state) => state.student);
   const { feesPaymentData } = useSelector((state) => state.feesPayment);
@@ -45,7 +44,7 @@ function ClassList() {
     "Class 10",
   ];
 
-  const classList = classNames.map((className) => {
+  const Classes = classNames.map((className) => {
     const students = studentData.filter(
       (student) => student.className === className,
     );
@@ -178,7 +177,7 @@ function ClassList() {
                   </tr>
                 </thead>
                 <tbody>
-                  {classList.map((e) => (
+                  {Classes.map((e) => (
                     <tr
                       key={e.className}
                       className="bg-white border border-gray-200 font-semibold"
@@ -283,4 +282,4 @@ function ClassList() {
   );
 }
 
-export default ClassList;
+export default Classes;

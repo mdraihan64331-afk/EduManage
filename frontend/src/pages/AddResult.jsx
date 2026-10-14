@@ -47,7 +47,15 @@ function AddResult() {
     "Practical Exam",
     "Viva Exam",
   ];
-  const [academicYear, setAcademicYear] = useState("");
+
+  const getAcademicYear = () => {
+    const currentYear = new Date().getFullYear();
+
+    return `${currentYear}-${currentYear + 1}`;
+  };
+  const currentAcademicYear = getAcademicYear();
+  const [academicYear, setAcademicYear] = useState(currentAcademicYear);
+
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [subjects, setSubjects] = useState([]);
@@ -358,10 +366,9 @@ function AddResult() {
                       </label>
                       <input
                         type="text"
-                        placeholder="2025-2026"
                         className="w-40 border border-gray-300 px-2 py-1 rounded-[8px] outline-none"
-                        value={academicYear}
-                        onChange={(e) => setAcademicYear(e.target.value)}
+                        value={currentAcademicYear}
+                        readOnly
                       />
                     </div>
                   </div>

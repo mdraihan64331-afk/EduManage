@@ -29,7 +29,6 @@ import TeachersList from "./pages/TeachersList.jsx";
 import useGetTeacher from "./hooks/useGetTeacher.jsx";
 import EditTeacher from "./pages/EditTeacher.jsx";
 import StudentDetails from "./pages/StudentDetails.jsx";
-import ClassList from "./pages/ClassList.jsx";
 import useGetStudent from "./hooks/useGetStudent.jsx";
 import MarkAttendance from "./pages/MarkAttendance.jsx";
 import AttendanceReport from "./pages/AttendanceReport.jsx";
@@ -39,9 +38,9 @@ import AddResult from "./pages/AddResult.jsx";
 import ResultList from "./pages/ResultList.jsx";
 import useGetResult from "./hooks/useGetResult.jsx";
 import EditResult from "./pages/EditResult.jsx";
-import AddFees from "./pages/AddFees.jsx";
-import ViewPayment from "./pages/ViewPayment.jsx";
 import useGetFeesPayment from "./hooks/useGetFeesPayment.jsx";
+import FeesPayment from "./pages/FeesPayment.jsx";
+import Classes from "./pages/Classes.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -84,7 +83,7 @@ function App() {
         <Route path="/teacher/add-teacher" element={<AddTeachers />} />
         <Route path="/teacher/teachers-list" element={<TeachersList />} />
         <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
-        <Route path="/classes/class-list" element={<ClassList />} />
+        <Route path="/classes" element={<Classes />} />
         <Route
           path="/attendances/mark-attendance"
           element={<MarkAttendance />}
@@ -102,8 +101,7 @@ function App() {
         <Route path="/result/edit-result/:id" element={<EditResult />} />
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />
-        <Route path="/fees-payments/add-fees" element={<AddFees />} />
-        <Route path="/fees-payments/view-payments" element={<ViewPayment />} />
+        <Route path="/fees-payments" element={<FeesPayment />} />
         <Route path="/notice-announcements" element={<NoticeAnnouncement />} />
         <Route path="/ranknings" element={<Rankning />} />
         <Route path="/reports" element={<Report />} />
