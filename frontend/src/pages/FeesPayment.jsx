@@ -2,7 +2,7 @@ import React from "react";
 import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import logoimage from "../assets/login-logo.png";
-import { FaRegSave, FaWallet } from "react-icons/fa";
+import { FaPlus, FaRegEye, FaRegSave, FaWallet } from "react-icons/fa";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
@@ -10,10 +10,11 @@ import { serverURL } from "../App";
 import { GoAlertFill } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 import { RiResetLeftFill } from "react-icons/ri";
-import { IoPerson } from "react-icons/io5";
+import { IoPerson, IoSearchOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { BsPeopleFill } from "react-icons/bs";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 function FeesPayment() {
   const [selectClass, setSelectClass] = useState("");
@@ -66,9 +67,17 @@ function FeesPayment() {
     return total + studentCount * Number(fee.totalAmount || 0);
   }, 0);
 
-  console.log("Current Year:", currentAcademicYear);
-  console.log("Fees Data:", feesPaymentData);
-  console.log("Student Data:", studentData);
+  const getStudentFees = (student) => {
+    const fee = feesPaymentData.find(
+      (item) =>
+        item.className === student.className &&
+        item.academicYear === currentAcademicYear,
+    );
+
+    const totalFee = Number(fee?.totalAmount || 0);
+
+    return { totalFee };
+  };
 
   const handleFeesPayment = async () => {
     try {
@@ -91,6 +100,12 @@ function FeesPayment() {
       console.log("Error:", error);
       setErr(error.response?.data.message);
     }
+  };
+
+  const hangleReset = () => {
+    setSelectClass("");
+    setSecretKey("");
+    setTotalAmount("");
   };
 
   return (
@@ -183,7 +198,7 @@ function FeesPayment() {
                 </button>
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-                  //   onClick={hangleReset}
+                  onClick={hangleReset}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <RiResetLeftFill /> Reset
@@ -255,6 +270,144 @@ function FeesPayment() {
                   <p className="text-xs text-red-600">50% remaining</p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-3 p-2 bg-white shadow rounded-[8px]">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">Student Fee list</h3>
+              <div className="flex items-center gap-2 border border-gray-400 rounded-[8px] p-1">
+                <IoSearchOutline />
+                <input
+                  type="text"
+                  placeholder="Search by Student name, ID or roll Number..."
+                  className="outline-none w-85"
+                />
+              </div>
+            </div>
+
+            <div className="mt-3 w-full overflow-auto max-h-[400px]">
+              <table className="w-full min-w-[700px]">
+                {/* table head */}
+                <thead className="sticky top-0 font-semibold text-slate-700 p-2 z-10">
+                  <tr className="bg-blue-50 rounded-t-[8px] border border-gray-200 text-gray-600">
+                    <th className="text-left py-3 px-2">#</th>
+                    <th className="text-left py-3 px-2">Student Name</th>
+                    <th className="text-left py-3 px-2">Roll No</th>
+                    <th className="text-left py-3 px-2">Class</th>
+                    <th className="text-left py-3 px-2">Total Fee</th>
+                    <th className="text-left py-3 px-2">Paid Amount</th>
+                    <th className="text-left py-3 px-2">Due Amount</th>
+                    <th className="text-left py-3 px-2">States</th>
+                    <th className="text-left py-3 px-2">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {studentData.map((student, index) => {
+                    const { totalFee } = getStudentFees(student);
+
+                    const paidAmount = 0;
+                    const dueAmount = Math.max(totalFee - paidAmount, 0);
+
+                    const status =
+                      dueAmount === 0
+                        ? "Paid"
+                        : paidAmount > 0
+                          ? "Partial"
+                          : "Due";
+
+                    return (
+                      <tr
+                        key={student._id}
+                        className="bg-white border border-gray-200 font-semibold"
+                      >
+                        <td className="py-3 px-2">{index + 1}</td>
+
+                        <td className="py-3 px-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-10 h-10 rounded-full">
+                              {student.image ? (
+                                <img
+                                  src={student.image}
+                                  alt={student.fullName}
+                                  className="w-full h-full rounded-full object-cover"
+                                />
+                              ) : (
+                                <p className="bg-purple-700 rounded-full w-full h-full flex items-center justify-center text-white">
+                                  {student.fullName?.slice(0, 1).toUpperCase()}
+                                </p>
+                              )}
+                            </div>
+
+                            <div>
+                              <p className="capitalize">{student.fullName}</p>
+                              <p className="text-xs text-gray-500">
+                                {student.studentId}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2">{student.rollNumber}</td>
+
+                        <td className="py-3 px-2">
+                          {student.className}-{student.section}
+                        </td>
+
+                        <td className="py-3 px-2">
+                          ৳ {totalFee.toLocaleString("en-BD")}
+                        </td>
+
+                        <td className="py-3 px-2">
+                          ৳ {paidAmount.toLocaleString("en-BD")}
+                        </td>
+
+                        <td className="py-3 px-2">
+                          ৳ {dueAmount.toLocaleString("en-BD")}
+                        </td>
+
+                        <td className="py-3 px-2">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs ${
+                              status === "Paid"
+                                ? "bg-green-100 text-green-700"
+                                : status === "Partial"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {status}
+                          </span>
+                        </td>
+
+                        <td className="py-3 px-2">
+                          <div className="flex gap-1">
+                            <button
+                              className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                              // onClick={() => {
+                              //   setShowResultModel(true);
+                              //   setViewResult(result);
+                              // }}
+                            >
+                              <FaPlus  />
+                            </button>
+
+                            <button
+                              className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                              // onClick={() =>
+                              //   navigate(`/result/edit-result/${result._id}`)
+                              // }
+                            >
+                              <MdOutlineModeEdit />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
