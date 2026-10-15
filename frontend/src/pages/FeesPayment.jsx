@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { BsPeopleFill } from "react-icons/bs";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { useNavigate, useParams } from "react-router-dom";
 
 function FeesPayment() {
   const [selectClass, setSelectClass] = useState("");
@@ -44,6 +45,8 @@ function FeesPayment() {
   const [loading, setLoading] = useState(false);
   const { studentData } = useSelector((state) => state.student);
   const { feesPaymentData } = useSelector((state) => state.feesPayment);
+  const navigate = useNavigate();
+  const { id } = useParams();
   const now = new Date();
 
   const thisMonthStudentJoined = studentData.filter((student) => {
@@ -385,12 +388,11 @@ function FeesPayment() {
                           <div className="flex gap-1">
                             <button
                               className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                              // onClick={() => {
-                              //   setShowResultModel(true);
-                              //   setViewResult(result);
-                              // }}
+                              onClick={() => {
+                                navigate(`/fees-payments/add-payment/${student._id}`);
+                              }}
                             >
-                              <FaPlus  />
+                              <FaPlus />
                             </button>
 
                             <button

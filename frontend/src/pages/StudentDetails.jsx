@@ -82,7 +82,6 @@ function StudentDetails() {
           { withCredentials: true },
         );
 
-        console.log(result.data)
         setStudent(result.data);
       } catch (error) {
         console.log(error);

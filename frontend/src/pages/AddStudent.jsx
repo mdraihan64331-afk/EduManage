@@ -17,7 +17,6 @@ import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
 import AdminHeader from "../components/AdminHeader";
 import { ClipLoader } from "react-spinners";
-import { useEffect } from "react";
 
 function AddStudent() {
   const [gender, setGender] = useState("");

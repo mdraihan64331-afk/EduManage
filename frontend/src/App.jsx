@@ -41,6 +41,7 @@ import EditResult from "./pages/EditResult.jsx";
 import useGetFeesPayment from "./hooks/useGetFeesPayment.jsx";
 import FeesPayment from "./pages/FeesPayment.jsx";
 import Classes from "./pages/Classes.jsx";
+import AddPayment from "./components/AddPayment.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -102,6 +103,7 @@ function App() {
         <Route path="/performances" element={<Performance />} />
         <Route path="/homeworks" element={<Homework />} />
         <Route path="/fees-payments" element={<FeesPayment />} />
+        <Route path="/fees-payments/add-payment/:id" element={<AddPayment />} />
         <Route path="/notice-announcements" element={<NoticeAnnouncement />} />
         <Route path="/ranknings" element={<Rankning />} />
         <Route path="/reports" element={<Report />} />

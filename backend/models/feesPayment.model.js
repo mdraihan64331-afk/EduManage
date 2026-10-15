@@ -16,13 +16,13 @@ const classFeesShema = mongoose.Schema(
         "Class 9",
         "Class 10",
       ],
-      unique: true,
       required: true,
     },
 
     academicYear: {
       type: String,
       required: true,
+      unique: true,
     },
 
     secretKey: {
@@ -33,6 +33,7 @@ const classFeesShema = mongoose.Schema(
     totalAmount: {
       type: Number,
       required: true,
+      min: 0,
     },
   },
   { timestamps: true },
@@ -49,7 +50,13 @@ const paymentSchema = new mongoose.Schema(
     },
 
     classFees: {
-      type: [classFeesShema],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ClassFees",
+      required: true,
+    },
+
+    academicYear: {
+      type: String,
       required: true,
     },
 
@@ -58,25 +65,15 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
-    dueAmount: {
-      type: Number,
-      required: true,
-    },
-
     paidDate: {
       type: Date,
-      required: true,
+      default: Date.now,
     },
 
-    Method: {
+    method: {
       type: String,
       enum: ["Cash", "Bkash", "Bank Transfer", "Nagad"],
       required: true,
-    },
-
-    status: {
-      type: String,
-      enum: ["Paid", "Partial", "Due"],
     },
   },
   { timestamps: true },
