@@ -65,48 +65,62 @@ export const getAllFees = async (req, res) => {
 export const AddPayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { classFees, academicYear, paidAmount, paidDate, method } = req.body;
+    const { classFees, paidAmount, paidDate, method, remark } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid student ID" });
+      return res.status(400).json({
+        message: "Invalid student ID",
+      });
     }
 
-    if (!classFees || !academicYear || !paidAmount || !paidDate || !method) {
-      return res
-        .status(400)
-        .json({ message: "Please provide all required fields" });
+    if (!classFees || paidAmount === undefined || !paidDate || !method) {
+      return res.status(400).json({
+        message: "Please provide all required fields",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(classFees)) {
+      return res.status(400).json({
+        message: "Invalid class fees ID",
+      });
     }
 
     const amount = Number(paidAmount);
 
     if (!Number.isFinite(amount) || amount <= 0) {
-      return res
-        .status(400)
-        .json({ message: "Paid amount must be greater than 0" });
+      return res.status(400).json({
+        message: "Paid amount must be greater than 0",
+      });
     }
 
-    const fees = await ClassFees.find({ _id: classFees, academicYear });
+    const fees = await ClassFees.findById(classFees);
+
     if (!fees) {
-      return res.status(400).json({ message: "Class fees not found" });
+      return res.status(404).json({
+        message: "Class fees not found",
+      });
     }
 
     const payment = await Payment.create({
       student: id,
-      classFees: _id,
-      academicYear,
+      classFees: fees._id,
       paidAmount: amount,
-      paidDate: paidDate || new Date(),
+      paidDate,
       method,
+      remark,
     });
 
-    return res
-      .status(201)
-      .json({ message: "Payment add successfully", payment });
+    return res.status(201).json({
+      message: "Payment added successfully",
+      payment,
+    });
   } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ message: "Failed to add Payment", error: error.message });
+    console.error("AddPayment Controller Error:", error);
+
+    return res.status(500).json({
+      message: "Failed to add Payment",
+      error: error.message,
+    });
   }
 };
 
@@ -116,6 +130,6 @@ export const getAllPayment = async (req, res) => {
 
     return res.status(200).json(getPayment);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };

@@ -10,12 +10,14 @@ import { serverURL } from "../App";
 import { FaMoneyBill, FaRegCalendarAlt, FaRegSave } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { useSelector } from "react-redux";
 
 function AddPayment() {
   const { id } = useParams();
+  const { feesPaymentData } = useSelector((state) => state.feesPayment);
   const [student, setStudent] = useState(null);
   const [amount, setAmount] = useState("");
-  const [PaymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const method = ["Cash", "Bkash", "Bank Transfer", "Nagad"];
   const [paidDate, setPaidDate] = useState(
     new Date().toISOString().split("T")[0],
@@ -39,6 +41,53 @@ function AddPayment() {
     };
     fatchStudent();
   }, [id]);
+
+  const totalFee = feesPaymentData.find(
+    (fee) => fee.className === student?.className,
+  );
+
+  const totalAmount = totalFee?.totalAmount ?? 0;
+  const paidAmount = Number(amount) || 0;
+  const dueAmount = Math.max(totalAmount - amount, 0);
+
+  const handlePayment = async () => {
+    try {
+      if (!amount || Number(amount) <= 0) {
+        alert("Please enter a valid amount!");
+      }
+
+      if (Number(amount) > totalAmount) {
+        alert("Payment amount cannot exceed total fee!");
+      }
+
+      if (!paymentMethod) {
+        alert("Please Select payment method!");
+      }
+
+      if (!totalFee?._id) {
+        alert("Class fees not found!");
+      }
+
+      const result = await axios.post(
+        `${serverURL}/api/fees-payment/add-payment/${id}`,
+        {
+          classFees: totalFee._id,
+          paidAmount: Number(amount),
+          method: paymentMethod,
+          paidDate,
+          remark,
+        },
+        { withCredentials: true },
+      );
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      console.log(error.response?.data?.message);
+      alert(error.response?.data?.message || "Payment failed!");
+    }
+  };
+
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -165,7 +214,11 @@ function AddPayment() {
                     <label htmlFor="">
                       Payment Method <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-50 border outline-none border-gray-300 px-2 py-1 rounded-[8px]">
+                    <select
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-50 border outline-none border-gray-300 px-2 py-1 rounded-[8px]"
+                    >
                       <option>Select Payment Method</option>
                       {method.map((e, index) => (
                         <option key={index}>{e}</option>
@@ -177,7 +230,7 @@ function AddPayment() {
                       Payment Date <span className="text-red-500">*</span>
                     </label>
                     <div className="flex items-center gap-1 border outline-none capitalize border-gray-300 px-2 py-1 rounded-[8px]">
-                        <FaRegCalendarAlt />
+                      <FaRegCalendarAlt />
                       <input
                         value={paidDate}
                         readOnly
@@ -193,6 +246,8 @@ function AddPayment() {
                     <textarea
                       placeholder="Description"
                       rows={3}
+                      value={remark}
+                      onChange={(e) => setRemark(e.target.value)}
                       className="w-full border resize-none outline-none capitalize border-gray-300 px-2 py-1 rounded-[8px]"
                     ></textarea>
                   </div>
@@ -207,20 +262,29 @@ function AddPayment() {
                 <div className="flex flex-col gap-3 mt-3">
                   <div className="flex items-center justify-between">
                     <p className="text-gray-600">Total Fee</p>
-                    <p>12,000</p>
+                    <p className="flex items-center font-semibold">
+                      <TbCurrencyTaka size={18} />
+                      {Number(totalAmount).toLocaleString("en-BD")}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-gray-600">Paid Amount</p>
-                    <p>12,000</p>
+                    <p className="flex items-center font-semibold text-green-500">
+                      <TbCurrencyTaka size={18} />
+                      {paidAmount.toLocaleString("en-BD")}
+                    </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-gray-600">Due Amount</p>
-                    <p>12,000</p>
+                    <p className="flex items-center font-semibold text-red-500">
+                      <TbCurrencyTaka size={18} />
+                      {Number(dueAmount).toLocaleString("en-BD")}
+                    </p>
                   </div>
                 </div>
                 <button
                   className="relative w-full mt-3 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  //   onClick={handleFeesPayment}
+                  onClick={handlePayment}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     {loading ? (

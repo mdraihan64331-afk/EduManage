@@ -55,11 +55,6 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
-    academicYear: {
-      type: String,
-      required: true,
-    },
-
     paidAmount: {
       type: Number,
       required: true,
@@ -74,6 +69,10 @@ const paymentSchema = new mongoose.Schema(
       type: String,
       enum: ["Cash", "Bkash", "Bank Transfer", "Nagad"],
       required: true,
+    },
+
+    remark: {
+      type: String,
     },
   },
   { timestamps: true },

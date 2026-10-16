@@ -46,7 +46,6 @@ function FeesPayment() {
   const { studentData } = useSelector((state) => state.student);
   const { feesPaymentData } = useSelector((state) => state.feesPayment);
   const navigate = useNavigate();
-  const { id } = useParams();
   const now = new Date();
 
   const thisMonthStudentJoined = studentData.filter((student) => {
