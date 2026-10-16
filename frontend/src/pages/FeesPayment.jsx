@@ -45,6 +45,7 @@ function FeesPayment() {
   const [loading, setLoading] = useState(false);
   const { studentData } = useSelector((state) => state.student);
   const { feesPaymentData } = useSelector((state) => state.feesPayment);
+  const { paymentData } = useSelector((state) => state.feesPayment);
   const navigate = useNavigate();
   const now = new Date();
 
@@ -79,6 +80,23 @@ function FeesPayment() {
     const totalFee = Number(fee?.totalAmount || 0);
 
     return { totalFee };
+  };
+
+  console.log(paymentData[0]?.paidAmount);
+
+  const getStudentPayment = (student) => {
+    const payments = Array.isArray(paymentData) ? paymentData : [];
+
+    const payment = payments.find((item) => {
+      const paymentStudentId =
+        typeof item.student === "object" ? item.student?._id : item.student;
+
+      return paymentStudentId === student._id;
+    });
+
+    const paidAmount = Number(payment?.paidAmount || 0);
+
+    return { paidAmount };
   };
 
   const handleFeesPayment = async () => {
@@ -211,6 +229,7 @@ function FeesPayment() {
             </div>
           </div>
 
+          {/* catagory */}
           <div className="mt-3">
             <div className="flex items-center justify-between gap-4">
               {/* total student */}
@@ -278,13 +297,28 @@ function FeesPayment() {
           <div className="mt-3 p-2 bg-white shadow rounded-[8px]">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">Student Fee list</h3>
-              <div className="flex items-center gap-2 border border-gray-400 rounded-[8px] p-1">
-                <IoSearchOutline />
-                <input
-                  type="text"
-                  placeholder="Search by Student name, ID or roll Number..."
-                  className="outline-none w-85"
-                />
+
+              <div className="flex items-center gap-5">
+                <div className="flex flex-col gap-2">
+                  <select
+                    value={currentAcademicYear}
+                    className="w-40 border border-gray-300 px-2 py-1 rounded-[8px]"
+                  >
+                    <option value="">Select Class</option>
+                    {feesPaymentData.map((e, index) => (
+                      <option key={index}>{e?.academicYear}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* search */}
+                <div className="flex items-center gap-2 border border-gray-400 rounded-[8px] p-1">
+                  <IoSearchOutline />
+                  <input
+                    type="text"
+                    placeholder="Search by Student name, ID or roll Number..."
+                    className="outline-none w-85"
+                  />
+                </div>
               </div>
             </div>
 
@@ -308,8 +342,8 @@ function FeesPayment() {
                 <tbody>
                   {studentData.map((student, index) => {
                     const { totalFee } = getStudentFees(student);
+                    const { paidAmount } = getStudentPayment(student);
 
-                    const paidAmount = 0;
                     const dueAmount = Math.max(totalFee - paidAmount, 0);
 
                     const status =
@@ -388,7 +422,9 @@ function FeesPayment() {
                             <button
                               className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                               onClick={() => {
-                                navigate(`/fees-payments/add-payment/${student._id}`);
+                                navigate(
+                                  `/fees-payments/add-payment/${student._id}`,
+                                );
                               }}
                             >
                               <FaPlus />

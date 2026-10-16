@@ -10,7 +10,8 @@ import { serverURL } from "../App";
 import { FaMoneyBill, FaRegCalendarAlt, FaRegSave } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
 import { TbCurrencyTaka } from "react-icons/tb";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setPaymentData } from "../redux/feesPaymentSlice";
 
 function AddPayment() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ function AddPayment() {
   );
   const [remark, setRemark] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +82,9 @@ function AddPayment() {
         { withCredentials: true },
       );
 
+      dispatch(setPaymentData(result.data));
       console.log(result);
+      navigate("/fees-payments")
     } catch (error) {
       console.log(error);
       console.log(error.response?.data?.message);

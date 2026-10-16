@@ -110,6 +110,8 @@ export const AddPayment = async (req, res) => {
       remark,
     });
 
+
+
     return res.status(201).json({
       message: "Payment added successfully",
       payment,

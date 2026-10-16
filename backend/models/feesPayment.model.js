@@ -22,7 +22,6 @@ const classFeesShema = mongoose.Schema(
     academicYear: {
       type: String,
       required: true,
-      unique: true,
     },
 
     secretKey: {
@@ -39,7 +38,9 @@ const classFeesShema = mongoose.Schema(
   { timestamps: true },
 );
 
-export const ClassFees = new mongoose.model("Class Fess", classFeesShema);
+classFeesShema.index({ className: 1, academicYear: 1 }, { unique: true });
+
+export const ClassFees = new mongoose.model("ClassFess", classFeesShema);
 
 const paymentSchema = new mongoose.Schema(
   {
