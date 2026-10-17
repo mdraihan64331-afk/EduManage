@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import logoimage from "../assets/logo.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverURL } from "../App";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { RxCross2 } from "react-icons/rx";
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user);
+  const [showPopup, setShowPopup] = useState(false);
 
   const navList = [
     { name: "Home", path: "/" },
@@ -50,20 +53,61 @@ function Navbar() {
           </>
         ))}
       </div>
-      <div className="flex gap-5">
-        <button
-          className="py-2 px-6 font-semibold bg-blue-800 text-white rounded-xl cursor-pointer"
-          onClick={() => navigate("/sign-in")}
-        >
-          Login
-        </button>
-        <button
-          className="py-2 px-6 font-semibold bg-blue-800 text-white rounded-xl cursor-pointer"
-          onClick={handleLogOut}
-        >
-          Log Out
-        </button>
-      </div>
+      {userData ? (
+        <div>
+          <button
+            className="cursor-pointer"
+            onClick={() => setShowPopup((prev) => !prev)}
+          >
+            {userData?.image ? (
+              <>
+                <div>
+                  <img
+                    src={userData?.image}
+                    alt={userData?.fullName}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="h-10 w-10 bg-purple-700 rounded-full flex items-center justify-center text-white">
+                {userData?.fullName.slice(0, 1).toUpperCase()}
+              </div>
+            )}
+          </button>
+
+          {/* show logout popup */}
+          {showPopup && (
+            <>
+              <div className="absolute top-[80px] shadow right-2 p-2 bg-white flex flex-col gap-4 rounded-[8px]">
+                <div className="flex items-center justify-end">
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => setShowPopup(false)}
+                  >
+                    <RxCross2 />
+                  </button>
+                </div>
+                <button
+                  className="py-2 px-6 font-semibold bg-blue-800 text-white rounded-xl cursor-pointer"
+                  onClick={handleLogOut}
+                >
+                  Log Out
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <>
+          <button
+            className="py-2 px-6 font-semibold bg-blue-800 text-white rounded-xl cursor-pointer"
+            onClick={() => navigate("/sign-in")}
+          >
+            Login
+          </button>
+        </>
+      )}
     </div>
   );
 }

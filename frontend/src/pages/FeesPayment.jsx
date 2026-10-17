@@ -82,8 +82,6 @@ function FeesPayment() {
     return { totalFee };
   };
 
-  console.log(paymentData[0]?.paidAmount);
-
   const getStudentPayment = (student) => {
     const payments = Array.isArray(paymentData) ? paymentData : [];
 
