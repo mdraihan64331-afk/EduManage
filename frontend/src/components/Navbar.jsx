@@ -70,7 +70,7 @@ function Navbar() {
                 </div>
               </>
             ) : (
-              <div className="h-10 w-10 bg-purple-700 rounded-full flex items-center justify-center text-white">
+              <div className="h-10 w-10 bg-blue-700 rounded-full flex items-center justify-center text-white">
                 {userData?.fullName.slice(0, 1).toUpperCase()}
               </div>
             )}
@@ -79,7 +79,7 @@ function Navbar() {
           {/* show logout popup */}
           {showPopup && (
             <>
-              <div className="absolute top-[80px] shadow right-2 p-2 bg-white flex flex-col gap-4 rounded-[8px]">
+              <div className="absolute z-10 top-[80px] shadow right-2 p-2 bg-white flex flex-col gap-4 rounded-[8px]">
                 <div className="flex items-center justify-end">
                   <button
                     className="cursor-pointer"
