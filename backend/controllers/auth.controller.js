@@ -5,7 +5,7 @@ import { sentOtpMail } from "../utils/mail.js";
 
 export const signup = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, role } = req.body;
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "user already exist." });
@@ -21,6 +21,7 @@ export const signup = async (req, res) => {
       fullName,
       email,
       password: hashPassword,
+      role,
     });
 
     const token = await genToken(user._id);
@@ -74,7 +75,7 @@ export const logOut = async (req, res) => {
 
 export const googleAuth = async (req, res) => {
   try {
-    const { fullName, email, profileImage } = req.body;
+    const { fullName, email, role, profileImage } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -82,6 +83,7 @@ export const googleAuth = async (req, res) => {
       user = await User.create({
         fullName,
         email,
+        role,
         profileImage,
       });
     }
