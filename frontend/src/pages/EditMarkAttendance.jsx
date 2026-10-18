@@ -59,7 +59,7 @@ function EditMarkAttendance() {
       );
 
       dispatch(setAttendanceData(updatedData));
-      navigate("/attendances/attendance-report");
+      navigate("/admin-dashboard/attendances/attendance-report");
     } catch (error) {
       console.log(error);
     }

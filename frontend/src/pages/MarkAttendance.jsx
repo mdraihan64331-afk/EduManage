@@ -83,8 +83,7 @@ function MarkAttendance() {
         status: markedAttendance[student._id]?.status || "Absent",
         remark: markedAttendance[student._id]?.remark || "",
       }));
-
-      // 1. Save attendance
+      
       await axios.post(
         `${serverURL}/api/attendance/add-attendance`,
         attendance,
@@ -93,22 +92,18 @@ function MarkAttendance() {
         },
       );
 
-      // 2. Get latest attendance
       const attendanceResult = await axios.get(
         `${serverURL}/api/attendance/get-all-attendance`,
         {
           withCredentials: true,
         },
       );
-
-      // 3. Update Redux
+      
       dispatch(setAttendanceData(attendanceResult.data));
-
       setErr("");
       setLoading(false);
 
-      // 4. Then navigate
-      navigate("/attendances/attendance-report");
+      navigate("/admin-dashboard/attendances/attendance-report");
     } catch (error) {
       console.log(error.response?.data || error.message);
 

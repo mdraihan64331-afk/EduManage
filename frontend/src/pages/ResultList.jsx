@@ -466,7 +466,7 @@ function ResultList() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/result/edit-result/${result._id}`)
+                              navigate(`/admin-dashboard/result/edit-result/${result._id}`)
                             }
                           >
                             <MdOutlineModeEdit />

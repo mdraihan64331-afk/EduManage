@@ -143,7 +143,7 @@ function StudentDetails() {
           <div className="flex gap-3 items-center text-gray-500">
             <span
               className="cursor-pointer"
-              onClick={() => navigate("/admin-dashboard")}
+              onClick={() => navigate("/admin-dashboard/dashboard")}
             >
               Dashboard
             </span>
@@ -152,7 +152,7 @@ function StudentDetails() {
             </span>
             <span
               className="cursor-pointer"
-              onClick={() => navigate("/students/list-student")}
+              onClick={() => navigate("/admin-dashboard/students/list-student")}
             >
               Student List
             </span>
@@ -176,7 +176,7 @@ function StudentDetails() {
             {/* back button */}
             <div
               className="flex gap-2 items-center px-4 py-1 bg-white rounded-[8px] shadow cursor-pointer"
-              onClick={() => navigate("/students/list-student")}
+              onClick={() => navigate("/admin-dashboard/students/list-student")}
             >
               <IoIosArrowDown className="rotate-90" /> Back to List
             </div>
@@ -259,7 +259,7 @@ function StudentDetails() {
             </div>
             <button
               className="flex items-center gap-2 py-1 px-4 rounded-[8px] border border-gray-300 cursor-pointer"
-              onClick={() => navigate(`/students/edit-student/${student._id}`)}
+              onClick={() => navigate(`/admin-dashboard/students/edit-student/${student._id}`)}
             >
               <FaRegEdit /> Edit Profile
             </button>

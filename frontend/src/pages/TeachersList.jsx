@@ -227,7 +227,7 @@ function TeachersList() {
                 {/* add button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  onClick={() => navigate("/teacher/add-teacher")}
+                  onClick={() => navigate("/admin-dashboard/teacher/add-teacher")}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <IoMdAdd /> Add Teacher
@@ -322,7 +322,7 @@ function TeachersList() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/teacher/edit-teacher/${teacher._id}`)
+                              navigate(`/admin-dashboard/teacher/edit-teacher/${teacher._id}`)
                             }
                           >
                             <MdOutlineModeEdit size={18} />
@@ -535,7 +535,7 @@ function TeachersList() {
                               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 bg-blue-600 text-white rounded-lg cursor-pointer group"
                               onClick={() =>
                                 navigate(
-                                  `/teacher/edit-teacher/${viewTeacher._id}`,
+                                  `/admin-dashboard/teacher/edit-teacher/${viewTeacher._id}`,
                                 )
                               }
                             >

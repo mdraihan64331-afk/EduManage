@@ -243,7 +243,7 @@ function AddResult() {
       dispatch(setResultData(result.data));
       setLoading(false);
       setErr("");
-      navigate("/result/view-result");
+      navigate("/admin-dashboard/result/view-result");
     } catch (error) {
       setLoading(false);
       setErr(error.response?.data?.message);

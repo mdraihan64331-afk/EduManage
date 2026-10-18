@@ -84,7 +84,7 @@ function AddPayment() {
 
       dispatch(setPaymentData(result.data));
       console.log(result);
-      navigate("/fees-payments")
+      navigate("/admin-dashboard/fees-payments")
     } catch (error) {
       console.log(error);
       console.log(error.response?.data?.message);
@@ -110,7 +110,7 @@ function AddPayment() {
               {/* back button */}
               <button
                 className="flex gap-2 items-center px-4 py-1 bg-white rounded-[8px] shadow cursor-pointer"
-                onClick={() => navigate("/fees-payments")}
+                onClick={() => navigate("/admin-dashboard/fees-payments")}
               >
                 <IoIosArrowDown className="rotate-90" /> Back to Fees/Payments
               </button>

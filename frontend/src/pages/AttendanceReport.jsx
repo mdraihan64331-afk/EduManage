@@ -418,7 +418,7 @@ function AttendanceReport() {
                               className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                               onClick={() =>
                                 navigate(
-                                  `/attendances/edit-mark-attendance/${attendance._id}`,
+                                  `/admin-dashboard/attendances/edit-mark-attendance/${attendance._id}`,
                                 )
                               }
                             >

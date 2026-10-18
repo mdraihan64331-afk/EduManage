@@ -147,7 +147,7 @@ function EditTeacher() {
 
       setLoading(false);
       setErr("");
-      navigate("/teacher/teachers-list");
+      navigate("/admin-dashboard/teacher/teachers-list");
     } catch (error) {
       setLoading(false);
       setErr(error.response?.data?.message);

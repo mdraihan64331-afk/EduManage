@@ -3,9 +3,11 @@ import axios from "axios";
 import { serverURL } from "../App";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function useGetCurrentUser() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -14,6 +16,7 @@ function useGetCurrentUser() {
         });
 
         dispatch(setUserData(result.data));
+        // navigate("/");
       } catch (error) {
         console.log("Status:", error.response?.status);
         console.log("Backend Error:", error.response?.data);

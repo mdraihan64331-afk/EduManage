@@ -222,7 +222,7 @@ function EditStudent() {
 
       dispatch(setUpdateStudent(result.data))
       setLoading(false);
-      navigate("/students/list-student");
+      navigate("/admin-dashboard/students/list-student");
     } catch (error) {
       console.log("EDIT STUDENT ERROR:", error);
 

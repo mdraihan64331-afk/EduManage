@@ -162,7 +162,7 @@ function AddStudent() {
       dispatch(setStudentData(students.data));
       setLoading(false);
       setErr("");
-      navigate("/students/list-student");
+      navigate("/admin-dashboard/students/list-student");
     } catch (error) {
       setLoading(false);
       setErr(error.response?.data?.message);

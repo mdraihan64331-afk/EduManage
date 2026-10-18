@@ -275,7 +275,7 @@ function EditResult() {
 
       console.log("Updated Result:", response.data);
 
-      navigate("/result/view-result");
+      navigate("/admin-dashboard/result/view-result");
     } catch (error) {
       console.error("Update Result Error:", error);
 

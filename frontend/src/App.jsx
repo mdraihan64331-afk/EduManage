@@ -64,7 +64,7 @@ function App() {
         <Route path="/notice" element={<Notice />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-dashboard/dashboard" element={<AdminDashboard />} />
         <Route
           path="/sign-in"
           element={!userData ? <Signin /> : <Navigate to={"/"} />}
@@ -73,43 +73,43 @@ function App() {
           path="/sign-up"
           element={!userData ? <Signup /> : <Navigate to={"/"} />}
         />
-        <Route path="/forgot" element={<Forgot />} />
-        <Route path="/students/add-student" element={<AddStudent />} />
-        <Route path="/students/edit-student/:id" element={<EditStudent />} />
+        <Route path="/admin-dashboard/forgot" element={<Forgot />} />
+        <Route path="/admin-dashboard/students/add-student" element={<AddStudent />} />
+        <Route path="/admin-dashboard/students/edit-student/:id" element={<EditStudent />} />
         <Route
-          path="/students/student-details/:id"
+          path="/admin-dashboard/students/student-details/:id"
           element={<StudentDetails />}
         />
-        <Route path="/students/list-student" element={<ListStudents />} />
-        <Route path="/teacher/add-teacher" element={<AddTeachers />} />
-        <Route path="/teacher/teachers-list" element={<TeachersList />} />
-        <Route path="/teacher/edit-teacher/:id" element={<EditTeacher />} />
-        <Route path="/classes" element={<Classes />} />
+        <Route path="/admin-dashboard/students/list-student" element={<ListStudents />} />
+        <Route path="/admin-dashboard/teacher/add-teacher" element={<AddTeachers />} />
+        <Route path="/admin-dashboard/teacher/teachers-list" element={<TeachersList />} />
+        <Route path="/admin-dashboard/teacher/edit-teacher/:id" element={<EditTeacher />} />
+        <Route path="/admin-dashboard/classes" element={<Classes />} />
         <Route
-          path="/attendances/mark-attendance"
+          path="/admin-dashboard/attendances/mark-attendance"
           element={<MarkAttendance />}
         />
         <Route
-          path="/attendances/attendance-report"
+          path="/admin-dashboard/attendances/attendance-report"
           element={<AttendanceReport />}
         />
         <Route
-          path="/attendances/edit-mark-attendance/:id"
+          path="/admin-dashboard/attendances/edit-mark-attendance/:id"
           element={<EditMarkAttendance />}
         />
-        <Route path="/result/add-result" element={<AddResult />} />
-        <Route path="/result/view-result" element={<ResultList />} />
-        <Route path="/result/edit-result/:id" element={<EditResult />} />
-        <Route path="/performances" element={<Performance />} />
-        <Route path="/homeworks" element={<Homework />} />
-        <Route path="/fees-payments" element={<FeesPayment />} />
-        <Route path="/fees-payments/add-payment/:id" element={<AddPayment />} />
-        <Route path="/notice-announcements" element={<NoticeAnnouncement />} />
-        <Route path="/ranknings" element={<Rankning />} />
-        <Route path="/reports" element={<Report />} />
-        <Route path="/settings" element={<Setting />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/admin-dashboard/result/add-result" element={<AddResult />} />
+        <Route path="/admin-dashboard/result/view-result" element={<ResultList />} />
+        <Route path="/admin-dashboard/result/edit-result/:id" element={<EditResult />} />
+        <Route path="/admin-dashboard/performances" element={<Performance />} />
+        <Route path="/admin-dashboard/homeworks" element={<Homework />} />
+        <Route path="/admin-dashboard/fees-payments" element={<FeesPayment />} />
+        <Route path="/admin-dashboard/fees-payments/add-payment/:id" element={<AddPayment />} />
+        <Route path="/admin-dashboard/notice-announcements" element={<NoticeAnnouncement />} />
+        <Route path="/admin-dashboard/ranknings" element={<Rankning />} />
+        <Route path="/admin-dashboard/reports" element={<Report />} />
+        <Route path="/admin-dashboard/settings" element={<Setting />} />
+        <Route path="/admin-dashboard/profile" element={<Profile />} />
+        <Route path="/admin-dashboard/logout" element={<Logout />} />
       </Routes>
     </>
   );

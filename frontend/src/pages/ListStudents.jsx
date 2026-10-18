@@ -258,7 +258,7 @@ function ListStudents() {
                 {/* add button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  onClick={() => navigate("/students/add-student")}
+                  onClick={() => navigate("/admin-dashboard/students/add-student")}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <IoMdAdd /> Add Student
@@ -348,7 +348,7 @@ function ListStudents() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() => {
-                              navigate(`/students/student-details/${student._id}`)
+                              navigate(`/admin-dashboard/students/student-details/${student._id}`)
                             }}
                           >
                             <FaRegEye size={18} />
@@ -357,7 +357,7 @@ function ListStudents() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/students/edit-student/${student._id}`)
+                              navigate(`/admin-dashboard/students/edit-student/${student._id}`)
                             }
                           >
                             <MdOutlineModeEdit size={18} />
