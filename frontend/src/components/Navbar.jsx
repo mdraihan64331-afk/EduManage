@@ -59,11 +59,11 @@ function Navbar() {
             className="cursor-pointer"
             onClick={() => setShowPopup((prev) => !prev)}
           >
-            {userData?.image ? (
+            {userData?.profileImage ? (
               <>
                 <div>
                   <img
-                    src={userData?.image}
+                    src={userData?.profileImage}
                     alt={userData?.fullName}
                     className="h-10 w-10 rounded-full object-cover"
                   />
