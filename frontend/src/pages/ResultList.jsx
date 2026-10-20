@@ -674,7 +674,7 @@ function ResultList() {
                             </div>
                           </div>
                         </div>
-                        <div className="bg-white mt-3 p-3 rounded-[8px]">
+                        <div className="bg-white shadow mt-3 p-3 rounded-[8px]">
                           <h2 className="font-semibold flex items-center gap-3">
                             <IoBookSharp className="text-blue-600" />{" "}
                             Subject-wise Marks
@@ -778,14 +778,14 @@ function ResultList() {
                                 </h2>
                                 <div>{viewResult.remark}</div>
                               </div>
-                              {/* <button
+                              <button
                                 className="relative mt-5 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 bg-white text-blue-600 rounded-lg cursor-pointer group"
                               >
                                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                                   <RiPrinterLine /> Print Result
                                 </span>
                                 <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
-                              </button> */}
+                              </button>
                             </div>
                           </div>
                         </div>

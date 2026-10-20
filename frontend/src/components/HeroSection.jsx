@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import heroBgImage from "../assets/heroBg.PNG";
 import heroImage from "../assets/heroLogo.PNG";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +101,10 @@ function HeroSection() {
             </div>
 
             <div className="flex items-center gap-5">
-              <button className="py-2 px-6 font-semibold bg-green-600 text-white rounded-xl cursor-pointer">
+              <button 
+              className="py-2 px-6 font-semibold bg-green-600 text-white rounded-xl cursor-pointer"
+              
+              >
                 Check Result
               </button>
 
