@@ -16,7 +16,6 @@ function useGetCurrentUser() {
         });
 
         dispatch(setUserData(result.data));
-        // navigate("/");
       } catch (error) {
         console.log("Status:", error.response?.status);
         console.log("Backend Error:", error.response?.data);
@@ -24,7 +23,7 @@ function useGetCurrentUser() {
     };
 
     fetchUser();
-  }, []);
+  }, [dispatch]);
 }
 
 export default useGetCurrentUser;

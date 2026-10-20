@@ -1,6 +1,6 @@
 import React from "react";
 import AdminDashboard from "./components/AdminDashboard";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import UserDashboard from "./components/UserDashboard";
 import Signin from "./pages/Signin";
@@ -42,10 +42,13 @@ import useGetFeesPayment from "./hooks/useGetFeesPayment.jsx";
 import FeesPayment from "./pages/FeesPayment.jsx";
 import Classes from "./pages/Classes.jsx";
 import AddPayment from "./components/AddPayment.jsx";
+import AdminLogin from "./pages/AdminLogin.jsx";
+import useGetCurrentAdmin from "./hooks/useGetCurrentAdmin.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
   useGetCurrentUser();
+  useGetCurrentAdmin();
   useGetTeacher();
   useGetStudent();
   useGetAttendance();
@@ -53,7 +56,7 @@ function App() {
   useGetFeesPayment();
 
   const { userData } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  const { adminData } = useSelector((state) => state.admin);
   return (
     <>
       <Routes>
@@ -64,7 +67,6 @@ function App() {
         <Route path="/notice" element={<Notice />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
-        <Route path="/admin-dashboard/dashboard" element={<AdminDashboard />} />
         <Route
           path="/sign-in"
           element={!userData ? <Signin /> : <Navigate to={"/"} />}
@@ -73,43 +75,267 @@ function App() {
           path="/sign-up"
           element={!userData ? <Signup /> : <Navigate to={"/"} />}
         />
-        <Route path="/admin-dashboard/forgot" element={<Forgot />} />
-        <Route path="/admin-dashboard/students/add-student" element={<AddStudent />} />
-        <Route path="/admin-dashboard/students/edit-student/:id" element={<EditStudent />} />
+        <Route
+          path="/admin-dashboard/admin-signin"
+          element={
+            !adminData ? (
+              <AdminLogin />
+            ) : (
+              <Navigate to={"/admin-dashboard/dashboard"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/dashboard"
+          element={
+            adminData ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/forgot"
+          element={
+            adminData ? (
+              <Forgot />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/students/add-student"
+          element={
+            adminData ? (
+              <AddStudent />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/students/edit-student/:id"
+          element={
+            adminData ? (
+              <EditStudent />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
         <Route
           path="/admin-dashboard/students/student-details/:id"
-          element={<StudentDetails />}
+          element={
+            adminData ? (
+              <StudentDetails />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
         />
-        <Route path="/admin-dashboard/students/list-student" element={<ListStudents />} />
-        <Route path="/admin-dashboard/teacher/add-teacher" element={<AddTeachers />} />
-        <Route path="/admin-dashboard/teacher/teachers-list" element={<TeachersList />} />
-        <Route path="/admin-dashboard/teacher/edit-teacher/:id" element={<EditTeacher />} />
+        <Route
+          path="/admin-dashboard/students/list-student"
+          element={
+            adminData ? (
+              <ListStudents />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/teacher/add-teacher"
+          element={
+            adminData ? (
+              <AddTeachers />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/teacher/teachers-list"
+          element={
+            adminData ? (
+              <TeachersList />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/teacher/edit-teacher/:id"
+          element={
+            adminData ? (
+              <EditTeacher />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
         <Route path="/admin-dashboard/classes" element={<Classes />} />
         <Route
           path="/admin-dashboard/attendances/mark-attendance"
-          element={<MarkAttendance />}
+          element={
+            adminData ? (
+              <MarkAttendance />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
         />
         <Route
           path="/admin-dashboard/attendances/attendance-report"
-          element={<AttendanceReport />}
+          element={
+            adminData ? (
+              <AttendanceReport />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
         />
         <Route
           path="/admin-dashboard/attendances/edit-mark-attendance/:id"
-          element={<EditMarkAttendance />}
+          element={
+            adminData ? (
+              <EditMarkAttendance />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
         />
-        <Route path="/admin-dashboard/result/add-result" element={<AddResult />} />
-        <Route path="/admin-dashboard/result/view-result" element={<ResultList />} />
-        <Route path="/admin-dashboard/result/edit-result/:id" element={<EditResult />} />
-        <Route path="/admin-dashboard/performances" element={<Performance />} />
-        <Route path="/admin-dashboard/homeworks" element={<Homework />} />
-        <Route path="/admin-dashboard/fees-payments" element={<FeesPayment />} />
-        <Route path="/admin-dashboard/fees-payments/add-payment/:id" element={<AddPayment />} />
-        <Route path="/admin-dashboard/notice-announcements" element={<NoticeAnnouncement />} />
-        <Route path="/admin-dashboard/ranknings" element={<Rankning />} />
-        <Route path="/admin-dashboard/reports" element={<Report />} />
-        <Route path="/admin-dashboard/settings" element={<Setting />} />
-        <Route path="/admin-dashboard/profile" element={<Profile />} />
-        <Route path="/admin-dashboard/logout" element={<Logout />} />
+        <Route
+          path="/admin-dashboard/result/add-result"
+          element={
+            adminData ? (
+              <AddResult />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/result/view-result"
+          element={
+            adminData ? (
+              <ResultList />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/result/edit-result/:id"
+          element={
+            adminData ? (
+              <EditResult />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/performances"
+          element={
+            adminData ? (
+              <Performance />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/homeworks"
+          element={
+            adminData ? (
+              <Homework />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/fees-payments"
+          element={
+            adminData ? (
+              <FeesPayment />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/fees-payments/add-payment/:id"
+          element={
+            adminData ? (
+              <AddPayment />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/notice-announcements"
+          element={
+            adminData ? (
+              <NoticeAnnouncement />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/ranknings"
+          element={
+            adminData ? (
+              <Rankning />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/reports"
+          element={
+            adminData ? (
+              <Report />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/settings"
+          element={
+            adminData ? (
+              <Setting />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/profile"
+          element={
+            adminData ? (
+              <Profile />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/logout"
+          element={
+            adminData ? (
+              <Logout />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
       </Routes>
     </>
   );

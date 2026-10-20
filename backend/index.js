@@ -14,6 +14,8 @@ import { classesRouter } from "./routes/class.route.js";
 import { attendanceRouter } from "./routes/attendance.route.js";
 import { resultRouter } from "./routes/result.route.js";
 import { feesPaymentRouter } from "./routes/feesPayment.route.js";
+import { adminAuthRouter } from "./routes/adminAuth.route.js";
+import { adminRouter } from "./routes/admin.route.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,6 +32,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/admin-auth", adminAuthRouter)
+app.use("/api/admin", adminRouter)
 app.use("/api/student", studentRoute);
 app.use("/api/teacher", teacherRouter);
 app.use("/api/classes", classesRouter);

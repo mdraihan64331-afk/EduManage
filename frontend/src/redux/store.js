@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./userSlice";
+import adminSlice from "./adminSlice";
 import studentSlice from "./studentSlice";
 import teacherSlice from "./teacherSlice";
 import attendanceSlice from "./attendanceSlice";
@@ -9,6 +10,7 @@ import feesPaymentSlice from "./feesPaymentSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
+    admin: adminSlice,
     student: studentSlice,
     teacher: teacherSlice,
     attendance: attendanceSlice,

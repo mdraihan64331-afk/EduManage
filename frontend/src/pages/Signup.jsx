@@ -22,7 +22,6 @@ import { setUserData } from "../redux/userSlice";
 
 function Signup() {
   const navigate = useNavigate();
-  const [role, setRole] = useState("Student/Guardian");
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +37,6 @@ function Signup() {
         `${serverURL}/api/auth/sign-up`,
         {
           fullName,
-          role,
           email,
           password,
         },
@@ -64,14 +62,13 @@ function Signup() {
         {
           fullName: result.user.displayName,
           email: result.user.email,
-          role,
           profileImage: result.user.photoURL,
         },
         { withCredentials: true },
       );
       dispatch(setUserData(data));
       console.log(data);
-      navigate("/landing-home");
+      navigate("/");
     } catch (error) {
       console.log("Backend Response:", error.response?.data);
     }
@@ -179,29 +176,6 @@ function Signup() {
             <p className="text-gray-600">
               Fill in the details below to get started with EduManage.
             </p>
-          </div>
-          {/* Role */}
-          <div className="flex gap-3">
-            {["Student/Guardian", "Admin"].map((r, index) => (
-              <>
-                <div
-                  key={index}
-                  className="px-5 py-2 border border-gray-300 rounded-[7px]  cursor-pointer w-full text-center"
-                  onClick={() => setRole(r)}
-                  style={
-                    role == r
-                      ? {
-                          background: "#eaf6ee",
-                          border: "1px solid #10B981",
-                          color: "green",
-                        }
-                      : { background: "#fff" }
-                  }
-                >
-                  {r}
-                </div>
-              </>
-            ))}
           </div>
 
           {/* Full Name */}

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 
 function AdminDashboard() {
   const { studentData } = useSelector((state) => state.student);
-  const { userData } = useSelector((state) => state.user);
+  const { adminData } = useSelector((state) => state.admin);
   const { teacherData } = useSelector((state) => state.teacher);
   const { attendanceData } = useSelector((state) => state.attendance);
   const now = new Date();
@@ -65,7 +65,7 @@ function AdminDashboard() {
             <h1 className="font-bold text-2xl">Dashboard</h1>
             <p>
               Welcome back,{" "}
-              <span className="font-semibold">{userData?.fullName}</span>!
+              <span className="font-semibold">{adminData?.fullName}</span>!
               Here's what's happening.
             </p>
             <div className="flex-1 py-6">
