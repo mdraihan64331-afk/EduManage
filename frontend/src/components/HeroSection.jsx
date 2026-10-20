@@ -120,7 +120,7 @@ function HeroSection() {
           </div>
         </div>
       </section>
-      <div className="px-15 absolute w-full -bottom-8.5">
+      <div className="px-6 absolute w-full -bottom-8.5">
         <div className="py-2 px-7 flex items-center justify-between bg-white rounded-[8px] shadow">
           {/* total students */}
           <div>
