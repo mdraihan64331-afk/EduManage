@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import CheckResult from "../components/CheckResult";
 import Features from "../components/Features";
+import Footer from "../components/Footer";
 
 function LandingHome() {
   return (
@@ -11,6 +12,7 @@ function LandingHome() {
       <HeroSection />
       <CheckResult />
       <Features />
+      <Footer />
     </div>
   );
 }

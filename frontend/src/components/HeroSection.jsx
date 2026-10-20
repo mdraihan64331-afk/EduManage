@@ -70,9 +70,9 @@ function HeroSection() {
       : 0;
 
   return (
-    <div className="relative">
+    <div className="relative mt-19">
       <section
-        className="min-h-[70vh] bg-cover bg-center bg-no-repeat"
+        className="min-h-[80vh] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(to right, rgba(232,248,237,0.3), rgba(220,238,255,0.3)), url(${heroBgImage})`,
         }}

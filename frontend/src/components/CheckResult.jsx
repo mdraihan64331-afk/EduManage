@@ -32,7 +32,7 @@ function CheckResult() {
   ];
   return (
     <div className="mt-13 px-6">
-      <div className="bg-white p-2 shadow rounded-[8px]">
+      <div className="bg-white p-2 shadow-[0_0_10px_rgba(0,0,0,0.15)] rounded-[8px]">
         <div className="text-center">
           <h1 className="text-xl font-bold">Check Student Result</h1>
           <p className="text-gray-600 text-[14px]">
@@ -89,7 +89,7 @@ function CheckResult() {
                 </td>
                 {/* button */}
                 <td className="py-3 px-2">
-                  <button className="py-1 px-6 font-semibold bg-green-600 text-white rounded-xl cursor-pointer">
+                  <button className="py-1 px-6 font-semibold bg-green-600 text-white rounded-[8px] cursor-pointer">
                     Search Result
                   </button>
                 </td>

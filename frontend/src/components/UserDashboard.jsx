@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
 import CheckResult from "./CheckResult";
 import Features from "./Features";
+import Footer from "./Footer";
 
 function UserDashboard() {
   return (
@@ -11,6 +12,7 @@ function UserDashboard() {
       <HeroSection />
       <CheckResult />
       <Features />
+      <Footer />
     </div>
   );
 }
