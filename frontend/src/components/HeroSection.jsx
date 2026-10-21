@@ -70,7 +70,7 @@ function HeroSection() {
       : 0;
 
   return (
-    <div className="relative mt-19">
+    <div className="relative">
       <section
         className="min-h-[80vh] bg-cover bg-center bg-no-repeat"
         style={{

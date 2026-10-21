@@ -1,6 +1,9 @@
 import React from "react";
 import logoimage from "../assets/EduManage Monochrome Logo.png";
 import { Link } from "react-router-dom";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdPhone } from "react-icons/md";
+import { CgMail } from "react-icons/cg";
 
 function Footer() {
   return (
@@ -69,28 +72,16 @@ function Footer() {
           <div>
             <h1 className="text-[17px] font-bold">Support</h1>
             <div className="flex flex-col gap-1 mt-3">
-              <Link
-              
-                className="hover:underline transition-all text-[14px]"
-              >
+              <Link className="hover:underline transition-all text-[14px]">
                 Help Center
               </Link>
-              <Link
-              
-                className="hover:underline transition-all text-[14px]"
-              >
+              <Link className="hover:underline transition-all text-[14px]">
                 Privacy Policy
               </Link>
-              <Link
-              
-                className="hover:underline transition-all text-[14px]"
-              >
+              <Link className="hover:underline transition-all text-[14px]">
                 Terms & Conditions
               </Link>
-              <Link
-              
-                className="hover:underline transition-all text-[14px]"
-              >
+              <Link className="hover:underline transition-all text-[14px]">
                 FAQ
               </Link>
             </div>
@@ -99,11 +90,26 @@ function Footer() {
           <div>
             <h1 className="text-[17px] font-bold">Contact Info</h1>
             <div className="flex flex-col gap-1 mt-3">
-              <p className="text-[14px]">Home</p>
-              <p className="text-[14px]">About Us</p>
-              <p className="text-[14px]">Features</p>
-              <p className="text-[14px]">Notice</p>
-              <p className="text-[14px]">Contact</p>
+              <div className="flex items-center gap-3">
+                <IoLocationSharp />
+                <div>
+                  <p className="text-[14px]">
+                    123 Education Street, Dhaka, Bangladesh
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <MdPhone />
+                <div>
+                  <p className="text-[14px]">+880 1234-567890</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <CgMail />
+                <div>
+                  <p className="text-[14px]">info@edumanage.com</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
