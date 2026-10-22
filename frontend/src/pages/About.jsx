@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import AboutHeroSection from "../components/AboutHeroSection";
 import OurVision from "../components/OurVision";
 import WhyChoose from "../components/WhyChoose";
+import OurCommitment from "../components/OurCommitment";
 
 function About() {
   return (
@@ -12,6 +13,7 @@ function About() {
       <AboutHeroSection />
       <OurVision />
       <WhyChoose />
+      <OurCommitment />
       <Footer />
     </div>
   );
