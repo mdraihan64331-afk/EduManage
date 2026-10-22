@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AboutHeroSection from "../components/AboutHeroSection";
 import OurVision from "../components/OurVision";
+import WhyChoose from "../components/WhyChoose";
 
 function About() {
   return (
@@ -10,6 +11,7 @@ function About() {
       <Navbar />
       <AboutHeroSection />
       <OurVision />
+      <WhyChoose />
       <Footer />
     </div>
   );

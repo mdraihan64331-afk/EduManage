@@ -19,9 +19,9 @@ function AboutHeroSection() {
         {/* hero contant */}
         <div className="flex items-center w-full">
           <div className="container mx-auto px-6 py-20 w-1/2">
-            <div className="flex items-center justify-center gap-2 w-43 bg-green-200 rounded-2xl p-1">
+            <div className="flex items-center justify-center animate-pulse gap-2 w-43 bg-green-200 rounded-2xl p-1">
               <IoAlertCircle size={20} className="rotate-180 text-green-600" />
-              <p className="text-green-700 text-[14px] font-bold">
+              <p className="text-green-600 text-[14px] font-bold">
                 About EduManage
               </p>
             </div>
