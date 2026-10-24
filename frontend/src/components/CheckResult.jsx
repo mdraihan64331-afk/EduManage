@@ -268,7 +268,7 @@ function CheckResult() {
                     }}
                   >
                     <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                      <RiArrowLeftLongLine /> Back to Result List
+                      <RiArrowLeftLongLine /> Back to Home
                     </span>
                     <span className="absolute inset-y-0 left-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
                   </button>
