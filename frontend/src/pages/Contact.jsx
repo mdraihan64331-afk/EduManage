@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ContactHeroSection from "../components/ContactHeroSection";
 import Address from "../components/Address";
+import DropUs from "../components/DropUs";
+import Map from "../components/Map";
 
 function Contact() {
   return (
@@ -10,6 +12,8 @@ function Contact() {
       <Navbar />
       <ContactHeroSection />
       <Address />
+      <DropUs />
+      <Map />
       <Footer />
     </div>
   );
