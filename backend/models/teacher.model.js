@@ -29,9 +29,10 @@ const teacherShema = new mongoose.Schema(
       required: true,
     },
     phone: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     email: {
       type: String,
@@ -66,9 +67,9 @@ const teacherShema = new mongoose.Schema(
       required: true,
     },
     qualification: {
-      type: String,
+      type: [String],
       required: true,
-      default: []
+      default: [],
     },
     classTeacher: {
       type: String,
@@ -82,7 +83,7 @@ const teacherShema = new mongoose.Schema(
         "Class 7",
         "Class 8",
         "Class 9",
-        "Class 10"
+        "Class 10",
       ],
     },
   },

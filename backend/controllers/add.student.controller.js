@@ -61,8 +61,9 @@ export const addStudent = async (req, res) => {
     }
 
     const studentCount = await AddStudent.countDocuments();
+    const currentYear = new Date().getFullYear();
 
-    const studentId = `STD-2026-${String(studentCount + 1).padStart(3, "0")}`;
+    const studentId = `STD-${currentYear}-${String(studentCount + 1).padStart(3, "0")}`;
     const user = await AddStudent.create({
       fullName,
       studentId,
@@ -102,7 +103,9 @@ export const addStudent = async (req, res) => {
 
 export const getAllStudents = async (req, res) => {
   try {
-    const students = await AddStudent.find();
+    const students = await AddStudent.find().sort({
+      createdAt: -1,
+    });
 
     return res.status(200).json(students);
   } catch (error) {

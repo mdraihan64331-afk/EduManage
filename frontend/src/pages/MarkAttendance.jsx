@@ -138,7 +138,6 @@ function MarkAttendance() {
     try {
       setSelectClass("");
       setSection("");
-      setMarkedAttendance({});
 
       const result = await axios.get(`${serverURL}/api/student/all-students`, {
         withCredentials: true,

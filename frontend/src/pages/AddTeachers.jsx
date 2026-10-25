@@ -72,7 +72,6 @@ function AddTeachers() {
     try {
       const formData = new FormData();
       formData.append("fullName", fullName);
-      formData.append("teacherId", teacherId);
       formData.append("subject", subject);
       formData.append("joiningDate", joiningDate);
       formData.append("gender", gender);
@@ -214,8 +213,8 @@ function AddTeachers() {
                     <input
                       type="text"
                       placeholder="TCH-001"
-                      value={teacherId}
-                      onChange={(e) => setTeacherId(e.target.value)}
+                      readOnly
+                      value={"Auto generated"}
                       className="border border-gray-300 rounded-[8px] w-50 px-2 py-1 outline-none"
                     />
                   </div>

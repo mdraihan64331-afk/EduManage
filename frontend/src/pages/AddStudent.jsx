@@ -258,7 +258,7 @@ function AddStudent() {
                       Roll Number <span className="text-red-500">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Enter roll number"
                       value={rollNumber}
                       onChange={(e) => setRollNumber(e.target.value)}
@@ -679,11 +679,14 @@ function AddStudent() {
                       className="w-50 border border-gray-300  rounded-lg px-2 py-1 outline-none"
                     >
                       <option value="">Select Teacher</option>
-                      {teacherData?.map((teacher) => (
-                        <option key={teacher._id} value={teacher._id}>
-                          {teacher.fullName}
-                        </option>
-                      ))}
+                      {teacherData?.map(
+                        (teacher) =>
+                          teacher.classTeacher && (
+                            <option key={teacher._id} value={teacher._id}>
+                              {teacher.fullName} - {teacher.classTeacher}
+                            </option>
+                          ),
+                      )}
                     </select>
                   </div>
                 </div>

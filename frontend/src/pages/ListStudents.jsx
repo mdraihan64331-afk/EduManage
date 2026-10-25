@@ -269,8 +269,8 @@ function ListStudents() {
             </div>
             {/* Student Table */}
 
-            <div className="mt-4 w-full overflow-auto max-h-[300px]">
-              <table className="w-full min-w-[700px]">
+            <div className="mt-4 w-full overflow-auto max-h-[400px]">
+              <table className="w-full min-w-[699px]">
                 {/* Table Header */}
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="border-b border-gray-300 text-gray-600">

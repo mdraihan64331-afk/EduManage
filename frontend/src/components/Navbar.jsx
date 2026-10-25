@@ -34,7 +34,7 @@ function Navbar() {
   };
 
   return (
-    <div className=" bg-white shadow-md px-4 py-2 flex justify-between items-center">
+    <div className="sticky top-0 z-100 bg-white shadow-md px-4 py-2 flex justify-between items-center">
       <Link to={"/"} className="cursor-pointer h-15 w-30">
         <img src={logoimage} alt="" className="h-[100%] w-[100%]" />
       </Link>

@@ -5,7 +5,6 @@ export const addTeacher = async (req, res) => {
   try {
     const {
       fullName,
-      teacherId,
       subject,
       assignedClass,
       phone,
@@ -15,7 +14,7 @@ export const addTeacher = async (req, res) => {
       gender,
       aboutTeacher,
       qualification,
-      classTeacher
+      classTeacher,
     } = req.body;
 
     let image;
@@ -33,6 +32,11 @@ export const addTeacher = async (req, res) => {
         .status(400)
         .json({ message: "Your number must be at least 11 digits!" });
     }
+
+    const teacherCount = await Teacher.countDocuments();
+    const currentYear = new Date().getFullYear();
+
+    const teacherId = `TCH-${currentYear}-${String(teacherCount + 1).padStart(3, 0)}`;
 
     const teacher = await Teacher.create({
       fullName,
@@ -58,7 +62,9 @@ export const addTeacher = async (req, res) => {
 
 export const getAllTeachers = async (req, res) => {
   try {
-    const teacher = await Teacher.find();
+    const teacher = await Teacher.find().sort({
+      createdAt: -1,
+    });
 
     return res.status(200).json(teacher);
   } catch (error) {

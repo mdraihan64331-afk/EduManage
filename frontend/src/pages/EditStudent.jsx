@@ -71,7 +71,7 @@ function EditStudent() {
   const [motherPhone, setMotherPhone] = useState("");
   const [motherOccupation, setMotherOccupation] = useState("");
   const { teacherData } = useSelector((state) => state.teacher);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [err, setErr] = useState("");
 
@@ -220,7 +220,7 @@ function EditStudent() {
         },
       );
 
-      dispatch(setUpdateStudent(result.data))
+      dispatch(setUpdateStudent(result.data));
       setLoading(false);
       navigate("/admin-dashboard/students/list-student");
     } catch (error) {
@@ -828,11 +828,14 @@ function EditStudent() {
                       className="w-50 border border-gray-300  rounded-lg px-2 py-1 outline-none"
                     >
                       <option value="">Select Teacher</option>
-                      {teacherData?.map((teacher) => (
-                        <option key={teacher._id} value={teacher._id}>
-                          {teacher.fullName}
-                        </option>
-                      ))}
+                      {teacherData?.map(
+                        (teacher) =>
+                          teacher.classTeacher && (
+                            <option key={teacher._id} value={teacher._id}>
+                              {teacher.fullName} - {teacher.classTeacher}
+                            </option>
+                          ),
+                      )}
                     </select>
                   </div>
                 </div>
