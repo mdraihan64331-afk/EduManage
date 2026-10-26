@@ -8,7 +8,7 @@ import {
   MdOutlinePreview,
 } from "react-icons/md";
 import { FaChartBar } from "react-icons/fa";
-import { RiLineChartLine } from "react-icons/ri";
+import { RiLineChartLine, RiStickyNoteAddFill } from "react-icons/ri";
 import { RiBookletLine } from "react-icons/ri";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { IoNotificationsOutline } from "react-icons/io5";
@@ -22,6 +22,7 @@ import { GiGraduateCap } from "react-icons/gi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { BsPersonAdd } from "react-icons/bs";
 import { CircleDollarSign, HandCoins } from "lucide-react";
+import { TfiAnnouncement } from "react-icons/tfi";
 
 export const adminCatagories = [
   {
@@ -114,7 +115,12 @@ export const adminCatagories = [
     menu: "Performance",
     path: "/admin-dashboard/performances",
   },
-  { id: 8, icon: <RiBookletLine />, menu: "Homework", path: "/admin-dashboard/homeworks" },
+  {
+    id: 8,
+    icon: <RiBookletLine />,
+    menu: "Homework",
+    path: "/admin-dashboard/homeworks",
+  },
   {
     id: 9,
     icon: <RiMoneyDollarCircleLine />,
@@ -124,22 +130,49 @@ export const adminCatagories = [
   {
     id: 10,
     icon: <IoNotificationsOutline />,
-    menu: "Notice / Announcement",
-    path: "/admin-dashboard/notice-announcements",
+    menu: "Notice",
+    path: "/admin-dashboard/notice",
+    subMenu: [
+      {
+        icon: <RiStickyNoteAddFill />,
+        subMenuName: "Add Notice",
+        path: "/admin-dashboard/notice/add-notice",
+      },
+      {
+        icon: <TfiAnnouncement />,
+        subMenuName: "Notice List",
+        path: "/admin-dashboard/notice/notice-list",
+      },
+    ],
   },
-  { id: 11, icon: <RiMedalLine />, menu: "Rankings", path: "/admin-dashboard/ranknings" },
+  {
+    id: 11,
+    icon: <RiMedalLine />,
+    menu: "Rankings",
+    path: "/admin-dashboard/ranknings",
+  },
   {
     id: 12,
     icon: <IoDocumentTextOutline />,
     menu: "Reports",
     path: "/admin-dashboard/reports",
   },
-  { id: 13, icon: <IoSettingsOutline />, menu: "Settings", path: "/admin-dashboard/settings" },
+  {
+    id: 13,
+    icon: <IoSettingsOutline />,
+    menu: "Settings",
+    path: "/admin-dashboard/settings",
+  },
   {
     id: 14,
     icon: <IoPersonCircleOutline />,
     menu: "Profile",
     path: "/admin-dashboard/profile",
   },
-  { id: 15, icon: <IoLogOutOutline />, menu: "Logout", path: "/admin-dashboard/logout" },
+  {
+    id: 15,
+    icon: <IoLogOutOutline />,
+    menu: "Logout",
+    path: "/admin-dashboard/logout",
+  },
 ];

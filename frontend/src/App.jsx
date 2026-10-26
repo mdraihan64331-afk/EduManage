@@ -13,7 +13,6 @@ import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import Performance from "./components/Performance";
 import Homework from "./components/Homework";
-import NoticeAnnouncement from "./components/NoticeAnnouncement.jsx";
 import Rankning from "./components/Rankning";
 import Report from "./components/Report";
 import Setting from "./components/Setting";
@@ -44,6 +43,8 @@ import Classes from "./pages/Classes.jsx";
 import AddPayment from "./components/AddPayment.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import useGetCurrentAdmin from "./hooks/useGetCurrentAdmin.jsx";
+import AddNotice from "./pages/AddNotice.jsx";
+import NoticeList from "./pages/NoticeList.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -277,10 +278,20 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/notice-announcements"
+          path="/admin-dashboard/notice/add-notice"
           element={
             adminData ? (
-              <NoticeAnnouncement />
+              <AddNotice />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/notice/notice-list"
+          element={
+            adminData ? (
+              <NoticeList />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
