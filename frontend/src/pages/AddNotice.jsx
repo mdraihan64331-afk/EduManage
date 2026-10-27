@@ -24,13 +24,14 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import { BsAlphabetUppercase } from "react-icons/bs";
-import { RxLetterCaseLowercase } from "react-icons/rx";
+import { RxCross2, RxLetterCaseLowercase } from "react-icons/rx";
 import { FiUploadCloud, FiPaperclip, FiX, FiFile } from "react-icons/fi";
 import { ClipLoader } from "react-spinners";
 import { RiResetLeftFill } from "react-icons/ri";
 import { FcIdea, FcOk } from "react-icons/fc";
 import axios from "axios";
 import { serverURL } from "../App";
+import { GoAlertFill } from "react-icons/go";
 
 function AddNotice() {
   const [noticeTitle, setNoticeTitle] = useState("");
@@ -47,6 +48,7 @@ function AddNotice() {
   );
   const [expiryDate, setExpriryDate] = useState("");
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
   const editor = useEditor({
     extensions: [
@@ -128,6 +130,7 @@ function AddNotice() {
   };
 
   const handleAddNotice = async () => {
+    setLoading(true);
     try {
       const formData = new FormData();
       formData.append("noticeTitle", noticeTitle);
@@ -135,13 +138,16 @@ function AddNotice() {
       formData.append("priority", priority);
       formData.append("status", status);
       formData.append("description", description);
+      formData.append("publishDate", publishDate);
+
       files.forEach((file) => {
         formData.append("files", file);
       });
-      formData.append("publishDate", publishDate);
+
       if (expiryDate) {
         formData.append("expiryDate", expiryDate);
       }
+
       const result = await axios.post(
         `${serverURL}/api/notice/add-notice`,
         formData,
@@ -149,7 +155,11 @@ function AddNotice() {
       );
 
       console.log(result);
+      setLoading(false);
+      setErr("");
     } catch (error) {
+      setLoading(false);
+      setErr(error.response?.data?.message);
       console.log(error);
       console.log(error.response?.data?.message);
     }
@@ -766,6 +776,39 @@ function AddNotice() {
             </div>
           </div>
         </div>
+        {err && (
+          <>
+            <div className="fixed z-60 inset-0 bg-black/50 flex justify-center items-center">
+              <div className="bg-white p-5 rounded-[8px]">
+                <div
+                  className="flex justify-end text-gray-600 cursor-pointer"
+                  onClick={() => setErr("")}
+                >
+                  <RxCross2 />
+                </div>
+                <div className="flex flex-col justify-center items-center gap-2">
+                  <div className=" p-3 rounded-full bg-red-100 text-red-500">
+                    <GoAlertFill size={30} />
+                  </div>
+                  <h1 className="text-xl font-bold">Something went wrong</h1>
+                  <p className="text-gray-500">Please try again latet.</p>
+                  <div className="bg-red-100 border border-red-700 w-full p-4 rounded-[8px]">
+                    <div className="flex items-center gap-3 text-red-500">
+                      <GoAlertFill size={30} />
+                      {err}
+                    </div>
+                  </div>
+                  <button
+                    className="bg-red-600 cursor-pointer px-15 text-white py-2 rounded-[8px]"
+                    onClick={() => setErr("")}
+                  >
+                    OK
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

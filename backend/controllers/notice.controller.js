@@ -13,6 +13,14 @@ export const addNotice = async (req, res) => {
       expiryDate,
     } = req.body;
 
+    if (!noticeTitle) {
+      return res.status(400).json({ message: "Notice title is required!" });
+    }
+
+    if (!description) {
+      return res.status(400).json({ message: "Description is required!" });
+    }
+
     const files = [];
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
