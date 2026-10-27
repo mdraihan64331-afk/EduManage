@@ -16,6 +16,7 @@ import { resultRouter } from "./routes/result.route.js";
 import { feesPaymentRouter } from "./routes/feesPayment.route.js";
 import { adminAuthRouter } from "./routes/adminAuth.route.js";
 import { adminRouter } from "./routes/admin.route.js";
+import { noticeRouter } from "./routes/notice.route.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -40,6 +41,7 @@ app.use("/api/classes", classesRouter);
 app.use("/api/attendance", attendanceRouter);
 app.use("/api/result", resultRouter);
 app.use("/api/fees-payment", feesPaymentRouter);
+app.use("/api/notice", noticeRouter)
 
 app.listen(port, () => {
   connectDB();

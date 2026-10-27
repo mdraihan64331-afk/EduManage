@@ -26,10 +26,11 @@ import TextAlign from "@tiptap/extension-text-align";
 import { BsAlphabetUppercase } from "react-icons/bs";
 import { RxLetterCaseLowercase } from "react-icons/rx";
 import { FiUploadCloud, FiPaperclip, FiX, FiFile } from "react-icons/fi";
-import { IoMdAdd } from "react-icons/io";
 import { ClipLoader } from "react-spinners";
 import { RiResetLeftFill } from "react-icons/ri";
 import { FcIdea, FcOk } from "react-icons/fc";
+import axios from "axios";
+import { serverURL } from "../App";
 
 function AddNotice() {
   const [noticeTitle, setNoticeTitle] = useState("");
@@ -124,6 +125,44 @@ function AddNotice() {
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
 
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const handleAddNotice = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("noticeTitle", noticeTitle);
+      formData.append("category", category);
+      formData.append("priority", priority);
+      formData.append("status", status);
+      formData.append("description", description);
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+      formData.append("publishDate", publishDate);
+      if (expiryDate) {
+        formData.append("expiryDate", expiryDate);
+      }
+      const result = await axios.post(
+        `${serverURL}/api/notice/add-notice`,
+        formData,
+        { withCredentials: true },
+      );
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      console.log(error.response?.data?.message);
+    }
+  };
+
+  const handleReset = () => {
+    setNoticeTitle("");
+    setCategory("");
+    setPriority("");
+    setStatus("");
+    setDescription("");
+    setFiles([]);
+    setExpriryDate("");
   };
 
   return (
@@ -512,7 +551,7 @@ function AddNotice() {
                 {/* reset button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-                  // onClick={handleReset}
+                  onClick={handleReset}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <RiResetLeftFill /> Reset
@@ -523,7 +562,7 @@ function AddNotice() {
                 {/* add button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  // onClick={handleAddStudent}
+                  onClick={handleAddNotice}
                   disabled={loading}
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">

@@ -1,27 +1,3 @@
-// import { v2 as cloudinary } from "cloudinary";
-// import fs from "fs";
-
-// export const uploadOnCloudinary = async (file) => {
-//   cloudinary.config({
-//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//     api_key: process.env.CLOUDINARY_API_KEY,
-//     api_secret: process.env.CLOUDINARY_API_SECRET,
-//   });
-
-//   try {
-//     const result = await cloudinary.uploader.upload(file);
-//     console.log(result);
-//     fs.unlinkSync(file);
-//     return result.secure_url;
-//   } catch (error) {
-//     console.log("upload error", error);
-//     if (fs.existsSync(file)) {
-//       fs.unlinkSync(file);
-//     }
-//     return null;
-//   }
-// };
-
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
@@ -35,8 +11,14 @@ const uploadOnCloudinary = async (file) => {
   try {
     if (!file) return null;
 
+    const extension = file.split(".").pop().toLowerCase();
+
+    const resourceType = ["pdf", "doc", "docx"].includes(extension)
+      ? "raw"
+      : "auto";
+
     const result = await cloudinary.uploader.upload(file, {
-      resource_type: "auto",
+      resource_type: resourceType,
     });
 
     console.log("Cloudinary URL:", result.secure_url);
