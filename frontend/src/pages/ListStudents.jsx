@@ -34,21 +34,19 @@ function ListStudents() {
     "Class 7",
     "Class 8",
     "Class 9",
-    "Class 10"
+    "Class 10",
   ];
   const [section, setSection] = useState("");
   const [input, setInput] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
   const [deleteStudent, setDeleteStudent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);  
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const sectionName = ["A", "B", "C"];
   const dispatch = useDispatch();
   const { studentData = [] } = useSelector((state) => state.student);
   const displayStudents = isFiltered ? filteredStudents : studentData;
   const navigate = useNavigate();
-
-
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -82,7 +80,7 @@ function ListStudents() {
   //   );
 
   //   setFilteredStudents(newList);
-  // }, [studentData, input]);  
+  // }, [studentData, input]);
 
   // reset button
   const handleReset = () => {
@@ -258,7 +256,9 @@ function ListStudents() {
                 {/* add button */}
                 <button
                   className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-                  onClick={() => navigate("/admin-dashboard/students/add-student")}
+                  onClick={() =>
+                    navigate("/admin-dashboard/students/add-student")
+                  }
                 >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     <IoMdAdd /> Add Student
@@ -315,7 +315,9 @@ function ListStudents() {
 
                       <td className="py-3 px-2">
                         <div>
-                          <h1 className="font-semibold capitalize">{student.fullName}</h1>
+                          <h1 className="font-semibold capitalize">
+                            {student.fullName}
+                          </h1>
 
                           <p className="text-xs text-gray-500">
                             {student.email}
@@ -348,16 +350,20 @@ function ListStudents() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() => {
-                              navigate(`/admin-dashboard/students/student-details/${student._id}`)
+                              navigate(
+                                `/admin-dashboard/students/student-details/${student._id}`,
+                              );
                             }}
                           >
                             <FaRegEye size={18} />
                           </button>
-                          
+
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/admin-dashboard/students/edit-student/${student._id}`)
+                              navigate(
+                                `/admin-dashboard/students/edit-student/${student._id}`,
+                              )
                             }
                           >
                             <MdOutlineModeEdit size={18} />
@@ -377,143 +383,140 @@ function ListStudents() {
                   ))}
                 </tbody>
               </table>
+            </div>
+            {/* delete popup */}
+            {showDeleteModal && deleteStudent && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                <div className="bg-white w-[600px] rounded-xl shadow-xl p-6">
+                  {/* Header */}
+                  <div className="flex justify-between">
+                    <div>
+                      <h2 className="text-xl flex items-center gap-2 font-bold text-gray-800">
+                        <RiDeleteBin6Line size={30} color="red" /> Delete
+                        Student
+                      </h2>
 
-              {/* delete popup */}
-              {showDeleteModal && deleteStudent && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                  <div className="bg-white w-[600px] rounded-xl shadow-xl p-6">
-                    {/* Header */}
-                    <div className="flex justify-between">
-                      <div>
-                        <h2 className="text-xl flex items-center gap-2 font-bold text-gray-800">
-                          <RiDeleteBin6Line size={30} color="red" /> Delete
-                          Student
-                        </h2>
-
-                        <p className="text-sm text-gray-500 mt-1">
-                          Are you sure you want to delete this student?
-                        </p>
-                      </div>
-                      <div
-                        className="flex justify-end text-gray-600 cursor-pointer"
-                        onClick={() => {
-                          setShowDeleteModal(false);
-                          setDeleteStudent(null);
-                        }}
-                      >
-                        <RxCross2 />
-                      </div>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Are you sure you want to delete this student?
+                      </p>
                     </div>
-
-                    <div className="mt-5 flex gap-4 rounded-xl p-4">
-                      <div className="">
-                        <div className="w-30 h-30">
-                          {deleteStudent.image ? (
-                            <img
-                              src={deleteStudent.image}
-                              alt={deleteStudent.fullName}
-                              className="w-full h-full rounded-[8px] object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full rounded-[8px] bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
-                              {deleteStudent.fullName
-                                ?.slice(0, 1)
-                                .toUpperCase()}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="text-sm">
-                        <div>
-                          <h3 className="font-bold text-lg capitalize">
-                            {deleteStudent.fullName}
-                          </h3>
-                        </div>
-                        <div className="mt-2">
-                          <div className="flex items-center gap-3 text-gray-400">
-                            <p>Student ID: </p>
-                            <p>{deleteStudent.studentId}</p>
-                          </div>
-
-                          <div className="flex items-center gap-3 text-gray-400">
-                            <p>Roll No: </p>
-                            <p>{deleteStudent.rollNumber}</p>
-                          </div>
-
-                          <div className="flex items-center gap-3 text-gray-400">
-                            <p>Class:</p>
-                            <p>{deleteStudent.className}</p>
-                          </div>
-
-                          <div className="flex items-center gap-3 text-gray-400">
-                            <p>Section: </p>
-                            <p>{deleteStudent.section}</p>
-                          </div>
-
-                          <div className="flex items-center gap-3 text-gray-400">
-                            <p>Gender</p>
-                            <p>{deleteStudent.gender}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-red-50 p-4 rounded-[8px]">
-                      <div className="flex gap-3">
-                        <div className="text-red-500">
-                          <GoAlertFill size={20} />
-                        </div>
-                        <div>
-                          <p className="text-red-500">
-                            This action cannot be undone!
-                          </p>
-                          <p>
-                            All data related to this student will be permanently
-                            removed
-                          </p>
-                          <p>
-                            from the system including results, attendance, fees
-                            and more.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center gap-3 mt-6">
-                      {/* cancel button */}
-                      <button
-                        onClick={() => {
-                          setShowDeleteModal(false);
-                          setDeleteStudent(null);
-                        }}
-                        className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
-                      >
-                        <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                          Cancel
-                        </span>
-                        <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
-                      </button>
-
-                      {/* delete button */}
-                      <button
-                        onClick={async () => {
-                          await handleDelete(deleteStudent._id);
-                          setShowDeleteModal(false);
-                          setDeleteStudent(null);
-                        }}
-                        className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
-                      >
-                        <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                          <RiDeleteBin6Line /> Delete Student
-                        </span>
-                        <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
-                      </button>
+                    <div
+                      className="flex justify-end text-gray-600 cursor-pointer"
+                      onClick={() => {
+                        setShowDeleteModal(false);
+                        setDeleteStudent(null);
+                      }}
+                    >
+                      <RxCross2 />
                     </div>
                   </div>
+
+                  <div className="mt-5 flex gap-4 rounded-xl p-4">
+                    <div className="">
+                      <div className="w-30 h-30">
+                        {deleteStudent.image ? (
+                          <img
+                            src={deleteStudent.image}
+                            alt={deleteStudent.fullName}
+                            className="w-full h-full rounded-[8px] object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full rounded-[8px] bg-purple-800 text-white flex items-center justify-center text-2xl font-bold">
+                            {deleteStudent.fullName?.slice(0, 1).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-sm">
+                      <div>
+                        <h3 className="font-bold text-lg capitalize">
+                          {deleteStudent.fullName}
+                        </h3>
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex items-center gap-3 text-gray-400">
+                          <p>Student ID: </p>
+                          <p>{deleteStudent.studentId}</p>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-gray-400">
+                          <p>Roll No: </p>
+                          <p>{deleteStudent.rollNumber}</p>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-gray-400">
+                          <p>Class:</p>
+                          <p>{deleteStudent.className}</p>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-gray-400">
+                          <p>Section: </p>
+                          <p>{deleteStudent.section}</p>
+                        </div>
+
+                        <div className="flex items-center gap-3 text-gray-400">
+                          <p>Gender</p>
+                          <p>{deleteStudent.gender}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-4 rounded-[8px]">
+                    <div className="flex gap-3">
+                      <div className="text-red-500">
+                        <GoAlertFill size={20} />
+                      </div>
+                      <div>
+                        <p className="text-red-500">
+                          This action cannot be undone!
+                        </p>
+                        <p>
+                          All data related to this student will be permanently
+                          removed
+                        </p>
+                        <p>
+                          from the system including results, attendance, fees
+                          and more.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-3 mt-6">
+                    {/* cancel button */}
+                    <button
+                      onClick={() => {
+                        setShowDeleteModal(false);
+                        setDeleteStudent(null);
+                      }}
+                      className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                    >
+                      <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                        Cancel
+                      </span>
+                      <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                    </button>
+
+                    {/* delete button */}
+                    <button
+                      onClick={async () => {
+                        await handleDelete(deleteStudent._id);
+                        setShowDeleteModal(false);
+                        setDeleteStudent(null);
+                      }}
+                      className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                    >
+                      <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                        <RiDeleteBin6Line /> Delete Student
+                      </span>
+                      <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

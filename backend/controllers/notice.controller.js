@@ -55,3 +55,15 @@ export const addNotice = async (req, res) => {
       .json({ message: "Failed to create notice", error: error.message });
   }
 };
+
+export const getAllNotice = async (req, res) => {
+  try {
+    const notice = await Notice.find().sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(notice);
+  } catch (error) {
+    console.log(error);
+  }
+};

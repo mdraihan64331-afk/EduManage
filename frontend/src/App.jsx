@@ -45,6 +45,7 @@ import AdminLogin from "./pages/AdminLogin.jsx";
 import useGetCurrentAdmin from "./hooks/useGetCurrentAdmin.jsx";
 import AddNotice from "./pages/AddNotice.jsx";
 import NoticeList from "./pages/NoticeList.jsx";
+import useGetNotice from "./hooks/useGetNotice.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -55,6 +56,7 @@ function App() {
   useGetAttendance();
   useGetResult();
   useGetFeesPayment();
+  useGetNotice();
 
   const { userData } = useSelector((state) => state.user);
   const { adminData } = useSelector((state) => state.admin);

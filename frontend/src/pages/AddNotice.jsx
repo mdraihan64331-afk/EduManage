@@ -32,6 +32,9 @@ import { FcIdea, FcOk } from "react-icons/fc";
 import axios from "axios";
 import { serverURL } from "../App";
 import { GoAlertFill } from "react-icons/go";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setNoticeData } from "../redux/noticeSlice";
 
 function AddNotice() {
   const [noticeTitle, setNoticeTitle] = useState("");
@@ -49,6 +52,8 @@ function AddNotice() {
   const [expiryDate, setExpriryDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const editor = useEditor({
     extensions: [
@@ -154,9 +159,10 @@ function AddNotice() {
         { withCredentials: true },
       );
 
-      console.log(result);
+      dispatch(setNoticeData(result.data));
       setLoading(false);
       setErr("");
+      navigate("/admin-dashboard/notice/notice-list");
     } catch (error) {
       setLoading(false);
       setErr(error.response?.data?.message);
@@ -178,7 +184,7 @@ function AddNotice() {
   return (
     <div className="flex bg-blue-50">
       <Menu />
-      {/* student add section */}
+      {/* notice add section */}
 
       <div className=" w-full ">
         {/* admin header */}
@@ -534,7 +540,11 @@ function AddNotice() {
                   </label>
 
                   <input
-                    value={publishDate}
+                    value={new Date(publishDate).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                     readOnly
                     className="outline-none w-80 py-1 px-2 border border-gray-300 rounded-[8px]"
                   />
@@ -586,6 +596,7 @@ function AddNotice() {
                   </span>
                   <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
                 </button>
+
                 {loading && (
                   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
                     {/* Loading Card */}
@@ -659,7 +670,13 @@ function AddNotice() {
                     </div>
                     {/*publish date */}
                     <div className="text-xs text-gray-500">
-                      <p>{publishDate}</p>
+                      <p>
+                        {new Date(publishDate).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </p>
                     </div>
                   </div>
 
@@ -695,9 +712,16 @@ function AddNotice() {
                       <div className="flex items-center text-xs gap-2 text-gray-400">
                         <MdOutlineWatchLater />
                         {expiryDate ? (
-                          <p>Vaild until: {expiryDate} </p>
+                          <p>
+                            Vaild until:{" "}
+                            {new Date(expiryDate).toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}{" "}
+                          </p>
                         ) : (
-                          <p>Vaild until: None</p>
+                          <p>Vaild Until: None</p>
                         )}
                       </div>
                       {/* status */}
