@@ -1,7 +1,6 @@
 import React from "react";
 import schoolImage from "../assets/EduManage School Campus in Bangladesh.png";
 import {
-  FaFacebook,
   FaFacebookSquare,
   FaInstagramSquare,
   FaLinkedin,
@@ -21,8 +20,12 @@ import { FcOk } from "react-icons/fc";
 import { MdPhone } from "react-icons/md";
 import { CgMail } from "react-icons/cg";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Features() {
+  const { noticeData } = useSelector((state) => state.notice);
+  const navigate = useNavigate();
   return (
     <div className="mt-5 px-6">
       <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.15)] rounded-[8px] p-2">
@@ -152,48 +155,52 @@ function Features() {
         <div className="bg-white rounded-[8px] shadow-[0_0_10px_rgba(0,0,0,0.15)] h-[286px] p-3">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">Latest Notices</h1>
-            <button className="text-blue-600 hover:underline transition-all cursor-pointer text-[14px]">
+            <button
+              className="text-blue-600 hover:underline transition-all cursor-pointer text-[14px]"
+              onClick={() => navigate("/notice")}
+            >
               View All
             </button>
           </div>
 
-          <div className="flex gap-2 mt-3">
-            <div className="flex items-center justify-center h-3 rounded-full w-3 bg-blue-600 text-white ">
-              <GoDotFill size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold">
-                Holiday on the occasion of Victory Day
-              </h2>
-              <p className="text-gray-600 text-[14px]">
-                School will remain closed on 16th December.
-              </p>
-              <p className="text-gray-600 text-[14px]">Dec 12, 2024</p>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-3">
-            <div className="flex items-center justify-center h-3 rounded-full w-3 bg-blue-600 text-white ">
-              <GoDotFill size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold">Parent-Teacher Meeting</h2>
-              <p className="text-gray-600 text-[14px]">
-                PTM will be held on 20th December at 10 AM.
-              </p>
-              <p className="text-gray-600 text-[14px]">Dec 11, 2024</p>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-3">
-            <div className="flex items-center justify-center h-3 rounded-full w-3 bg-blue-600 text-white ">
-              <GoDotFill size={18} />
-            </div>
-            <div>
-              <h2 className="font-bold">Final Exam Routine Published</h2>
-              <p className="text-gray-600 text-[14px]">
-                Final exam routine has been publish.
-              </p>
-              <p className="text-gray-600 text-[14px]">Dec 10, 2024</p>
-            </div>
+          <div className="mt-3">
+            {Array.isArray(noticeData) &&
+              noticeData
+                .filter((notice) => notice.status === "Active")
+                .splice(0, 3)
+                .map((notice, index) => (
+                  <div key={index} className="mt-3 w-[340px]">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-4 h-4 rounded-full flex items-center justify-center ${notice.category === "General" ? "text-green-600 bg-green-200" : notice.category === "Academic" ? "text-blue-600 bg-blue-200" : notice.category === "Exam" ? "bg-[#d0cfeb] text-[#4840e8]" : notice.category === "Holiday" ? "text-pink-600 bg-pink-200" : notice.category === "Event" ? "text-orange-600 bg-orange-200" : ""}`}
+                      >
+                        <GoDotFill />
+                      </div>
+
+                      <div className="text-gray-500">
+                        <h4 className="font-semibold capitalize text-[16px]">
+                          {notice.noticeTitle}
+                        </h4>
+                        <div
+                          className="line-clamp-1 text-[14px] text-gray-500"
+                          dangerouslySetInnerHTML={{
+                            __html: notice.description,
+                          }}
+                        />
+                        <p className="text-[14px]">
+                          {new Date(notice.publishDate).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
         {/* about our school */}
