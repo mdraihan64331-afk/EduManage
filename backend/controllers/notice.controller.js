@@ -13,24 +13,35 @@ export const addNotice = async (req, res) => {
       expiryDate,
     } = req.body;
 
-    if (!noticeTitle) {
-      return res.status(400).json({ message: "Notice title is required!" });
+    if (!noticeTitle?.trim()) {
+      return res.status(400).json({
+        message: "Notice title is required!",
+      });
     }
 
-    if (!description) {
-      return res.status(400).json({ message: "Description is required!" });
+    if (!description?.trim()) {
+      return res.status(400).json({
+        message: "Description is required!",
+      });
     }
 
     const files = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const fileUrl = await uploadOnCloudinary(file.path);
 
-        if (!fileUrl) {
-          return res.status(500).json({ message: "Attachment upload failed" });
+    if (req.files?.length > 0) {
+      for (const file of req.files) {
+        const uploadedFile = await uploadOnCloudinary(file.path);
+
+        if (!uploadedFile) {
+          return res.status(500).json({
+            message: "Attachment upload failed",
+          });
         }
 
-        files.push(fileUrl);
+        files.push({
+          url: uploadedFile.url,
+          size: uploadedFile.size,
+          name: file.originalname,
+        });
       }
     }
 
@@ -45,14 +56,17 @@ export const addNotice = async (req, res) => {
       expiryDate: expiryDate || undefined,
     });
 
-    return res
-      .status(201)
-      .json({ notice, message: "Notice created successfully" });
+    return res.status(201).json({
+      notice,
+      message: "Notice created successfully",
+    });
   } catch (error) {
     console.log(error);
-    return res
-      .status(400)
-      .json({ message: "Failed to create notice", error: error.message });
+
+    return res.status(400).json({
+      message: "Failed to create notice",
+      error: error.message,
+    });
   }
 };
 
@@ -62,8 +76,12 @@ export const getAllNotice = async (req, res) => {
       createdAt: -1,
     });
 
-    res.status(200).json(notice);
+    return res.status(200).json(notice);
   } catch (error) {
     console.log(error);
+
+    return res.status(500).json({
+      message: "Failed to fetch notices",
+    });
   }
 };

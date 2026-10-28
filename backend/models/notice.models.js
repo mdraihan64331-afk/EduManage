@@ -32,7 +32,18 @@ const noticeShema = new mongoose.Schema(
 
     files: [
       {
-        type: String,
+        url: {
+          type: String,
+          required: true,
+        },
+        size: {
+          type: Number,
+          default: 0,
+        },
+        name: {
+          type: String,
+          required: true,
+        },
       },
     ],
 

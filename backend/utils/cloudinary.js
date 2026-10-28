@@ -1,3 +1,4 @@
+
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
@@ -22,12 +23,16 @@ const uploadOnCloudinary = async (file) => {
     });
 
     console.log("Cloudinary URL:", result.secure_url);
+    console.log("File Size:", result.bytes);
 
     if (fs.existsSync(file)) {
       fs.unlinkSync(file);
     }
 
-    return result.secure_url;
+    return {
+      url: result.secure_url,
+      size: result.bytes,
+    };
   } catch (error) {
     console.log("Cloudinary upload error:", error);
 

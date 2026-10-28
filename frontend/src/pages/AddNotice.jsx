@@ -788,7 +788,7 @@ function AddNotice() {
                     <FcOk />
                     <div>
                       <p className="text-[14px] text-gray-600">
-                        Make suru to click "Publish Notice" after
+                        Make sure to click "Publish Notice" after
                       </p>
                       <p className="text-[14px] text-gray-600">
                         filling all the details.
