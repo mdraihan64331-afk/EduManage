@@ -70,6 +70,7 @@ function App() {
         <Route path="/notice" element={<Notice />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/forgot" element={<Forgot />} />
         <Route
           path="/sign-in"
           element={!userData ? <Signin /> : <Navigate to={"/"} />}
@@ -98,16 +99,7 @@ function App() {
             )
           }
         />
-        <Route
-          path="/forgot"
-          element={
-            adminData ? (
-              <Forgot />
-            ) : (
-              <Navigate to={"/admin-dashboard/admin-signin"} />
-            )
-          }
-        />
+
         <Route
           path="/admin-dashboard/students/add-student"
           element={
