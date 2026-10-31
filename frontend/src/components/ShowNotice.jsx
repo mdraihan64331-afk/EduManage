@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBars, FaBell, FaRegEye, FaRegFileAlt } from "react-icons/fa";
 import { GoArrowRight, GoDotFill } from "react-icons/go";
 import { IoSearchOutline } from "react-icons/io5";
@@ -7,9 +7,31 @@ import {
   MdOutlineWatchLater,
 } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ShowNotice() {
   const { noticeData } = useSelector((state) => state.notice);
+  const [selectCategory, setSelectCategory] = useState("All");
+  const categories = ["All", "General", "Academic", "Exam", "Holiday", "Event"];
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const displayNotices = Array.isArray(noticeData)
+    ? noticeData.filter((notice) => {
+        const isActive = notice.status === "Active";
+
+        const matchCategory =
+          selectCategory === "All" || notice.category === selectCategory;
+
+        const matchSearch = notice.noticeTitle
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+        return isActive && matchCategory && matchSearch;
+      })
+    : [];
+
   return (
     <div className="mt-3 px-6">
       <div className="flex gap-4 justify-between">
@@ -21,6 +43,8 @@ function ShowNotice() {
               <input
                 type="text"
                 placeholder="Search notices by title..."
+                values={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full outline-none"
               />
             </div>
@@ -37,33 +61,23 @@ function ShowNotice() {
             </button>
           </div>
 
-          <div className="mt-4 flex items-center gap-3">
-            <button className="py-0.5 w-15 cursor-pointer text-white bg-green-700 rounded-2xl flex items-center justify-center">
-              <p>All</p>
-            </button>
-            <button className="py-0.5 w-20 cursor-pointer text-blue-500 border border-gray-300 rounded-2xl flex items-center justify-center">
-              <p>General</p>
-            </button>
-            <button className="py-0.5 w-25 cursor-pointer text-blue-500 border border-gray-300 rounded-2xl flex items-center justify-center">
-              <p>Academic</p>
-            </button>
-            <button className="py-0.5 w-20 cursor-pointer text-blue-500 border border-gray-300 rounded-2xl flex items-center justify-center">
-              <p>Exam</p>
-            </button>
-            <button className="py-0.5 w-20 cursor-pointer text-blue-500 border border-gray-300 rounded-2xl flex items-center justify-center">
-              <p>Holiday</p>
-            </button>
-            <button className="py-0.5 w-20 cursor-pointer text-blue-500 border border-gray-300 rounded-2xl flex items-center justify-center">
-              <p>Event</p>
-            </button>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {categories.map((category) => (
+              <div
+                key={category}
+                onClick={() => setSelectCategory(category)}
+                className={`cursor-pointer rounded-2xl border px-4 py-1 transition-all duration-300 ${selectCategory === category ? "border-green-700 bg-green-700 text-white" : "border-gray-300 bg-white text-blue-500 hover:border-green-600 hover:bg-green-50"}`}
+              >
+                {category}
+              </div>
+            ))}
           </div>
 
           <div>
-            {noticeData
-              .filter((notice) => notice.status === "Active")
-              .map((notice, index) => (
+            {displayNotices.length > 0 ? (
+              displayNotices.map((notice, index) => (
                 <div
-                  key={index}
+                  key={notice._id || index}
                   className={`p-3 flex items-center gap-4 rounded-[8px] my-2 border ${notice.category === "General" ? "bg-green-50  border-green-500" : notice.category === "Academic" ? "bg-blue-50  border-blue-500" : notice.category === "Exam" ? "bg-[#d7d6e8] border-[#4840e8]" : notice.category === "Holiday" ? "bg-pink-50 border-pink-500" : notice.category === "Event" ? "bg-orange-50 border-orange-500" : "bg-white border-gray-400"}`}
                 >
                   <div
@@ -179,13 +193,18 @@ function ShowNotice() {
                       <div>
                         <p className="flex items-center gap-2 text-[14px] text-gray-500">
                           <FaRegEye />
-                          1.6k
+                          {notice.views ?? 0}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <button className="group relative flex items-center gap-3 py-1 px-5 bg-blue-200 text-blue-700 rounded-[8px] cursor-pointer overflow-hidden">
+                  <button
+                    className="group relative flex items-center gap-3 py-1 px-5 bg-blue-200 text-blue-700 rounded-[8px] cursor-pointer overflow-hidden"
+                    onClick={() =>
+                      navigate(`/notice/notice-details/${notice._id}`)
+                    }
+                  >
                     <span className="absolute -bottom-full left-0 w-full h-full bg-blue-700 rounded-[40%] group-hover:bottom-0 group-hover:rounded-none transition-all duration-700 ease-in-out"></span>
 
                     <span className="relative z-10 flex items-center gap-3 group-hover:text-white transition-colors duration-300">
@@ -197,7 +216,22 @@ function ShowNotice() {
                     </span>
                   </button>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="my-5 rounded-lg border border-dashed border-gray-300 p-8 text-center">
+                <FaRegFileAlt className="mx-auto mb-3 text-3xl text-gray-400" />
+
+                <h3 className="font-semibold text-gray-700">
+                  No Notices Found
+                </h3>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm
+                    ? "No notices match your search."
+                    : `There are no active ${selectCategory === "All" ? "" : selectCategory + " "}notices available.`}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

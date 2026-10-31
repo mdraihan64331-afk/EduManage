@@ -55,6 +55,18 @@ const noticeShema = new mongoose.Schema(
     expiryDate: {
       type: Date,
     },
+
+    views: {
+      type: Number,
+      default: 0,
+    },
+
+    viewedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true },
 );

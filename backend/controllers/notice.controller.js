@@ -70,6 +70,54 @@ export const addNotice = async (req, res) => {
   }
 };
 
+export const increaseNoticeView = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Please login first",
+      });
+    }
+
+    const notice = await Notice.findOneAndUpdate(
+      {
+        _id: id,
+        viewedBy: { $ne: userId },
+      },
+      {
+        $inc: { views: 1 },
+        $addToSet: { viewedBy: userId },
+      },
+      { new: true },
+    );
+
+    if (!notice) {
+      const existingNotice = await Notice.findById(id);
+
+      if (!existingNotice) {
+        return res.status(404).json({
+          message: "Notice not found",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Already viewed",
+        views: existingNotice.views,
+      });
+    }
+
+    return res.status(200).json({ views: notice.views });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to increase view count",
+      error: error.message,
+    });
+  }
+};
+
 export const getAllNotice = async (req, res) => {
   try {
     const notice = await Notice.find().sort({
@@ -83,5 +131,21 @@ export const getAllNotice = async (req, res) => {
     return res.status(500).json({
       message: "Failed to fetch notices",
     });
+  }
+};
+
+export const getNoticeById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const notice = await Notice.findById(id);
+
+    if (!notice) {
+      return res.status(404).json({ message: "notice not found" });
+    }
+
+    return res.status(200).json(notice);
+  } catch (error) {
+    console.log(error);
   }
 };

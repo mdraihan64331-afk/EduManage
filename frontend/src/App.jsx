@@ -46,6 +46,7 @@ import useGetCurrentAdmin from "./hooks/useGetCurrentAdmin.jsx";
 import AddNotice from "./pages/AddNotice.jsx";
 import NoticeList from "./pages/NoticeList.jsx";
 import useGetNotice from "./hooks/useGetNotice.jsx";
+import NoticeDetails from "./components/NoticeDetails.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -68,6 +69,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/features" element={<Features />} />
         <Route path="/notice" element={<Notice />} />
+        <Route
+          path="/notice/notice-details/:id"
+          element={userData ? <NoticeDetails /> : <Navigate to={"/sign-in"} />}
+        />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/forgot" element={<Forgot />} />
