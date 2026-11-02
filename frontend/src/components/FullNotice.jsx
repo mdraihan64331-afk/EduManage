@@ -1,16 +1,26 @@
 import axios from "axios";
+import image1 from "../assets/showNoticeImage.PNG";
 import React, { useEffect, useState } from "react";
 import { LuArrowLeft, LuDownload } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { serverURL } from "../App";
 import { IoMdShare } from "react-icons/io";
-import { FaFileAlt, FaFileWord, FaLink, FaRegFileAlt } from "react-icons/fa";
+import {
+  FaBell,
+  FaFileAlt,
+  FaFileWord,
+  FaLink,
+  FaRegFileAlt,
+} from "react-icons/fa";
 import { BiSolidFilePdf } from "react-icons/bi";
 import { MdOutlinePhotoSizeSelectActual } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { GoDotFill } from "react-icons/go";
 
 function FullNotice() {
   const { id } = useParams();
   const [notice, setNotice] = useState(null);
+  const { noticeData } = useSelector((state) => state.notice);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,9 +65,56 @@ function FullNotice() {
 
     return <FaFileAlt size={24} className="text-gray-500" />;
   };
+
+  const handleShare = async () => {
+    const shareData = {
+      Title: "EduManage Notice",
+      text: "Check out this notice from EduManage.",
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        alert("Notice link copied successfull");
+      }
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Share failed:", error);
+      }
+    }
+  };
+
+  const handleDownload = async (fileUrl, fileName) => {
+    try {
+      const response = await fetch(fileUrl);
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = fileName || "download";
+      document.body.appendChild(link);
+
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Download error:", error);
+      alert(error.message);
+    }
+  };
+
   return (
-    <div className="px-6 mt-4">
-      <div className="bg-white rounded-[8px] shadow p-3 w-[826px]">
+    <div className="px-6 mt-4 flex justify-between">
+      <div className="bg-white rounded-[8px] shadow p-3 w-[840px]">
         <button
           className="flex cursor-pointer items-center gap-3 bg-green-100 rounded-full py-1 px-2 text-green-600"
           onClick={() => navigate("/notice")}
@@ -136,7 +193,10 @@ function FullNotice() {
                 </div>
               </div>
             </div>
-            <button className="border w-20 h-[33px] border-gray-300 rounded-[8px] py-1 px-2 cursor-pointer flex justify-center items-center gap-2">
+            <button
+              className="border w-20 h-[33px] border-gray-300 rounded-[8px] py-1 px-2 cursor-pointer flex justify-center items-center gap-2"
+              onClick={handleShare}
+            >
               <IoMdShare /> Share
             </button>
           </div>
@@ -162,10 +222,8 @@ function FullNotice() {
                 })}
               </div>
             ) : (
-              <div className="my-5 rounded-lg border border-dashed border-gray-300 p-8 text-center">
-                <FaRegFileAlt className="mx-auto mb-3 text-3xl text-gray-400" />
-
-                <h3 className="font-semibold text-gray-700">No Image Found</h3>
+              <div>
+                <img src={image1} alt="" className="w-full rounded-[8px]" />
               </div>
             )}
           </div>
@@ -259,10 +317,8 @@ function FullNotice() {
                             </div>
                           </div>
 
-                          <a
-                            href={fileUrl}
-                            target="_blank"
-                            rel="noreferrer"
+                          <button
+                            onClick={() => handleDownload(fileUrl, fileName)}
                             className="group relative flex items-center gap-3 py-2 px-5 text-green-700 rounded-[8px] cursor-pointer overflow-hidden"
                           >
                             <span className="absolute -bottom-full left-0 w-full h-full bg-green-700 rounded-[40%] group-hover:bottom-0 group-hover:rounded-none transition-all duration-700 ease-in-out"></span>
@@ -274,7 +330,7 @@ function FullNotice() {
                                 className="transition-transform duration-300 group-hover:translate-x-1"
                               />
                             </span>
-                          </a>
+                          </button>
                         </div>
                       );
                     })}
@@ -293,7 +349,48 @@ function FullNotice() {
           </div>
         </div>
       </div>
-      <div></div>
+
+      {/* recent notices */}
+      <div className="bg-white p-3 shadow rounded-[8px] h-[337px] w-[370px]">
+        <div className="flex items-center gap-3 font-bold">
+          <FaBell />
+          <h4>Recent Notices</h4>
+        </div>
+
+        <div className="mt-4">
+          {Array.isArray(noticeData) &&
+            noticeData
+              .filter((notice) => notice.status === "Active")
+              .splice(0, 5)
+              .map((notice, index) => (
+                <div key={index} className="mt-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-4 h-4 rounded-full flex items-center justify-center ${notice.category === "General" ? "text-green-600 bg-green-200" : notice.category === "Academic" ? "text-blue-600 bg-blue-200" : notice.category === "Exam" ? "bg-[#d0cfeb] text-[#4840e8]" : notice.category === "Holiday" ? "text-pink-600 bg-pink-200" : notice.category === "Event" ? "text-orange-600 bg-orange-200" : ""}`}
+                    >
+                      <GoDotFill />
+                    </div>
+
+                    <div className="text-gray-500">
+                      <h4 className="font-semibold capitalize text-[16px]">
+                        {notice.noticeTitle}
+                      </h4>
+                      <p className="text-[14px]">
+                        {new Date(notice.publishDate).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          },
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+        </div>
+      </div>
     </div>
   );
 }
