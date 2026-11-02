@@ -18,13 +18,8 @@ function NoticeList() {
   const categoryName = ["General", "Academic", "Exam", "Holiday", "Event"];
   const [filteredNotices, setFilteredNotices] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
-  const displayNotices = Array.isArray(
-    isFiltered ? filteredNotices : noticeData,
-  )
-    ? isFiltered
-      ? filteredNotices
-      : noticeData
-    : [];
+  const displayNotices = isFiltered ? filteredNotices : noticeData;
+  const [input, setInput] = useState("");
   const navigate = useNavigate();
   const now = new Date();
 
@@ -38,6 +33,30 @@ function NoticeList() {
         );
       }).length
     : 0;
+
+  const handleFilter = () => {
+    const result = Array.isArray(displayNotices)
+      ? displayNotices.filter((notice) => {
+          const matchCategory = !category || notice.category === category;
+
+          const matchSearch = notice.noticeTitle
+            ?.toLowerCase()
+            .includes(input.toLowerCase());
+
+          return matchCategory && matchSearch;
+        })
+      : [];
+
+    setFilteredNotices(result);
+    setIsFiltered(true);
+  };
+
+  const handleReset = () => {
+    setCategory("");
+    setInput("");
+    setFilteredNotices([]);
+    setIsFiltered(false);
+  };
   return (
     <div className="flex bg-blue-50">
       <Menu />
@@ -114,16 +133,22 @@ function NoticeList() {
 
             {/* notice list */}
             <div className="flex items-center justify-between gap-3 bg-white p-2 rounded-[8px] shadow">
-              <div className="flex w-165 items-center gap-3 rounded-[8px] py-1 px-2 border border-gray-400">
+              <div className="flex w-140 items-center gap-3 rounded-[8px] py-1 px-2 border border-gray-400">
                 <IoSearchOutline />
                 <input
                   type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                   placeholder="Search notice by title..."
                   className="outline-none w-full"
                 />
               </div>
               <div>
-                <select className="w-50 border border-gray-300  rounded-[8px] px-2 py-1 outline-none">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-50 border border-gray-300  rounded-[8px] px-2 py-1 outline-none"
+                >
                   <option>All Categories</option>
                   {categoryName.map((e, index) => (
                     <option key={index}>{e}</option>
@@ -132,12 +157,21 @@ function NoticeList() {
               </div>
               <button
                 className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
-                // onClick={handleFilter}
+                onClick={handleFilter}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                   <FiFilter /> Filter
                 </span>
                 <span className="absolute inset-y-0 left-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
+              <button
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group "
+                onClick={handleReset}
+              >
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <FiFilter /> Reset
+                </span>
+                <span className="absolute inset-y-0 right-0 w-0 bg-blue-600 transition-all duration-500 group-hover:w-full"></span>
               </button>
             </div>
 
@@ -163,7 +197,7 @@ function NoticeList() {
                 </div>
               </div>
 
-              <div className="mt-4 w-full overflow-auto max-h-[400px]">
+              <div className="w-full overflow-auto max-h-[400px]">
                 <table className="w-full min-w-[699px]">
                   {/* Table Header */}
                   <thead className="sticky top-0 bg-white z-10">

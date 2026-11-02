@@ -153,11 +153,13 @@ function AddNotice() {
         formData.append("expiryDate", expiryDate);
       }
 
-      const result = await axios.post(
-        `${serverURL}/api/notice/add-notice`,
-        formData,
-        { withCredentials: true },
-      );
+      await axios.post(`${serverURL}/api/notice/add-notice`, formData, {
+        withCredentials: true,
+      });
+
+      const result = await axios.get(`${serverURL}/api/notice/get-notice`, {
+        withCredentials: true,
+      });
 
       dispatch(setNoticeData(result.data));
       setLoading(false);

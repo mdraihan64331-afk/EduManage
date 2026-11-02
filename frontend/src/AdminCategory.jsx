@@ -116,12 +116,6 @@ export const adminCatagories = [
     path: "/admin-dashboard/performances",
   },
   {
-    id: 8,
-    icon: <RiBookletLine />,
-    menu: "Homework",
-    path: "/admin-dashboard/homeworks",
-  },
-  {
     id: 9,
     icon: <RiMoneyDollarCircleLine />,
     menu: "Fees / Payments",
@@ -156,18 +150,6 @@ export const adminCatagories = [
     icon: <IoDocumentTextOutline />,
     menu: "Reports",
     path: "/admin-dashboard/reports",
-  },
-  {
-    id: 13,
-    icon: <IoSettingsOutline />,
-    menu: "Settings",
-    path: "/admin-dashboard/settings",
-  },
-  {
-    id: 14,
-    icon: <IoPersonCircleOutline />,
-    menu: "Profile",
-    path: "/admin-dashboard/profile",
   },
   {
     id: 15,

@@ -12,11 +12,8 @@ import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import Performance from "./components/Performance";
-import Homework from "./components/Homework";
 import Rankning from "./components/Rankning";
 import Report from "./components/Report";
-import Setting from "./components/Setting";
-import Profile from "./components/Profile";
 import Logout from "./components/Logout";
 import LandingHome from "./pages/LandingHome.jsx";
 import AddStudent from "./pages/AddStudent.jsx";
@@ -247,16 +244,6 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/homeworks"
-          element={
-            adminData ? (
-              <Homework />
-            ) : (
-              <Navigate to={"/admin-dashboard/admin-signin"} />
-            )
-          }
-        />
-        <Route
           path="/admin-dashboard/fees-payments"
           element={
             adminData ? (
@@ -311,26 +298,6 @@ function App() {
           element={
             adminData ? (
               <Report />
-            ) : (
-              <Navigate to={"/admin-dashboard/admin-signin"} />
-            )
-          }
-        />
-        <Route
-          path="/admin-dashboard/settings"
-          element={
-            adminData ? (
-              <Setting />
-            ) : (
-              <Navigate to={"/admin-dashboard/admin-signin"} />
-            )
-          }
-        />
-        <Route
-          path="/admin-dashboard/profile"
-          element={
-            adminData ? (
-              <Profile />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )

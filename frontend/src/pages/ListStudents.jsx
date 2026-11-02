@@ -70,18 +70,6 @@ function ListStudents() {
     }
   };
 
-  // useEffect(() => {
-  //   const newList = studentData.filter(
-  //     (student) =>
-  //       student.fullName?.toLowerCase().includes(input.toLowerCase()) ||
-  //       student.studentId?.toLowerCase().includes(input.toLowerCase()) ||
-  //       student.rollNumber?.toString().includes(input) ||
-  //       student.phone?.toString().includes(input),
-  //   );
-
-  //   setFilteredStudents(newList);
-  // }, [studentData, input]);
-
   // reset button
   const handleReset = () => {
     setInput("");
