@@ -149,3 +149,68 @@ export const getNoticeById = async (req, res) => {
     console.log(error);
   }
 };
+
+export const editNotice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      noticeTitle,
+      category,
+      priority,
+      status,
+      description,
+      publishDate,
+      expiryDate,
+    } = req.body;
+
+    const notice = await Notice.findById(id);
+
+    if (!notice) {
+      return res.status(404).json({ message: "notice not found!" });
+    }
+
+    const files = notice.files || [];
+
+    if (req.files?.length > 0) {
+      files = [];
+      for (const file of req.files) {
+        const uploadedFile = await uploadOnCloudinary(file.path);
+
+        if (!uploadedFile) {
+          return res.status(500).json({
+            message: "Attachment upload failed",
+          });
+        }
+
+        files.push({
+          url: uploadedFile.url,
+          size: uploadedFile.size,
+          name: file.originalname,
+        });
+      }
+    }
+
+    const updatedNotice = await Notice.findByIdAndUpdate(
+      id,
+      {
+        noticeTitle,
+        category,
+        priority,
+        status,
+        description,
+        files,
+        publishDate,
+        expiryDate: expiryDate || undefined,
+      },
+      { new: true, runValidators: true },
+    );
+
+    return res.status(200).json(updatedNotice);
+  } catch (error) {
+    console.log("EDIT NOTICE ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

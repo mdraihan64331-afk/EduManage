@@ -2,6 +2,7 @@ import express from "express";
 import upload from "../middlewares/upload.js";
 import {
   addNotice,
+  editNotice,
   getAllNotice,
   getNoticeById,
   increaseNoticeView,
@@ -14,3 +15,4 @@ noticeRouter.post("/add-notice", upload.array("files", 5), addNotice);
 noticeRouter.get("/get-notice", getAllNotice);
 noticeRouter.get("/notice/:id", getNoticeById);
 noticeRouter.patch("/:id/view", isAuth, increaseNoticeView);
+noticeRouter.put("/edit-notice/:id", upload.array("files", 5), editNotice);

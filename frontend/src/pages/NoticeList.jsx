@@ -34,6 +34,21 @@ function NoticeList() {
       }).length
     : 0;
 
+  const upComingEvent = Array.isArray(noticeData)
+    ? noticeData.filter((notice) => {
+        const event = notice.category === "Event";
+
+        const Scheduled = notice.status === "Scheduled";
+        return event && Scheduled;
+      }).length
+    : 0;
+
+  const totalViews = Array.isArray(noticeData)
+    ? noticeData.reduce((total, notice) => {
+        return total + (notice.views || 0);
+      }, 0)
+    : 0;
+
   const handleFilter = () => {
     const result = Array.isArray(displayNotices)
       ? displayNotices.filter((notice) => {
@@ -114,7 +129,7 @@ function NoticeList() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <p className="font-semibold">Upcoming Events</p>
-                    <h1 className="font-bold text-2xl">3</h1>
+                    <h1 className="font-bold text-2xl">{upComingEvent}</h1>
                   </div>
                 </div>
 
@@ -125,7 +140,7 @@ function NoticeList() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <p className="font-semibold">Total Views</p>
-                    <h1 className="font-bold text-2xl">455</h1>
+                    <h1 className="font-bold text-2xl">{totalViews}</h1>
                   </div>
                 </div>
               </div>
@@ -347,11 +362,11 @@ function NoticeList() {
 
                             <button
                               className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                              // onClick={() =>
-                              //   navigate(
-                              //     `/admin-dashboard/notices/edit-notice/${notice._id}`,
-                              //   )
-                              // }
+                              onClick={() =>
+                                navigate(
+                                  `/admin-dashboard/notice/edit-notice/${notice._id}`,
+                                )
+                              }
                             >
                               <MdOutlineModeEdit size={18} />
                             </button>

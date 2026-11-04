@@ -7,7 +7,7 @@ import {
   MdOutlineWatchLater,
 } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ShowNotice() {
   const { noticeData } = useSelector((state) => state.notice);
@@ -15,7 +15,6 @@ function ShowNotice() {
   const categories = ["All", "General", "Academic", "Exam", "Holiday", "Event"];
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const displayNotices = Array.isArray(noticeData)
     ? noticeData.filter((notice) => {

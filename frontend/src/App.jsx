@@ -44,6 +44,7 @@ import AddNotice from "./pages/AddNotice.jsx";
 import NoticeList from "./pages/NoticeList.jsx";
 import useGetNotice from "./hooks/useGetNotice.jsx";
 import NoticeDetails from "./components/NoticeDetails.jsx";
+import EditNotice from "./pages/EditNotice.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -268,6 +269,16 @@ function App() {
           element={
             adminData ? (
               <AddNotice />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/notice/edit-notice/:id"
+          element={
+            adminData ? (
+              <EditNotice />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
