@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import Menu from "./Menu";
 import { TfiAnnouncement } from "react-icons/tfi";
 import AdminHeader from "../components/AdminHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaRegEye, FaRegFileAlt } from "react-icons/fa";
 import { MdOutlineCalendarMonth, MdOutlineModeEdit } from "react-icons/md";
 import { TbCalendarClock } from "react-icons/tb";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiFilter } from "react-icons/fi";
-import { IoMdAdd } from "react-icons/io";
+import { IoIosAlert, IoMdAdd } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { RxCross2 } from "react-icons/rx";
+import axios from "axios";
+import { serverURL } from "../App";
+import { setNoticeData } from "../redux/noticeSlice";
 
 function NoticeList() {
   const { noticeData } = useSelector((state) => state.notice);
@@ -20,7 +24,10 @@ function NoticeList() {
   const [isFiltered, setIsFiltered] = useState(false);
   const displayNotices = isFiltered ? filteredNotices : noticeData;
   const [input, setInput] = useState("");
+  const [deleteNotice, setDeleteNotice] = useState(null);
+  const [showDeleteModel, setShowDeleteModel] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const now = new Date();
 
   const thisMonth = Array.isArray(noticeData)
@@ -71,6 +78,26 @@ function NoticeList() {
     setInput("");
     setFilteredNotices([]);
     setIsFiltered(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      if (!id) {
+        return;
+      }
+
+      await axios.delete(`${serverURL}/api/notice/delete-notice/${id}`, {
+        withCredentials: true,
+      });
+
+      const result = await axios.get(`${serverURL}/api/notice/get-notice`, {
+        withCredentials: true,
+      });
+
+      dispatch(setNoticeData(result.data));
+    } catch (error) {
+      console.error("Delete error:", error.response?.data || error.message);
+    }
   };
   return (
     <div className="flex bg-blue-50">
@@ -372,10 +399,10 @@ function NoticeList() {
                             </button>
                             <button
                               className="p-2 rounded-[8px] bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
-                              // onClick={() => {
-                              //   setDeletenotice(notice);
-                              //   setShowDeleteModal(true);
-                              // }}
+                              onClick={() => {
+                                setDeleteNotice(notice);
+                                setShowDeleteModel(true);
+                              }}
                             >
                               <RiDeleteBin6Line size={18} />
                             </button>
@@ -386,6 +413,76 @@ function NoticeList() {
                   </tbody>
                 </table>
               </div>
+
+              {/* delete popup */}
+              {deleteNotice && showDeleteModel && (
+                <>
+                  <div className="fixed bg-black/40 flex items-center justify-center inset-0 z-110">
+                    <div className="p-3 bg-white rounded-[8px] shadow w-[440px] max-w-[90%]">
+                      <div className="flex justify-end">
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setShowDeleteModel(false);
+                          }}
+                        >
+                          <RxCross2 />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-center">
+                        <div className="text-center flex flex-col gap-2">
+                          <div className="flex items-center justify-center">
+                            <IoIosAlert size={80} className="text-red-500" />
+                          </div>
+                          <h1 className="text-3xl font-bold">Are you sure?</h1>
+                          <div>
+                            <p>
+                              Do you really want to delete the notice records
+                            </p>
+                            <p>This action cannot be undone.</p>
+                          </div>
+                          <div className="flex items-center justify-center gap-3 mt-6">
+                            {/* cancel button */}
+                            <button
+                              onClick={() => {
+                                setShowDeleteModel(false);
+                              }}
+                              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                            >
+                              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                                Cancel
+                              </span>
+                              <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                            </button>
+
+                            {/* delete button */}
+                            <button
+                              onClick={async () => {
+                                if (!deleteNotice?._id) {
+                                  console.error("Result ID is missing!");
+                                  return;
+                                }
+
+                                await handleDelete(deleteNotice._id);
+
+                                setShowDeleteModel(false);
+                                setDeleteNotice(null);
+                              }}
+                              className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                            >
+                              <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                                <RiDeleteBin6Line /> Delete notice
+                              </span>
+                              <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import AdminHeader from "../components/AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { BiSolidReport } from "react-icons/bi";
 import { FaPlus } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BsFillPeopleFill } from "react-icons/bs";
 import {
   FaArrowDown,
@@ -41,7 +41,6 @@ import axios from "axios";
 import { setResultData } from "../redux/resultSlice";
 
 function ResultList() {
-  const { id } = useParams();
   const { resultData } = useSelector((state) => state.result);
   const { studentData } = useSelector((state) => state.student);
 

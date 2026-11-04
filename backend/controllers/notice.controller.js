@@ -214,3 +214,25 @@ export const editNotice = async (req, res) => {
     });
   }
 };
+
+export const deleteNotice = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const notice = await Notice.findById(id);
+
+    if (!notice) {
+      return res.status(404).json({ message: "notice not found!" });
+    }
+
+    await Notice.findByIdAndDelete(id);
+
+    return res.status(200).json({ message: "Delete notice successfully!" });
+  } catch (error) {
+    console.log("DELETE NOTICE ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

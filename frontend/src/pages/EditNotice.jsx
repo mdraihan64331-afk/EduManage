@@ -243,9 +243,9 @@ function EditNotice() {
           <div className="flex items-center gap-4">
             <TfiAnnouncement size={40} className="text-green-700" />
             <div>
-              <h1 className="font-bold text-xl">Add New Notice</h1>
+              <h1 className="font-bold text-xl">Update Notice</h1>
               <p>
-                Create a new notice or announcement for students, teachers and
+                Update notice or announcement for students, teachers and
                 parents.
               </p>
             </div>
