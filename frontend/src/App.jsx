@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Performance from "./components/Performance";
 import Rankning from "./components/Rankning";
 import Report from "./components/Report";
 import Logout from "./components/Logout";
@@ -46,6 +45,8 @@ import useGetNotice from "./hooks/useGetNotice.jsx";
 import NoticeDetails from "./components/NoticeDetails.jsx";
 import EditNotice from "./pages/EditNotice.jsx";
 import ViewNotice from "./pages/ViewNotice.jsx";
+import AddPerformance from "./pages/AddPerformance.jsx";
+import PerformanceList from "./pages/PerformanceList.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -236,10 +237,20 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/performances"
+          path="/admin-dashboard/performances/add-performance"
           element={
             adminData ? (
-              <Performance />
+              <AddPerformance />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/performances/list-performance"
+          element={
+            adminData ? (
+              <PerformanceList />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )

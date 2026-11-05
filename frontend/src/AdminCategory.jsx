@@ -1,4 +1,8 @@
-import { IoCalendarNumber, IoHomeOutline } from "react-icons/io5";
+import {
+  IoCalendarNumber,
+  IoHomeOutline,
+  IoPersonAddSharp,
+} from "react-icons/io5";
 import { RxPeople } from "react-icons/rx";
 import { SlPeople } from "react-icons/sl";
 import { SiGoogleclassroom } from "react-icons/si";
@@ -8,7 +12,7 @@ import {
   MdOutlinePreview,
 } from "react-icons/md";
 import { FaChartBar } from "react-icons/fa";
-import { RiLineChartLine, RiStickyNoteAddFill } from "react-icons/ri";
+import { RiFileList2Line, RiLineChartLine, RiStickyNoteAddFill } from "react-icons/ri";
 import { RiBookletLine } from "react-icons/ri";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { IoNotificationsOutline } from "react-icons/io5";
@@ -114,6 +118,18 @@ export const adminCatagories = [
     icon: <RiLineChartLine />,
     menu: "Performance",
     path: "/admin-dashboard/performances",
+    subMenu: [
+      {
+        icon: <IoPersonAddSharp />,
+        subMenuName: "Add performance",
+        path: "/admin-dashboard/performances/add-performance",
+      },
+      {
+        icon: <RiFileList2Line />,
+        subMenuName: "List performance",
+        path: "/admin-dashboard/performances/list-performance",
+      },
+    ],
   },
   {
     id: 9,

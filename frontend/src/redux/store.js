@@ -7,6 +7,7 @@ import attendanceSlice from "./attendanceSlice";
 import resultSlice from "./resultSlice";
 import feesPaymentSlice from "./feesPaymentSlice";
 import noticeSlice from "./noticeSlice";
+import performanceSlice from "./performanceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     result: resultSlice,
     feesPayment: feesPaymentSlice,
     notice: noticeSlice,
+    performance: performanceSlice,
   },
 });
