@@ -115,7 +115,6 @@ export const addPerformance = async (req, res) => {
   }
 };
 
-// GET ALL PERFORMANCE
 export const getAllPerformance = async (req, res) => {
   try {
     const performances = await Performance.find()
@@ -123,7 +122,6 @@ export const getAllPerformance = async (req, res) => {
       .sort({ date: -1, createdAt: -1 });
 
     return res.status(200).json({
-      success: true,
       performances,
     });
   } catch (error) {
@@ -136,7 +134,6 @@ export const getAllPerformance = async (req, res) => {
   }
 };
 
-// UPDATE PERFORMANCE
 export const updatePerformance = async (req, res) => {
   try {
     const {
@@ -240,7 +237,6 @@ export const updatePerformance = async (req, res) => {
   }
 };
 
-// DELETE PERFORMANCE
 export const deletePerformance = async (req, res) => {
   try {
     const performance = await Performance.findByIdAndDelete(req.params.id);

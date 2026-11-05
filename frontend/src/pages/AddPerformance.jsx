@@ -16,7 +16,7 @@ import { RiResetLeftFill } from "react-icons/ri";
 const initialForm = {
   studentId: "",
   date: new Date().toLocaleDateString("en-CA"),
-  subject: "",
+  subject: "Mathematics",
   classwork: 0,
   homework: 0,
   participation: 0,

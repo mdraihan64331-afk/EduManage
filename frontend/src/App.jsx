@@ -47,6 +47,7 @@ import EditNotice from "./pages/EditNotice.jsx";
 import ViewNotice from "./pages/ViewNotice.jsx";
 import AddPerformance from "./pages/AddPerformance.jsx";
 import PerformanceList from "./pages/PerformanceList.jsx";
+import useGetPerformance from "./hooks/useGetPerformance.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -58,6 +59,7 @@ function App() {
   useGetResult();
   useGetFeesPayment();
   useGetNotice();
+  useGetPerformance();
 
   const { userData } = useSelector((state) => state.user);
   const { adminData } = useSelector((state) => state.admin);
