@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import image1 from "../assets/showNoticeImage.PNG";
 import Menu from "./Menu";
 import { TfiAnnouncement } from "react-icons/tfi";
 import AdminHeader from "../components/AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegEye, FaRegFileAlt } from "react-icons/fa";
-import { MdOutlineCalendarMonth, MdOutlineModeEdit } from "react-icons/md";
+import {
+  FaFileAlt,
+  FaFileWord,
+  FaLink,
+  FaRegEye,
+  FaRegFileAlt,
+} from "react-icons/fa";
+import {
+  MdOutlineCalendarMonth,
+  MdOutlineModeEdit,
+  MdOutlinePhotoSizeSelectActual,
+} from "react-icons/md";
 import { TbCalendarClock } from "react-icons/tb";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiFilter } from "react-icons/fi";
-import { IoIosAlert, IoMdAdd } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { IoIosAlert, IoMdAdd, IoMdShare } from "react-icons/io";
+import { useNavigate, useParams } from "react-router-dom";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 import { serverURL } from "../App";
 import { setNoticeData } from "../redux/noticeSlice";
+import { LuArrowLeft, LuDownload } from "react-icons/lu";
+import { BiSolidFilePdf } from "react-icons/bi";
 
 function NoticeList() {
   const { noticeData } = useSelector((state) => state.notice);
@@ -378,11 +391,11 @@ function NoticeList() {
                           <div className="flex gap-1">
                             <button
                               className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
-                              // onClick={() => {
-                              //   navigate(
-                              //     `/admin-dashboard/notices/notice-details/${notice._id}`,
-                              //   );
-                              // }}
+                              onClick={() => {
+                                navigate(
+                                  `/admin-dashboard/notice/view-notice/${notice._id}`,
+                                );
+                              }}
                             >
                               <FaRegEye size={18} />
                             </button>
