@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const performanceSlice = createSlice({
   name: "performance",
   initialState: {
-    performanceData: [],
+    performanceData: {
+      performances: [],
+    },
   },
 
   reducers: {

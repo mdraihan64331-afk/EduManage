@@ -78,7 +78,7 @@ function AddPerformance() {
         return;
       }
 
-      const result = await axios.post(
+      await axios.post(
         `${serverURL}/api/performance/add-performance`,
         {
           ...formData,
@@ -89,9 +89,14 @@ function AddPerformance() {
         { withCredentials: true },
       );
 
-      dispatch(setPerformanceData(result.data));
+      const result = await axios.get(
+        `${serverURL}/api/performance/get-all-performance`,
+        { withCredentials: true },
+      );
+
       setLoading(false);
       setErr("");
+      dispatch(setPerformanceData(result.data));
       navigate("/admin-dashboard/performances/list-performance");
     } catch (error) {
       setLoading(false);

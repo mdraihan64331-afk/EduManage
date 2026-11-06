@@ -28,9 +28,12 @@ export const addStudent = async (req, res) => {
       motherPhone,
       motherOccupation,
     } = req.body;
-    let image;
+
+    let image = "";
+
     if (req.file) {
-      image = await uploadOnCloudinary(req.file.path);
+      const uploadedImage = await uploadOnCloudinary(req.file.path);
+      image = uploadedImage.url;
     }
 
     const existingStudent = await AddStudent.findOne({ email });
@@ -133,7 +136,7 @@ export const editStudent = async (req, res) => {
       const newImage = await uploadOnCloudinary(req.file.path);
 
       if (newImage) {
-        image = newImage;
+        image = newImage.url;
       }
     }
 

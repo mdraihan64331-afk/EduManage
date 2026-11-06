@@ -21,7 +21,7 @@ function useGetPerformance() {
       }
     };
     fatchPerformance();
-  }, [dispatch]);
+  }, []);
 }
 
 export default useGetPerformance;

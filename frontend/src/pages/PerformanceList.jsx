@@ -7,7 +7,6 @@ import { IoPerson, IoSearchOutline } from "react-icons/io5";
 import {
   FaRegEye,
   FaRegStar,
-  FaSearch,
   FaStar,
   FaTrophy,
 } from "react-icons/fa";
@@ -45,15 +44,18 @@ function PerformanceList() {
   ];
   const [filteredPerformance, setFilteredPerformance] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
-  const displayPerformance = isFiltered
-    ? filteredPerformance
-    : performanceData?.performances || [];
-
-  console.log(displayPerformance?.[0]?.student);
 
   const performances = Array.isArray(performanceData?.performances)
     ? performanceData.performances
     : [];
+
+  const displayPerformance = isFiltered
+    ? filteredPerformance
+    : performances.filter(
+        (performance) =>
+          new Date(performance.date).toLocaleDateString("en-CA") ===
+          new Date().toLocaleDateString("en-CA"),
+      );
 
   const now = new Date();
 
@@ -141,6 +143,65 @@ function PerformanceList() {
     yesterdayRecords > 0
       ? ((todayRecords - yesterdayRecords) / yesterdayRecords) * 100
       : 0;
+
+  const handleFilter = () => {
+    let filtered = Array.isArray(performanceData?.performances)
+      ? [...performanceData.performances]
+      : [];
+
+    if (input.trim()) {
+      filtered = filtered.filter(
+        (performance) =>
+          performance.student?.fullName
+            ?.toLowerCase()
+            .includes(input.toLowerCase()) ||
+          performance.student?.studentId
+            ?.toLowerCase()
+            .includes(input.toLowerCase()) ||
+          String(performance.student?.rollNumber || "")
+            .toLowerCase()
+            .includes(input.toLowerCase()),
+      );
+    }
+
+    if (date) {
+      filtered = filtered.filter(
+        (performance) =>
+          new Date(performance.date).toLocaleDateString("en-CA") === date,
+      );
+    }
+
+    if (selectClass) {
+      filtered = filtered.filter(
+        (performance) => performance.student?.className === selectClass,
+      );
+    }
+
+    if (section) {
+      filtered = filtered.filter(
+        (performance) => performance.student?.section === section,
+      );
+    }
+
+    if (subject) {
+      filtered = filtered.filter(
+        (performance) => performance.subject === subject,
+      );
+    }
+
+    setFilteredPerformance(filtered);
+    setIsFiltered(true);
+  };
+
+  const handleReset = () => {
+    setDate(new Date().toLocaleDateString("en-CA"));
+    setSelectClass("");
+    setSection("");
+    setInput("");
+    setSubject("");
+    setFilteredPerformance([]);
+    setIsFiltered(false);
+  };
 
   return (
     <div className="flex bg-blue-50">
@@ -296,7 +357,7 @@ function PerformanceList() {
                   onChange={(e) => setSection(e.target.value)}
                   className="w-35 border border-gray-300  rounded-lg px-2 py-1 outline-none"
                 >
-                  <option>Select Class</option>
+                  <option>Select Section</option>
                   {sectionName.map((e, index) => (
                     <option key={index}>{e}</option>
                   ))}
@@ -334,7 +395,10 @@ function PerformanceList() {
               {/* button  */}
               <div className="flex items-center gap-4">
                 {/* filter */}
-                <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group">
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                  onClick={handleFilter}
+                >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     Filter
                   </span>
@@ -342,7 +406,10 @@ function PerformanceList() {
                 </button>
 
                 {/* reset */}
-                <button className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group">
+                <button
+                  className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                  onClick={handleReset}
+                >
                   <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                     Reset
                   </span>
@@ -426,7 +493,7 @@ function PerformanceList() {
                               </div>
 
                               <div>
-                                <h1 className="font-semibold capitalize">
+                                <h1 className="text-[14px] font-semibold capitalize">
                                   {student?.fullName || "N/A"}
                                 </h1>
                                 <p className="text-xs text-gray-500">
