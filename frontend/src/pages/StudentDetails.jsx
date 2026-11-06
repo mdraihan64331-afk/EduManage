@@ -21,17 +21,13 @@ function StudentDetails() {
   const [student, setStudent] = useState(null);
   const { teacherData } = useSelector((state) => state.teacher);
   const { attendanceData } = useSelector((state) => state.attendance);
-  const navigate = useNavigate();
-  const performance = [
-    { subject: "Mathematics", marks: 95, grade: "A+" },
-    { subject: "English", marks: 88, grade: "A" },
-    { subject: "Physics", marks: 92, grade: "A+" },
-    { subject: "Chemistry", marks: 90, grade: "A+" },
-    { subject: "Biology", marks: 85, grade: "A" },
-    { subject: "Bangla", marks: 88, grade: "A" },
-  ];
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { performanceData } = useSelector((state) => state.performance);
   const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
+  const navigate = useNavigate();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [inputDate, setInputDate] = useState(
+    new Date().toLocaleDateString("en-CA"),
+  );
 
   const studentAttendance = attendanceList.filter((attendance) => {
     if (!attendance.student || !attendance.date) return false;
@@ -110,6 +106,15 @@ function StudentDetails() {
   const nextMonth = () => {
     setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
   };
+
+  const displayPerformance =
+    performanceData.performances?.filter((performance) => {
+      return String(performance.student?._id) === String(id);
+    }) || [];
+
+  const todayPerformance = displayPerformance.filter((performance) => {
+    return new Date(performance.date).toLocaleDateString("en-CA") === inputDate;
+  });
 
   return (
     <div className="flex bg-blue-50">
@@ -259,7 +264,11 @@ function StudentDetails() {
             </div>
             <button
               className="flex items-center gap-2 py-1 px-4 rounded-[8px] border border-gray-300 cursor-pointer"
-              onClick={() => navigate(`/admin-dashboard/students/edit-student/${student._id}`)}
+              onClick={() =>
+                navigate(
+                  `/admin-dashboard/students/edit-student/${student._id}`,
+                )
+              }
             >
               <FaRegEdit /> Edit Profile
             </button>
@@ -271,7 +280,7 @@ function StudentDetails() {
             <div className="bg-white shadow rounded-[8px] p-5 ">
               <div className="flex items-center gap-4 text-xl">
                 <IoPerson /> Personal Information
-              </div>  
+              </div>
               <div className="flex mt-3 justify-between text-[14px]">
                 <div>
                   <p>Full Name</p>
@@ -391,8 +400,17 @@ function StudentDetails() {
             <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <h2 className="flex items-center gap-3 text-xl mb-4">
                 <IoStatsChartSharp />
-                Class Performance
+                Class Performance Today
               </h2>
+
+              <div>
+                <input
+                  type="date"
+                  value={inputDate}
+                  onChange={(e) => setInputDate(e.target.value)}
+                  className="border border-gray-300 rounded-[8px] w-45 px-2 py-1 outline-none text-gray-500"
+                />
+              </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -403,36 +421,32 @@ function StudentDetails() {
                       </th>
 
                       <th className="px-4 py-3 font-semibold text-slate-500">
-                        Marks
-                      </th>
-
-                      <th className="px-4 py-3 font-semibold text-slate-500">
-                        Grade
+                        Overall
                       </th>
                     </tr>
                   </thead>
 
                   <tbody className="divide-y divide-slate-100">
-                    {performance.map((item) => (
-                      <tr
-                        key={item.subject}
-                        className="transition hover:bg-slate-50"
-                      >
-                        <td className="px-4 py-3 font-medium text-slate-700">
-                          {item.subject}
-                        </td>
+                    {todayPerformance ? (
+                      todayPerformance.map((performance) => (
+                        <tr
+                          key={performance?._id}
+                          className="transition hover:bg-slate-50"
+                        >
+                          <td className="px-4 py-3 font-medium text-slate-700">
+                            {performance?.subject}
+                          </td>
 
-                        <td className="px-4 py-3 font-semibold text-slate-800">
-                          {item.marks}
-                        </td>
-
-                        <td className="px-4 py-3">
-                          <span className="rounded-md bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
-                            {item.grade}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="px-4 py-3">
+                            <span className="rounded-md bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
+                              {performance.overallPercentage}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <></>
+                    )}
                   </tbody>
                 </table>
               </div>
