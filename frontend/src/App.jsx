@@ -48,6 +48,7 @@ import ViewNotice from "./pages/ViewNotice.jsx";
 import AddPerformance from "./pages/AddPerformance.jsx";
 import PerformanceList from "./pages/PerformanceList.jsx";
 import useGetPerformance from "./hooks/useGetPerformance.jsx";
+import EditPerformance from "./pages/EditPerformance.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -253,6 +254,16 @@ function App() {
           element={
             adminData ? (
               <PerformanceList />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/performances/edit-performance/:id"
+          element={
+            adminData ? (
+              <EditPerformance />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )

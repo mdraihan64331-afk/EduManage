@@ -24,6 +24,7 @@ import { serverURL } from "../App";
 import { setPerformanceData } from "../redux/performanceSlice";
 import { AiFillHome } from "react-icons/ai";
 import { ChartNoAxesColumnIncreasing, Info, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function PerformanceList() {
   const { performanceData } = useSelector((state) => state.performance);
@@ -60,6 +61,7 @@ function PerformanceList() {
   const [viewPerformance, setViewPerformance] = useState(null);
   const [showViewModel, setShowViewModel] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const performances = Array.isArray(performanceData?.performances)
     ? performanceData.performances
@@ -619,7 +621,14 @@ function PerformanceList() {
                                 <FaRegEye size={18} />
                               </button>
 
-                              <button className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white">
+                              <button
+                                className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white"
+                                onClick={() =>
+                                  navigate(
+                                    `/admin-dashboard/performances/edit-performance/${performance._id}`,
+                                  )
+                                }
+                              >
                                 <MdOutlineModeEdit size={18} />
                               </button>
 
