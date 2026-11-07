@@ -20,7 +20,7 @@ function useGetAttendance() {
       }
     };
     fatchAttendance()
-  }, [dispatch]);
+  }, []);
 }
 
 export default useGetAttendance;

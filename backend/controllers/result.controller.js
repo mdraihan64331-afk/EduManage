@@ -97,7 +97,9 @@ export const addResult = async (req, res) => {
 
 export const getResult = async (req, res) => {
   try {
-    const result = await Result.find().populate("student");
+    const result = await Result.find().populate("student").sort({
+      createdAt: -1,
+    });
 
     if (result.length === 0) {
       return res.status(400).json({ message: "Result is not found!" });

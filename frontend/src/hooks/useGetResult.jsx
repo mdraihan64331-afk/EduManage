@@ -3,11 +3,9 @@ import React, { useEffect } from "react";
 import { serverURL } from "../App";
 import { useDispatch } from "react-redux";
 import { setResultData } from "../redux/resultSlice";
-import { useLocation } from "react-router-dom";
 
 function useGetResult() {
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     const fatchResult = async () => {
@@ -23,7 +21,7 @@ function useGetResult() {
     };
 
     fatchResult();
-  }, [dispatch, location.pathname]);
+  }, []);
 }
 
 export default useGetResult;

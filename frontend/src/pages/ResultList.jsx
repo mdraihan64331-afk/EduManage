@@ -149,7 +149,7 @@ function ResultList() {
         return;
       }
 
-      const response = await axios.delete(
+      await axios.delete(
         `${serverURL}/api/result/delete-result/${id}`,
         { withCredentials: true },
       );
@@ -186,7 +186,7 @@ function ResultList() {
 
             <button
               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
-              onClick={() => navigate("/result/add-result")}
+              onClick={() => navigate("/admin-dashboard/result/add-result")}
             >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                 <FaPlus /> Add New Result
@@ -465,7 +465,9 @@ function ResultList() {
                           <button
                             className="p-2 rounded-[8px] bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
                             onClick={() =>
-                              navigate(`/admin-dashboard/result/edit-result/${result._id}`)
+                              navigate(
+                                `/admin-dashboard/result/edit-result/${result._id}`,
+                              )
                             }
                           >
                             <MdOutlineModeEdit />
@@ -777,9 +779,7 @@ function ResultList() {
                                 </h2>
                                 <div>{viewResult.remark}</div>
                               </div>
-                              <button
-                                className="relative mt-5 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 bg-white text-blue-600 rounded-lg cursor-pointer group"
-                              >
+                              <button className="relative mt-5 overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 bg-white text-blue-600 rounded-lg cursor-pointer group">
                                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                                   <RiPrinterLine /> Print Result
                                 </span>
@@ -836,12 +836,9 @@ function ResultList() {
                             onClick={() => {
                               setShowDeleteModel(false);
                             }}
-                            className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                            className="flex items-center justify-center gap-2 px-5 py-1 border border-gray-300 hover:bg-gray-300 transition-all rounded-lg cursor-pointer w-50"
                           >
-                            <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                              Cancel
-                            </span>
-                            <span className="absolute inset-y-0 left-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                            Cancel
                           </button>
 
                           {/* delete button */}
@@ -857,12 +854,9 @@ function ResultList() {
                               setShowDeleteModel(false);
                               setDeleteResult(null);
                             }}
-                            className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-red-600 text-red-600 rounded-lg cursor-pointer group w-50"
+                            className="flex items-center justify-center gap-2 px-5 py-1 border border-red-500 bg-red-500 hover:bg-red-700 transition-all text-white rounded-lg cursor-pointer  w-50"
                           >
-                            <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                              <RiDeleteBin6Line /> Delete Student
-                            </span>
-                            <span className="absolute inset-y-0 right-0 w-0 bg-red-600 transition-all duration-500 group-hover:w-full"></span>
+                            <RiDeleteBin6Line /> Delete Student
                           </button>
                         </div>
                       </div>

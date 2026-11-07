@@ -234,11 +234,13 @@ function AddResult() {
         remark,
       };
 
-      const result = await axios.post(
-        `${serverURL}/api/result/add-result`,
-        resultData,
-        { withCredentials: true },
-      );
+      await axios.post(`${serverURL}/api/result/add-result`, resultData, {
+        withCredentials: true,
+      });
+
+      const result = await axios.get(`${serverURL}/api/result/get-result`, {
+        withCredentials: true,
+      });
 
       dispatch(setResultData(result.data));
       setLoading(false);

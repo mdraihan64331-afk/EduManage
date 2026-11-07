@@ -86,18 +86,17 @@ function AddTeachers() {
         formData.append("profile", backendImage);
       }
 
-      const result = await axios.post(
+      await axios.post(
         `${serverURL}/api/teacher/add-teacher`,
         formData,
         { withCredentials: true },
       );
 
-      const teacher = await axios.get(`${serverURL}/api/teacher/all-teacher`, {
+      const result = await axios.get(`${serverURL}/api/teacher/all-teacher`, {
         withCredentials: true,
       });
 
-      console.log("API RESPONSE:", teacher.data);
-      dispatch(setTeacherData(teacher.data));
+      dispatch(setTeacherData(result.data));
       setLoading(false);
       setErr("");
       navigate("/admin-dashboard/teacher/teachers-list");

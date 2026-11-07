@@ -239,7 +239,9 @@ export const updatePerformance = async (req, res) => {
 
 export const deletePerformance = async (req, res) => {
   try {
-    const performance = await Performance.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+
+    const performance = await Performance.findByIdAndDelete(id);
 
     if (!performance) {
       return res.status(404).json({
