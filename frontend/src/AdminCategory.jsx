@@ -6,27 +6,23 @@ import {
 import { RxPeople } from "react-icons/rx";
 import { SlPeople } from "react-icons/sl";
 import { SiGoogleclassroom } from "react-icons/si";
+import { MdEventAvailable, MdOutlinePreview } from "react-icons/md";
+import { FaChartBar, FaTrophy } from "react-icons/fa";
 import {
-  MdEventAvailable,
-  MdOutlineModeEdit,
-  MdOutlinePreview,
-} from "react-icons/md";
-import { FaChartBar } from "react-icons/fa";
-import { RiFileList2Line, RiLineChartLine, RiStickyNoteAddFill } from "react-icons/ri";
-import { RiBookletLine } from "react-icons/ri";
+  RiFileList2Line,
+  RiLineChartLine,
+  RiStickyNoteAddFill,
+} from "react-icons/ri";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { RiMedalLine } from "react-icons/ri";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { IoSettingsOutline } from "react-icons/io5";
-import { IoPersonCircleOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
-import { GiGraduateCap } from "react-icons/gi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { BsPersonAdd } from "react-icons/bs";
-import { CircleDollarSign, HandCoins } from "lucide-react";
 import { TfiAnnouncement } from "react-icons/tfi";
+import { IoIosGift } from "react-icons/io";
 
 export const adminCatagories = [
   {
@@ -159,7 +155,19 @@ export const adminCatagories = [
     id: 11,
     icon: <RiMedalLine />,
     menu: "Rankings",
-    path: "/admin-dashboard/ranknings",
+    path: "/admin-dashboard/rankings",
+    subMenu: [
+      {
+        icon: <FaTrophy />,
+        subMenuName: "Result Rankings",
+        path: "/admin-dashboard/rankings/result-ranking",
+      },
+      {
+        icon: <IoIosGift />,
+        subMenuName: "Rewards",
+        path: "/admin-dashboard/rankings/reward",
+      },
+    ],
   },
   {
     id: 12,

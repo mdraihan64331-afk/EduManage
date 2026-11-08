@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Rankning from "./components/Rankning";
 import Report from "./components/Report";
 import Logout from "./components/Logout";
 import LandingHome from "./pages/LandingHome.jsx";
@@ -49,6 +48,8 @@ import AddPerformance from "./pages/AddPerformance.jsx";
 import PerformanceList from "./pages/PerformanceList.jsx";
 import useGetPerformance from "./hooks/useGetPerformance.jsx";
 import EditPerformance from "./pages/EditPerformance.jsx";
+import ResultRanking from "./pages/ResultRanking.jsx";
+import Reward from "./pages/Reward.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -330,10 +331,20 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/ranknings"
+          path="/admin-dashboard/rankings/result-ranking"
           element={
             adminData ? (
-              <Rankning />
+              <ResultRanking />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/rankings/reward"
+          element={
+            adminData ? (
+              <Reward />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
