@@ -64,8 +64,13 @@ function ResultRanking() {
     .sort()
     .reverse();
 
-  // Filter Results
-  const results = (Array.isArray(resultData) ? resultData : []).filter(
+  // Select academic year
+  // If no year is selected, use the latest academic year
+  const rankingAcademicYear = academic || academicYears[0] || "";
+
+  // Get all exam results of students for the selected academic year
+  // Important: Do NOT apply examType filter here
+  const rankingResults = (Array.isArray(resultData) ? resultData : []).filter(
     (result) => {
       const matchClass = selectClass
         ? result.student?.className === selectClass
@@ -73,10 +78,8 @@ function ResultRanking() {
 
       const matchSection = section ? result.student?.section === section : true;
 
-      const matchExamType = examType ? result.examType === examType : true;
-
-      const matchAcademicYear = academic
-        ? result.academicYear === academic
+      const matchAcademicYear = rankingAcademicYear
+        ? result.academicYear === rankingAcademicYear
         : true;
 
       const searchValue = search.toLowerCase();
@@ -92,63 +95,111 @@ function ResultRanking() {
           .toLowerCase()
           .includes(searchValue);
 
-      return (
-        matchClass &&
-        matchSection &&
-        matchExamType &&
-        matchAcademicYear &&
-        matchSearch
-      );
+      return matchClass && matchSection && matchAcademicYear && matchSearch;
     },
   );
 
-  // Total Students in filtered results
-  const totalStudents = new Set(
-    results.map((item) => item.student?._id).filter(Boolean),
-  ).size;
+  // Calculate average GPA of all exams for each student
+  const uniqueStudentResults = Object.values(
+    rankingResults.reduce((acc, result) => {
+      const student = result.student;
+      const key = student?._id || student?.studentId;
+
+      if (!key) return acc;
+
+      const examGPA = Number(result.gpa);
+
+      if (!Number.isFinite(examGPA)) return acc;
+
+      if (!acc[key]) {
+        acc[key] = {
+          ...result,
+          totalGPA: 0,
+          totalExams: 0,
+        };
+      }
+
+      acc[key].totalGPA += examGPA;
+      acc[key].totalExams += 1;
+
+      return acc;
+    }, {}),
+  ).map((student) => ({
+    ...student,
+    gpa: student.totalExams ? student.totalGPA / student.totalExams : 0,
+  }));
+
+  // Sort students by average GPA
+  const totalDisplay = [...uniqueStudentResults]
+    .filter((student) => student.resultStatus === "Pass")
+    .sort((a, b) => b.gpa - a.gpa);
+
+  const totalStudents = uniqueStudentResults.length;
 
   // Top GPA
-  const topGPA = results.length
-    ? Math.max(...results.map((item) => Number(item.gpa) || 0))
+  const topGPA = totalDisplay.length
+    ? Math.max(...totalDisplay.map((student) => student.gpa))
     : 0;
 
-  // Top Class Calculation
-  const classPerformance = Object.values(
-    results.reduce((acc, item) => {
-      const className = item.student?.className;
+  const classGPA = Object.values(
+    uniqueStudentResults.reduce((acc, student) => {
+      const className = student.student?.className;
 
       if (!className) return acc;
 
       if (!acc[className]) {
         acc[className] = {
-          className,
           totalGPA: 0,
           totalStudents: 0,
         };
       }
 
-      acc[className].totalGPA += Number(item.gpa) || 0;
+      acc[className].totalGPA += student.gpa;
       acc[className].totalStudents += 1;
 
       return acc;
     }, {}),
-  ).map((item) => ({
+  ).map((item, index) => ({
     ...item,
     averageGPA: item.totalGPA / item.totalStudents,
+    className: Object.keys(
+      uniqueStudentResults.reduce((acc, student) => {
+        const name = student.student?.className;
+        if (name) acc[name] = true;
+        return acc;
+      }, {}),
+    )[index],
   }));
 
-  const topClass = [...classPerformance].sort(
-    (a, b) => b.averageGPA - a.averageGPA,
-  )[0];
+  const topClass = classGPA.sort((a, b) => b.averageGPA - a.averageGPA)[0];
 
-  // Overall Pass Rate
-  const passCount = results.filter(
-    (item) => item.resultStatus === "Pass",
+  const overallRate = totalStudents
+    ? (
+        (uniqueStudentResults.reduce(
+          (total, student) => total + student.gpa,
+          0,
+        ) /
+          totalStudents /
+          5) *
+        100
+      ).toFixed(2)
+    : 0;
+
+  const passCount = rankingResults.filter(
+    (result) => result.resultStatus === "Pass",
   ).length;
 
-  const overallRate = results.length ? (passCount / results.length) * 100 : 0;
+  // Get Top 3 students
+  const topThree = totalDisplay.slice(0, 3);
 
-  // Reset Filters
+  // Display order: 2nd, 1st, 3rd
+  const rankingDisplay = [
+    { result: topThree[1], position: 2 },
+    { result: topThree[0], position: 1 },
+    { result: topThree[2], position: 3 },
+  ];
+
+  // Handle Reset
   const handleReset = () => {
     setSelectClass("");
     setSection("");
@@ -157,38 +208,6 @@ function ResultRanking() {
     setSearch("");
   };
 
-  // Get unique students and their highest GPA
-  const uniqueStudentResults = Object.values(
-    results.reduce((acc, result) => {
-      const student = result.student;
-      const key = student?._id || student?.studentId;
-
-      if (!key) return acc;
-
-      if (!acc[key] || Number(result.gpa) > Number(acc[key].gpa)) {
-        acc[key] = result;
-      }
-
-      return acc;
-    }, {}),
-  );
-
-  // Sort by GPA and get Top 3
-  const topThree = [...uniqueStudentResults]
-    .sort((a, b) => Number(b.gpa) - Number(a.gpa))
-    .slice(0, 3);
-
-  const rankingDisplay = [
-    { result: topThree[1], position: 2 },
-    { result: topThree[0], position: 1 },
-    { result: topThree[2], position: 3 },
-  ];
-
-  const totalDisplay = [...uniqueStudentResults].sort(
-    (a, b) => Number(b.gpa) - Number(a.gpa),
-  );
-
-  console.log(totalDisplay)
   return (
     <div className="flex bg-blue-50 min-h-screen">
       <Menu />
@@ -263,9 +282,7 @@ function ResultRanking() {
 
               <div>
                 <p className="text-gray-500">Overall Pass Rate</p>
-                <h3 className="text-2xl font-bold">
-                  {overallRate.toFixed(2)}%
-                </h3>
+                <h3 className="text-2xl font-bold">{overallRate}%</h3>
 
                 <p className="text-xs text-gray-400">
                   {passCount} Students Passed
@@ -487,7 +504,7 @@ function ResultRanking() {
 
                 {/* Student Data */}
                 <tbody>
-                  {totalDisplay.map((result, index) => (
+                  {totalDisplay.splice(0, 51).map((result, index) => (
                     <tr
                       key={result._id}
                       className="border-b border-gray-200 hover:bg-gray-50"
@@ -502,15 +519,11 @@ function ResultRanking() {
                         {result.student?.rollNumber}
                       </td>
 
-                      <td className="py-3 px-2">
-                        {result.student?.className}
-                      </td>
+                      <td className="py-3 px-2">{result.student?.className}</td>
 
                       <td className="py-3 px-2">{result.gpa}</td>
 
-                      <td className="py-3 px-2">
-                        {result.averageMark}
-                      </td>
+                      <td className="py-3 px-2">{result.averageMark}</td>
 
                       <td className="py-3 px-2"></td>
                     </tr>
