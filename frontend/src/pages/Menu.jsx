@@ -6,7 +6,6 @@ import { IoIosArrowDown } from "react-icons/io";
 
 function Menu() {
   const [openMenu, setOpenMenu] = useState(null);
-  const navigate = useNavigate();
 
   return (
     <div>
@@ -68,7 +67,9 @@ function Menu() {
                       to={subItem.path}
                       className={({ isActive }) =>
                         `px-2 py-1 text-sm rounded ${
-                          isActive ? "bg-[#2f8456] rounded-[7px]" : "hover:bg-[#2f8456] rounded-[7px]"
+                          isActive
+                            ? "bg-[#2f8456] rounded-[7px]"
+                            : "hover:bg-[#2f8456] rounded-[7px]"
                         }`
                       }
                     >

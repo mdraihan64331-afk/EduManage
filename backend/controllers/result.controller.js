@@ -17,8 +17,6 @@ export const addResult = async (req, res) => {
       remark,
     } = req.body;
 
-    console.log("RESULT BODY:", req.body);
-
     if (!student || !examType || !subject || !academicYear) {
       return res.status(400).json({
         message: "Student, exam type, subject and academic year are required",

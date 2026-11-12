@@ -6,7 +6,7 @@ import {
 import { RxPeople } from "react-icons/rx";
 import { SlPeople } from "react-icons/sl";
 import { SiGoogleclassroom } from "react-icons/si";
-import { MdEventAvailable, MdOutlinePreview } from "react-icons/md";
+import { MdEventAvailable, MdOutlinePayments, MdOutlinePreview, MdPayment } from "react-icons/md";
 import { FaChartBar, FaTrophy } from "react-icons/fa";
 import {
   RiFileList2Line,
@@ -132,6 +132,18 @@ export const adminCatagories = [
     icon: <RiMoneyDollarCircleLine />,
     menu: "Fees / Payments",
     path: "/admin-dashboard/fees-payments",
+    subMenu: [
+      {
+        icon: <MdPayment />,
+        subMenuName: "Add Payment",
+        path: "/admin-dashboard/fees-payments/add-payment"
+      },
+      {
+        icon: <MdOutlinePayments />,
+        subMenuName: "Payment List",
+        path: "/admin-dashboard/fees-payments/payment-list"
+      }
+    ]
   },
   {
     id: 10,
@@ -168,12 +180,6 @@ export const adminCatagories = [
         path: "/admin-dashboard/rankings/reward",
       },
     ],
-  },
-  {
-    id: 12,
-    icon: <IoDocumentTextOutline />,
-    menu: "Reports",
-    path: "/admin-dashboard/reports",
   },
   {
     id: 15,

@@ -13,11 +13,11 @@ import { teacherRouter } from "./routes/teacher.route.js";
 import { classesRouter } from "./routes/class.route.js";
 import { attendanceRouter } from "./routes/attendance.route.js";
 import { resultRouter } from "./routes/result.route.js";
-import { feesPaymentRouter } from "./routes/feesPayment.route.js";
 import { adminAuthRouter } from "./routes/adminAuth.route.js";
 import { adminRouter } from "./routes/admin.route.js";
 import { noticeRouter } from "./routes/notice.route.js";
 import { performanceRouter } from "./routes/performance.route.js";
+import { feesPaymentRouter } from "./routes/feesPayment.route.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -41,9 +41,9 @@ app.use("/api/teacher", teacherRouter);
 app.use("/api/classes", classesRouter);
 app.use("/api/attendance", attendanceRouter);
 app.use("/api/result", resultRouter);
-app.use("/api/fees-payment", feesPaymentRouter);
 app.use("/api/notice", noticeRouter);
 app.use("/api/performance", performanceRouter);
+app.use("/api/fees-payment", feesPaymentRouter);
 
 app.listen(port, () => {
   connectDB();

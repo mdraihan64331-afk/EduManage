@@ -11,7 +11,6 @@ import axios from "axios";
 function Classes() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { studentData } = useSelector((state) => state.student);
-  const { feesPaymentData } = useSelector((state) => state.feesPayment);
   const [classes, setClasses] = useState([]);
   const [selectSection, setSelectSection] = useState({});
 
@@ -230,14 +229,7 @@ function Classes() {
 
                       {/* total amount */}
                       <td className="py-2 px-3">
-                        {e.classFees ? (
-                          <div className="text-green-600">
-                            <span className="font-extrabold text-xl">৳</span> {" "}
-                            {Number(e.classFees?.totalAmount).toLocaleString("en-BD")}
-                          </div>
-                        ) : (
-                          <div>Not Set</div>  
-                        )}
+                        2000
                       </td>
 
                       {/* Class Teacher */}

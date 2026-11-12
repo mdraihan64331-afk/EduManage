@@ -1,48 +1,6 @@
 import mongoose from "mongoose";
 
-const classFeesShema = mongoose.Schema(
-  {
-    className: {
-      type: String,
-      enum: [
-        "Class 1",
-        "Class 2",
-        "Class 3",
-        "Class 4",
-        "Class 5",
-        "Class 6",
-        "Class 7",
-        "Class 8",
-        "Class 9",
-        "Class 10",
-      ],
-      required: true,
-    },
-
-    academicYear: {
-      type: String,
-      required: true,
-    },
-
-    secretKey: {
-      type: String,
-      required: true,
-    },
-
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-  },
-  { timestamps: true },
-);
-
-classFeesShema.index({ className: 1, academicYear: 1 }, { unique: true });
-
-export const ClassFees = new mongoose.model("ClassFess", classFeesShema);
-
-const paymentSchema = new mongoose.Schema(
+const feesPaymentSchema = new mongoose.Schema(
   {
     student: {
       type: mongoose.Schema.Types.ObjectId,
@@ -50,25 +8,25 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
-    classFees: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "ClassFees",
+    feesType: {
+      type: String,
+      enum: ["Monthly Fee", "Exam Fee", "Registration Fee"],
       required: true,
     },
 
-    paidAmount: {
+    amount: {
       type: Number,
       required: true,
     },
 
-    paidDate: {
-      type: Date,
-      default: Date.now,
+    paymentMethod: {
+      type: String,
+      enum: ["Bkash", "Nagad", "Bank Transfer", "Cash"],
+      required: true,
     },
 
-    method: {
-      type: String,
-      enum: ["Cash", "Bkash", "Bank Transfer", "Nagad"],
+    paymentDate: {
+      type: Date,
       required: true,
     },
 
@@ -79,4 +37,4 @@ const paymentSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const Payment = new mongoose.model("Payment", paymentSchema);
+export const FeesPayment = new mongoose.model("FeesPayment", feesPaymentSchema);

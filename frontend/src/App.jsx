@@ -11,7 +11,6 @@ import Notice from "./pages/Notice";
 import Signup from "./pages/Signup";
 import Forgot from "./pages/Forgot";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
-import Report from "./components/Report";
 import Logout from "./components/Logout";
 import LandingHome from "./pages/LandingHome.jsx";
 import AddStudent from "./pages/AddStudent.jsx";
@@ -32,10 +31,7 @@ import AddResult from "./pages/AddResult.jsx";
 import ResultList from "./pages/ResultList.jsx";
 import useGetResult from "./hooks/useGetResult.jsx";
 import EditResult from "./pages/EditResult.jsx";
-import useGetFeesPayment from "./hooks/useGetFeesPayment.jsx";
-import FeesPayment from "./pages/FeesPayment.jsx";
 import Classes from "./pages/Classes.jsx";
-import AddPayment from "./components/AddPayment.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import useGetCurrentAdmin from "./hooks/useGetCurrentAdmin.jsx";
 import AddNotice from "./pages/AddNotice.jsx";
@@ -50,6 +46,8 @@ import useGetPerformance from "./hooks/useGetPerformance.jsx";
 import EditPerformance from "./pages/EditPerformance.jsx";
 import ResultRanking from "./pages/ResultRanking.jsx";
 import Reward from "./pages/Reward.jsx";
+import AddPayment from "./pages/AddPayment.jsx";
+import ListPayment from "./pages/ListPayment.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -59,7 +57,6 @@ function App() {
   useGetStudent();
   useGetAttendance();
   useGetResult();
-  useGetFeesPayment();
   useGetNotice();
   useGetPerformance();
 
@@ -271,20 +268,20 @@ function App() {
           }
         />
         <Route
-          path="/admin-dashboard/fees-payments"
+          path="/admin-dashboard/fees-payments/add-payment"
           element={
             adminData ? (
-              <FeesPayment />
+              <AddPayment />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
           }
         />
         <Route
-          path="/admin-dashboard/fees-payments/add-payment/:id"
+          path="/admin-dashboard/fees-payments/payment-list"
           element={
             adminData ? (
-              <AddPayment />
+              <ListPayment />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
@@ -345,16 +342,6 @@ function App() {
           element={
             adminData ? (
               <Reward />
-            ) : (
-              <Navigate to={"/admin-dashboard/admin-signin"} />
-            )
-          }
-        />
-        <Route
-          path="/admin-dashboard/reports"
-          element={
-            adminData ? (
-              <Report />
             ) : (
               <Navigate to={"/admin-dashboard/admin-signin"} />
             )
