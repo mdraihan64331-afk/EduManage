@@ -6,30 +6,45 @@ export const addFeesPayment = async (req, res) => {
       req.body;
 
     if (!student) {
-      return res.status(400).json({ message: "Student is required!" });
+      return res.status(400).json({
+        message: "Student is required!",
+      });
+    }
+    
+    if (!feesType) {
+      return res.status(400).json({
+        message: "Fees type is required!",
+      });
     }
 
-    if (!amount) {
-      return res.status(400).json({ message: "amount is required!" });
+    if (!amount || Number(amount) <= 0) {
+      return res.status(400).json({
+        message: "Valid amount is required!",
+      });
     }
 
     if (!paymentMethod) {
-      return res.status(400).json({ message: "payment method is required!" });
+      return res.status(400).json({
+        message: "Payment method is required!",
+      });
     }
 
-    const addFeesPayment = await FeesPayment.create({
+    const newPayment = await FeesPayment.create({
       student,
       feesType,
-      amount,
+      amount: Number(amount),
       paymentMethod,
       paymentDate,
       remark,
     });
 
-    return res.status(201).json(addFeesPayment);
+    return res.status(201).json({ newPayment });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "payment create faild" });
+    console.log("Payment Create Error:", error);
+
+    return res.status(500).json({
+      message: "Payment creation failed!",
+      error: error.message,
+    });
   }
 };
-

@@ -63,16 +63,11 @@ function Classes() {
       (teacher) => teacher.classTeacher === className,
     );
 
-    const classFees = feesPaymentData.find(
-      (fees) => fees.className === className,
-    );
-
     return {
       className,
       totalStudents: students.length,
       sections,
       classTeacher,
-      classFees,
     };
   });
 
@@ -229,7 +224,7 @@ function Classes() {
 
                       {/* total amount */}
                       <td className="py-2 px-3">
-                        2000
+                        {Number(2000).toLocaleString("en-BD")}
                       </td>
 
                       {/* Class Teacher */}

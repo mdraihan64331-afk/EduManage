@@ -804,7 +804,7 @@ function AddNotice() {
         </div>
         {err && (
           <>
-            <div className="fixed z-60 inset-0 bg-black/50 flex justify-center items-center">
+            <div className="fixed z-20 inset-0 bg-black/50 flex justify-center items-center">
               <div className="bg-white p-5 rounded-[8px]">
                 <div
                   className="flex justify-end text-gray-600 cursor-pointer"

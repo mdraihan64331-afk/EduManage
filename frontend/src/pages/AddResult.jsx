@@ -621,7 +621,7 @@ function AddResult() {
 
               {/* add error popup */}
               {err && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-110">
+                <div className="fixed inset-0 z-20 bg-black/50 flex justify-center items-center z-110">
                   <div className="bg-white p-5 rounded-[8px]">
                     <div
                       className="flex justify-end text-gray-600 cursor-pointer"
