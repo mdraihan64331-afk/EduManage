@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import logoimage from "../assets/login-logo.png";
 import { SiGoogleclassroom } from "react-icons/si";
 import AdminHeader from "../components/AdminHeader";
 import Menu from "./Menu";
@@ -9,6 +10,8 @@ import axios from "axios";
 import { serverURL } from "../App";
 import { useDispatch } from "react-redux";
 import { setClassFees } from "../redux/classRoomAndFeesSlice";
+import { GoAlertFill } from "react-icons/go";
+import { RxCross2 } from "react-icons/rx";
 
 function AddTotalClassRoomAndFees() {
   const [className, setClassName] = useState("");
@@ -26,10 +29,13 @@ function AddTotalClassRoomAndFees() {
   ];
   const [classFees, setClassFee] = useState("");
   const [totalClassRoom, setTotalClassRoom] = useState("");
+  const [loading, setLoading] = useState("");
+  const [err, setErr] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleAddClassRoomAndFees = async () => {
+    setLoading(true);
     try {
       await axios.post(
         `${serverURL}/api/classes/add-total-class-room-and-fees`,
@@ -43,9 +49,13 @@ function AddTotalClassRoomAndFees() {
       );
 
       dispatch(setClassFees(result.data));
+      setLoading(false);
+      setErr("");
+      navigate("/admin-dashboard/classes");
       console.log(result.data);
     } catch (error) {
-      console.log(error.response.data.message);
+      setLoading(false);
+      setErr(error.response?.data?.message);
     }
   };
 
@@ -84,7 +94,7 @@ function AddTotalClassRoomAndFees() {
           </div>
 
           <div className="p-3 mt-5 rounded-[8px] shadow bg-white">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
                 <label>
                   Class <span className="text-red-500">*</span>
@@ -145,14 +155,80 @@ function AddTotalClassRoomAndFees() {
               <button
                 className="relative mt-7 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
                 onClick={handleAddClassRoomAndFees}
+                disabled={loading}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                   <IoMdAdd /> Add Class Room And Fees
                 </span>
                 <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
               </button>
+
+              {loading && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+                  {/* Loading Card */}
+                  <div className="w-[90%] max-w-[520px] rounded-3xl bg-white px-8 py-10 sm:px-12 shadow-2xl text-center">
+                    {/* Spinner + Logo */}
+                    <div className="relative mx-auto mb-7 flex h-44 w-44 items-center justify-center">
+                      {/* Spinner */}
+                      <div className="absolute inset-0 rounded-full border-[12px] border-slate-200 border-t-green-500 border-r-cyan-500 animate-spin"></div>
+
+                      {/* Logo Circle */}
+                      <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-green-50 to-blue-50">
+                        <img
+                          src={logoimage}
+                          alt="EduManage"
+                          className="h-20 w-20 object-contain"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-3xl font-bold text-[#102A5C]">
+                      Please wait...
+                    </h2>
+
+                    {/* Description */}
+                    <p className="mt-3 text-base text-slate-500">
+                      Create the student payment.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+          {err && (
+            <>
+              <div className="fixed inset-0 z-20 bg-black/50 flex justify-center items-center">
+                <div className="bg-white p-5 rounded-[8px]">
+                  <div
+                    className="flex justify-end text-gray-600 cursor-pointer"
+                    onClick={() => setErr("")}
+                  >
+                    <RxCross2 />
+                  </div>
+                  <div className="flex flex-col justify-center items-center gap-2">
+                    <div className=" p-3 rounded-full bg-red-100 text-red-500">
+                      <GoAlertFill size={30} />
+                    </div>
+                    <h1 className="text-xl font-bold">Something went wrong</h1>
+                    <p className="text-gray-500">Please try again latet.</p>
+                    <div className="bg-red-100 border border-red-700 w-full p-4 rounded-[8px]">
+                      <div className="flex items-center gap-3 text-red-500">
+                        <GoAlertFill size={30} />
+                        {err}
+                      </div>
+                    </div>
+                    <button
+                      className="bg-red-600 cursor-pointer px-15 text-white py-2 rounded-[8px]"
+                      onClick={() => setErr("")}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

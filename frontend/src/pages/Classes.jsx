@@ -9,10 +9,12 @@ import { serverURL } from "../App";
 import axios from "axios";
 import { IoMdAdd } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 function Classes() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { studentData } = useSelector((state) => state.student);
+  const { classFeesData } = useSelector((state) => state.classFees);
   const [classes, setClasses] = useState([]);
   const [selectSection, setSelectSection] = useState({});
   const navigate = useNavigate();
@@ -74,7 +76,10 @@ function Classes() {
     };
   });
 
-  // const classTotalFees =
+  const totalClassRoom = classFeesData.reduce(
+    (sum, item) => sum + Number(item.totalClassRoom),
+    0,
+  );
 
   return (
     <div className="flex bg-blue-50">
@@ -105,8 +110,8 @@ function Classes() {
                     <SiGoogleclassroom size={25} className=" text-blue-600" />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <p className="font-semibold">Total Classes</p>
-                    <h1 className="font-bold text-2xl">10</h1>
+                    <p className="font-semibold">Total Class Room</p>
+                    <h1 className="font-bold text-2xl">{totalClassRoom}</h1>
                     <p className="text-xs text-green-400">+ Active Classes</p>
                   </div>
                 </div>
@@ -188,94 +193,107 @@ function Classes() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Classes.map((e) => (
-                    <tr
-                      key={e.className}
-                      className="bg-white border border-gray-200 font-semibold"
-                    >
-                      {/* Class */}
-                      <td className="py-2 px-3">{e.className}</td>
+                  {Classes.map((e) => {
+                    const fees = classFeesData.find(
+                      (item) => item.className === e.className,
+                    );
 
-                      {/* Sections */}
-                      <td className="py-2 px-3">
-                        {e.sections.map((section) => (
-                          <button
-                            key={section.section}
-                            onClick={() => {
-                              setSelectSection((prev) => ({
-                                ...prev,
-                                [e.className]:
-                                  prev[e.className] === section.section
-                                    ? null
-                                    : section.section,
-                              }));
-                            }}
-                            className={`py-2 px-4  mx-2 border rounded-[8px] ${
-                              selectSection[e.className] === section.section
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "bg-blue-50 text-slate-600 border-gray-200"
-                            }`}
-                          >
-                            {section.section}
-                          </button>
-                        ))}
-                      </td>
+                    return (
+                      <tr
+                        key={e.className}
+                        className="bg-white border border-gray-200 font-semibold"
+                      >
+                        {/* Class */}
+                        <td className="py-2 px-3">{e.className}</td>
 
-                      {/* Total Students */}
-                      <td className="py-2 px-3">
-                        {selectSection[e.className]
-                          ? `${
-                              e.sections.find(
-                                (section) =>
-                                  section.section ===
-                                  selectSection[e.className],
-                              )?.students || 0
-                            }`
-                          : `${e.totalStudents}`}
-                      </td>
+                        {/* Sections */}
+                        <td className="py-2 px-3">
+                          {e.sections.map((section) => (
+                            <button
+                              key={section.section}
+                              onClick={() => {
+                                setSelectSection((prev) => ({
+                                  ...prev,
+                                  [e.className]:
+                                    prev[e.className] === section.section
+                                      ? null
+                                      : section.section,
+                                }));
+                              }}
+                              className={`py-2 px-4  mx-2 border rounded-[8px] ${
+                                selectSection[e.className] === section.section
+                                  ? "bg-blue-600 text-white border-blue-600"
+                                  : "bg-blue-50 text-slate-600 border-gray-200"
+                              }`}
+                            >
+                              {section.section}
+                            </button>
+                          ))}
+                        </td>
 
-                      {/* Assigned Class */}
-                      <td className="py-2 px-3">
-                        {e.classTeacher?.assignedClass}
-                      </td>
+                        {/* Total Students */}
+                        <td className="py-2 px-3">
+                          {selectSection[e.className]
+                            ? `${
+                                e.sections.find(
+                                  (section) =>
+                                    section.section ===
+                                    selectSection[e.className],
+                                )?.students || 0
+                              }`
+                            : `${e.totalStudents}`}
+                        </td>
 
-                      {/* total amount */}
-                      <td className="py-2 px-3">
-                        {Number(2000).toLocaleString("en-BD")}
-                      </td>
+                        {/* Assigned Class */}
+                        <td className="py-2 px-3">
+                          {e.classTeacher?.assignedClass}
+                        </td>
 
-                      {/* Class Teacher */}
-                      <td className="py-2 px-3">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10">
-                            {e.classTeacher?.image ? (
-                              <img
-                                src={e.classTeacher.image}
-                                alt=""
-                                className="h-full w-full rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="h-10 w-10 rounded-full flex items-center justify-center bg-purple-700 text-white">
-                                {e.classTeacher?.fullName
-                                  ?.slice(0, 1)
-                                  .toUpperCase()}
-                              </div>
-                            )}
-                          </div>
-
-                          <div>
-                            <h1 className="text-slate-700 capitalize">
-                              {e.classTeacher?.fullName}
-                            </h1>
-
-                            <p className="text-gray-600 text-xs capitalize">
-                              ({e.classTeacher?.subject})
+                        {/* total amount */}
+                        <td className="py-2 px-3">
+                          {fees ? (
+                            <p className="flex items-center gap-2 text-green-600">
+                              <TbCurrencyTaka size={20} />
+                              {Number(fees.fees).toLocaleString("en-BD")}
                             </p>
+                          ) : (
+                            <p className="text-red-500">Not Added</p>
+                          )}
+                        </td>
+
+                        {/* Class Teacher */}
+                        <td className="py-2 px-3">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10">
+                              {e.classTeacher?.image ? (
+                                <img
+                                  src={e.classTeacher.image}
+                                  alt=""
+                                  className="h-full w-full rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="h-10 w-10 rounded-full flex items-center justify-center bg-purple-700 text-white">
+                                  {e.classTeacher?.fullName
+                                    ?.slice(0, 1)
+                                    .toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+
+                            <div>
+                              <h1 className="text-slate-700 capitalize">
+                                {e.classTeacher?.fullName}
+                              </h1>
+
+                              <p className="text-gray-600 text-xs capitalize">
+                                ({e.classTeacher?.subject})
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

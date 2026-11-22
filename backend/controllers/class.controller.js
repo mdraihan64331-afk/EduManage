@@ -60,12 +60,16 @@ export const addTotalClassAndFees = async (req, res) => {
   try {
     const { className, fees, totalClassRoom } = req.body;
 
-    if (fees <= 0) {
-      return res.status.json({ message: "Valid amount is required!" });
+    if (!className) {
+      return res.status(400).json({ message: "Class name is required!" });
     }
 
-    if (totalClassRoom <= 0) {
-      return res.status.json({ message: "Valid class room is required!" });
+    if (fees <= 0 || !fees) {
+      return res.status(400).json({ message: "Valid amount is required!" });
+    }
+
+    if (totalClassRoom < 0) {
+      return res.status(400).json({ message: "Valid class room is required!" });
     }
 
     const totalClassRoomAndFees = await classFees.create({
@@ -78,7 +82,6 @@ export const addTotalClassAndFees = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "class Fees creation failed!",
       error: error.message,
     });
   }
