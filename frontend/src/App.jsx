@@ -48,6 +48,8 @@ import ResultRanking from "./pages/ResultRanking.jsx";
 import Reward from "./pages/Reward.jsx";
 import AddPayment from "./pages/AddPayment.jsx";
 import ListPayment from "./pages/ListPayment.jsx";
+import useGetPayment from "./hooks/useGetPayment.jsx";
+import AddTotalClassRoomAndFees from "./pages/AddTotalClassRoomAndFees.jsx";
 
 export const serverURL = "http://localhost:8000";
 function App() {
@@ -59,6 +61,7 @@ function App() {
   useGetResult();
   useGetNotice();
   useGetPerformance();
+  useGetPayment();
 
   const { userData } = useSelector((state) => state.user);
   const { adminData } = useSelector((state) => state.admin);
@@ -176,7 +179,26 @@ function App() {
             )
           }
         />
-        <Route path="/admin-dashboard/classes" element={<Classes />} />
+        <Route
+          path="/admin-dashboard/classes"
+          element={
+            adminData ? (
+              <Classes />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
+        <Route
+          path="/admin-dashboard/add-total-class-room-and-fees"
+          element={
+            adminData ? (
+              <AddTotalClassRoomAndFees />
+            ) : (
+              <Navigate to={"/admin-dashboard/admin-signin"} />
+            )
+          }
+        />
         <Route
           path="/admin-dashboard/attendances/mark-attendance"
           element={

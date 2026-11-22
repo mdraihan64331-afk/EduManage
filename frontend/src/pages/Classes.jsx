@@ -7,12 +7,15 @@ import { IoPerson } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { serverURL } from "../App";
 import axios from "axios";
+import { IoMdAdd } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 function Classes() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { studentData } = useSelector((state) => state.student);
   const [classes, setClasses] = useState([]);
   const [selectSection, setSelectSection] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -153,9 +156,23 @@ function Classes() {
 
           {/* class management */}
           <div className="bg-white p-3 rounded-[8px] shadow">
-            <div className="flex items-center gap-3">
-              <SiGoogleclassroom size={20} className="text-green-600" />
-              <h4 className="font-semibold">Class & Section Management</h4>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <SiGoogleclassroom size={20} className="text-green-600" />
+                <h4 className="font-semibold">Class & Section Management</h4>
+              </div>
+
+              <button
+                className="relative mt-3 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                onClick={() =>
+                  navigate("/admin-dashboard/add-total-class-room-and-fees")
+                }
+              >
+                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                  <IoMdAdd /> Add Class Room
+                </span>
+                <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
+              </button>
             </div>
             <div className="mt-4 w-full overflow-auto max-h-[400px]">
               <table className="w-full min-w-[700px] mt-3">

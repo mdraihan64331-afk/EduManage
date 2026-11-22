@@ -10,7 +10,7 @@ export const addFeesPayment = async (req, res) => {
         message: "Student is required!",
       });
     }
-    
+
     if (!feesType) {
       return res.status(400).json({
         message: "Fees type is required!",
@@ -38,7 +38,7 @@ export const addFeesPayment = async (req, res) => {
       remark,
     });
 
-    return res.status(201).json({ newPayment });
+    return res.status(201).json(newPayment);
   } catch (error) {
     console.log("Payment Create Error:", error);
 
@@ -46,5 +46,15 @@ export const addFeesPayment = async (req, res) => {
       message: "Payment creation failed!",
       error: error.message,
     });
+  }
+};
+
+export const getAllPayment = async (req, res) => {
+  try {
+    const payments = await FeesPayment.find().sort({ createdAt: -1 });
+
+    return res.status(200).json(payments);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

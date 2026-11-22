@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 function useGetCurrentUser() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchUser = async () => {
       try {

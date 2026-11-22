@@ -25,4 +25,34 @@ const classSchema = new mongoose.Schema({
   },
 });
 
-export const Classes = new mongoose.model("Classes", classSchema)
+export const Classes = new mongoose.model("Classes", classSchema);
+
+const classFeesSchema = new mongoose.Schema({
+  className: {
+    type: String,
+    enum: [
+      "Class 1",
+      "Class 2",
+      "Class 3",
+      "Class 4",
+      "Class 5",
+      "Class 6",
+      "Class 7",
+      "Class 8",
+      "Class 9",
+      "Class 10",
+    ],
+    required: true,
+  },
+
+  fees: {
+    type: Number,
+    required: true,
+  },
+
+  totalClassRoom: {
+    type: Number,
+  },
+});
+
+export const classFees = new mongoose.model("classFees", classFeesSchema);

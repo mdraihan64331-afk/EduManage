@@ -4,7 +4,7 @@ import Menu from "./Menu";
 import AdminHeader from "../components/AdminHeader";
 import { IoPersonSharp, IoWallet } from "react-icons/io5";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoIosSearch, IoMdAdd } from "react-icons/io";
 import { FaPlus, FaTicketAlt } from "react-icons/fa";
 import { TbCurrencyTaka } from "react-icons/tb";
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { RxCross2 } from "react-icons/rx";
 import { GoAlertFill } from "react-icons/go";
+import { setPaymentData } from "../redux/paymentSlice";
 
 function AddPayment() {
   const { studentData } = useSelector((state) => state.student);
@@ -31,6 +32,7 @@ function AddPayment() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const selectedStudent = studentData?.find((e) => e._id === student);
 
@@ -48,9 +50,7 @@ function AddPayment() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      
-
-      const result = await axios.post(
+      await axios.post(
         `${serverURL}/api/fees-payment/add-fees-payment`,
         {
           student,
@@ -63,10 +63,15 @@ function AddPayment() {
         { withCredentials: true },
       );
 
+      const result = await axios.get(
+        `${serverURL}/api/fees-payment/all-payments`,
+        { withCredentials: true },
+      );
+
+      dispatch(setPaymentData(result.data));
       setLoading(false);
       setErr("");
       navigate("/admin-dashboard/fees-payments/payment-list");
-      console.log("Payment Created:", result.data);
     } catch (error) {
       setLoading(false);
       setErr(error.response?.data?.message);
