@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { RiResetLeftFill } from "react-icons/ri";
 import axios from "axios";
 import { serverURL } from "../App";
+import { useDispatch } from "react-redux";
+import { setClassFees } from "../redux/classRoomAndFeesSlice";
 
 function AddTotalClassRoomAndFees() {
   const [className, setClassName] = useState("");
@@ -22,18 +24,25 @@ function AddTotalClassRoomAndFees() {
     "Class 9",
     "Class 10",
   ];
-  const [classFees, setClassFees] = useState("");
+  const [classFees, setClassFee] = useState("");
   const [totalClassRoom, setTotalClassRoom] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleAddClassRoomAndFees = async () => {
     try {
-      const result = await axios.post(
+      await axios.post(
         `${serverURL}/api/classes/add-total-class-room-and-fees`,
         { className, fees: classFees, totalClassRoom },
         { withCredentials: true },
       );
 
+      const result = await axios.get(
+        `${serverURL}/api/classes/get-all-total-class-room-and-fees`,
+        { withCredentials: true },
+      );
+
+      dispatch(setClassFees(result.data));
       console.log(result.data);
     } catch (error) {
       console.log(error.response.data.message);
@@ -42,7 +51,7 @@ function AddTotalClassRoomAndFees() {
 
   const handleReset = () => {
     setClassName("");
-    setClassFees("");
+    setClassFee("");
     setTotalClassRoom("");
   };
   return (
@@ -101,7 +110,7 @@ function AddTotalClassRoomAndFees() {
                   <input
                     type="text"
                     value={classFees}
-                    onChange={(e) => setClassFees(e.target.value)}
+                    onChange={(e) => setClassFee(e.target.value)}
                     placeholder="Class Fees"
                     className="outline-none w-full"
                   />
@@ -123,7 +132,7 @@ function AddTotalClassRoomAndFees() {
               </div>
               {/* reset button */}
               <button
-                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
+                className="relative mt-7 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
                 onClick={handleReset}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
@@ -134,7 +143,7 @@ function AddTotalClassRoomAndFees() {
 
               {/* add class room and fees */}
               <button
-                className="relative mt-3 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                className="relative mt-7 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
                 onClick={handleAddClassRoomAndFees}
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">

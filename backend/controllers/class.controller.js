@@ -83,3 +83,17 @@ export const addTotalClassAndFees = async (req, res) => {
     });
   }
 };
+
+export const getAllClassRoomAndFees = async (req, res) => {
+  try {
+    const totalClassRoomAndFees = await classFees.find().sort({
+      createdAt: -1,
+    });
+
+    return res.status(200).json(totalClassRoomAndFees);
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
