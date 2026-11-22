@@ -13,6 +13,7 @@ function AdminDashboard() {
   const { adminData } = useSelector((state) => state.admin);
   const { teacherData } = useSelector((state) => state.teacher);
   const { attendanceData } = useSelector((state) => state.attendance);
+  const { classFeesData } = useSelector((state) => state.classFees);
   const now = new Date();
 
   const thisMonthStudentJoined = studentData.filter((student) => {
@@ -53,6 +54,11 @@ function AdminDashboard() {
 
   const attendancePercentage =
     totalToday > 0 ? ((presentToday / totalToday) * 100).toFixed(1) : 0;
+
+  const totalClassRoom = classFeesData.reduce(
+    (sum, item) => sum + Number(item.totalClassRoom),
+    0,
+  );
 
   return (
     <div className="flex bg-blue-50">
@@ -114,8 +120,7 @@ function AdminDashboard() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-400">Total Classes</p>
-                    <h1 className="font-bold text-2xl">85</h1>
-                    <p className="text-xs text-green-600">+5 this month</p>
+                    <h1 className="font-bold text-2xl">{totalClassRoom}</h1>
                   </div>
                 </div>
 
