@@ -2,12 +2,32 @@ import { FeesPayment } from "../models/feesPayment.model.js";
 
 export const addFeesPayment = async (req, res) => {
   try {
-    const { student, feesType, amount, paymentMethod, paymentDate, remark } =
-      req.body;
+    const {
+      student,
+      className,
+      academicYear,
+      feesType,
+      amount,
+      paymentMethod,
+      paymentDate,
+      remark,
+    } = req.body;
 
     if (!student) {
       return res.status(400).json({
         message: "Student is required!",
+      });
+    }
+
+    if (!className) {
+      return res.status(400).json({
+        message: "Class name is required!",
+      });
+    }
+
+    if (!academicYear) {
+      return res.status(400).json({
+        message: "Academic year is required!",
       });
     }
 
@@ -31,6 +51,8 @@ export const addFeesPayment = async (req, res) => {
 
     const newPayment = await FeesPayment.create({
       student,
+      className,
+      academicYear,
       feesType,
       amount: Number(amount),
       paymentMethod,

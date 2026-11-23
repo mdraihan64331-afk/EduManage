@@ -286,7 +286,7 @@ function ListPayment() {
 
                       <td className="py-3 px-2">
                         <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-2xl">
-                          {e.student?.className}
+                          {e.className}
                         </div>
                       </td>
 

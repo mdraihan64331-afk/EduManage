@@ -19,8 +19,23 @@ import { setPaymentData } from "../redux/paymentSlice";
 function AddPayment() {
   const { studentData } = useSelector((state) => state.student);
   const { classFeesData } = useSelector((state) => state.classFees);
+  const { paymentData } = useSelector((state) => state.payment);
   const [input, setInput] = useState("");
   const [student, setStudent] = useState("");
+  const [className, setClassName] = useState("");
+  const selectClass = [
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+  ];
+  const [academicYear, setAcademicYear] = useState("");
   const [feesType, setFeesType] = useState("");
   const fees = ["Monthly Fee", "Exam Fee", "Registration Fee"];
   const [amount, setAmount] = useState("");
@@ -34,6 +49,11 @@ function AddPayment() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // const currentAcademicYear = () => {
+  //   const currentYear = new Date().getFullYear();
+
+  //   return `${currentYear}-${currentYear - 1}`;
+  // };
 
   const selectedStudent = studentData?.find((e) => e._id === student);
 
@@ -52,6 +72,33 @@ function AddPayment() {
     return fees.className === selectedStudent?.className;
   });
 
+  const studentPayments = Array.isArray(paymentData)
+    ? paymentData.filter((payment) => {
+        const paymentStudentId =
+          typeof payment.student === "object"
+            ? payment.student?._id
+            : payment.student;
+
+        return (
+          String(paymentStudentId) === String(selectedStudent?._id) &&
+          payment.academicYear === academicYear
+        );
+      })
+    : [];
+
+  const previousPaid = studentPayments.reduce(
+    (sum, payment) => sum + Number(payment.amount || 0),
+    0,
+  );
+
+  const currentPayment = Number(amount) || 0;
+
+  const paidAmount = previousPaid + currentPayment;
+
+  const totalFee = Number(totalAmout?.fees) || 0;
+
+  const dueAmount = Math.max(0, totalFee - paidAmount);
+
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -59,6 +106,8 @@ function AddPayment() {
         `${serverURL}/api/fees-payment/add-fees-payment`,
         {
           student,
+          className,
+          academicYear,
           feesType,
           amount: Number(amount),
           paymentMethod,
@@ -139,13 +188,13 @@ function AddPayment() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="">
+                  <label>
                     Student <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={student}
                     onChange={(e) => setStudent(e.target.value)}
-                    className="w-80 border border-gray-300 px-2 py-1 rounded-[8px]"
+                    className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
                   >
                     <option value="">Select Student</option>
 
@@ -153,6 +202,21 @@ function AddPayment() {
                       <option key={e._id} value={e._id}>
                         {e.fullName} ({e.studentId})
                       </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label>
+                    Class Name <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={className}
+                    onChange={(e) => setClassName(e.target.value)}
+                    className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
+                  >
+                    <option>Select Class</option>
+                    {selectClass.map((e, index) => (
+                      <option key={index}>{e}</option>
                     ))}
                   </select>
                 </div>
@@ -206,6 +270,18 @@ function AddPayment() {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-3">
+              <label>
+                academicYear <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="AcademicYear"
+                onChange={(e) => setAcademicYear(e.target.value)}
+                className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
+              />
             </div>
 
             <div>
@@ -303,45 +379,23 @@ function AddPayment() {
                       <p>Due Amount</p>
                     </div>
                     <div className="flex flex-col gap-3 font-semibold">
-                      <p>
-                        {totalAmout?.fees ? (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka />
-                            {Number(totalAmout?.fees).toLocaleString("en-BD")}
-                          </p>
-                        ) : (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka />
-                            00
-                          </p>
-                        )}
-                      </p>
-                      <p>
-                        {amount ? (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka />
-                            {Number(amount).toLocaleString("en-BD")}
-                          </p>
-                        ) : (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka /> 00
-                          </p>
-                        )}
-                      </p>
-                      <p>
-                        {totalAmout?.fees ? (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka />
-                            {Number(totalAmout?.fees - amount).toLocaleString(
-                              "en-BD",
-                            )}
-                          </p>
-                        ) : (
-                          <p className="flex items-center gap-2">
-                            <TbCurrencyTaka /> 00
-                          </p>
-                        )}
-                      </p>
+                      {/* Total Fee */}
+                      <div className="flex items-center gap-2">
+                        <TbCurrencyTaka />
+                        {totalFee.toLocaleString("en-BD")}
+                      </div>
+
+                      {/* Paid Amount */}
+                      <div className="flex items-center gap-2 text-green-600">
+                        <TbCurrencyTaka />
+                        {paidAmount.toLocaleString("en-BD")}
+                      </div>
+
+                      {/* Due Amount */}
+                      <div className="flex items-center gap-2 text-red-500">
+                        <TbCurrencyTaka />
+                        {dueAmount.toLocaleString("en-BD")}
+                      </div>
                     </div>
                   </div>
                   <button
