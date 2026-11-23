@@ -51,7 +51,9 @@ export const addFeesPayment = async (req, res) => {
 
 export const getAllPayment = async (req, res) => {
   try {
-    const payments = await FeesPayment.find().sort({ createdAt: -1 });
+    const payments = await FeesPayment.find()
+      .populate("student")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json(payments);
   } catch (error) {

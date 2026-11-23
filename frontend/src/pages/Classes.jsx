@@ -168,13 +168,13 @@ function Classes() {
               </div>
 
               <button
-                className="relative mt-3 overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
+                className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1.5 border border-green-600 text-green-600 rounded-lg cursor-pointer group"
                 onClick={() =>
                   navigate("/admin-dashboard/add-total-class-room-and-fees")
                 }
               >
                 <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  <IoMdAdd /> Add Class Room
+                  <IoMdAdd /> Add Class Fees
                 </span>
                 <span className="absolute inset-y-0 right-0 w-0 bg-green-600 transition-all duration-500 group-hover:w-full"></span>
               </button>

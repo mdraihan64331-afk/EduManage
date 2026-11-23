@@ -18,6 +18,7 @@ import { setPaymentData } from "../redux/paymentSlice";
 
 function AddPayment() {
   const { studentData } = useSelector((state) => state.student);
+  const { classFeesData } = useSelector((state) => state.classFees);
   const [input, setInput] = useState("");
   const [student, setStudent] = useState("");
   const [feesType, setFeesType] = useState("");
@@ -46,6 +47,10 @@ function AddPayment() {
         return matchInput;
       })
     : [];
+
+  const totalAmout = classFeesData.find((fees) => {
+    return fees.className === selectedStudent?.className;
+  });
 
   const handleSave = async () => {
     setLoading(true);
@@ -298,17 +303,44 @@ function AddPayment() {
                       <p>Due Amount</p>
                     </div>
                     <div className="flex flex-col gap-3 font-semibold">
-                      <p className="flex items-center gap-2">
-                        <TbCurrencyTaka />
-                        {Number(12000).toLocaleString("en-BD")}
+                      <p>
+                        {totalAmout?.fees ? (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka />
+                            {Number(totalAmout?.fees).toLocaleString("en-BD")}
+                          </p>
+                        ) : (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka />
+                            00
+                          </p>
+                        )}
                       </p>
-                      <p className="flex items-center gap-2">
-                        <TbCurrencyTaka />
-                        {Number(amount).toLocaleString("en-BD")}
+                      <p>
+                        {amount ? (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka />
+                            {Number(amount).toLocaleString("en-BD")}
+                          </p>
+                        ) : (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka /> 00
+                          </p>
+                        )}
                       </p>
-                      <p className="flex items-center gap-2">
-                        <TbCurrencyTaka />
-                        {Number(12000 - amount).toLocaleString("en-BD")}
+                      <p>
+                        {totalAmout?.fees ? (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka />
+                            {Number(totalAmout?.fees - amount).toLocaleString(
+                              "en-BD",
+                            )}
+                          </p>
+                        ) : (
+                          <p className="flex items-center gap-2">
+                            <TbCurrencyTaka /> 00
+                          </p>
+                        )}
                       </p>
                     </div>
                   </div>
