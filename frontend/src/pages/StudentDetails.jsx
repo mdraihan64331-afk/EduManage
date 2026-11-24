@@ -3,7 +3,11 @@ import Menu from "./Menu";
 import { useNavigate, useParams } from "react-router-dom";
 import { serverURL } from "../App";
 import axios from "axios";
-import { IoNotificationsOutline, IoPerson } from "react-icons/io5";
+import {
+  IoNotificationsOutline,
+  IoPerson,
+  IoWalletOutline,
+} from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -22,12 +26,26 @@ function StudentDetails() {
   const { teacherData } = useSelector((state) => state.teacher);
   const { attendanceData } = useSelector((state) => state.attendance);
   const { performanceData } = useSelector((state) => state.performance);
+  const { paymentData } = useSelector((state) => state.payment);
   const attendanceList = Array.isArray(attendanceData) ? attendanceData : [];
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [inputDate, setInputDate] = useState(
     new Date().toLocaleDateString("en-CA"),
   );
+  const [selectClass, setSelectClass] = useState("");
+  const className = [
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+  ];
 
   const studentAttendance = attendanceList.filter((attendance) => {
     if (!attendance.student || !attendance.date) return false;
@@ -85,6 +103,21 @@ function StudentDetails() {
     };
     fatchStudent();
   }, [id]);
+
+  const payment = Array.isArray(paymentData)
+    ? paymentData.filter((payment) => payment.student?._id === id)
+    : [];
+
+  const paymentWithClassWise = payment.filter(
+    (cls) => cls.className === selectClass,
+  );
+
+  const totalPaid = paymentWithClassWise.reduce(
+    (sum, fees) => sum + fees?.amount,
+    0,
+  );
+
+  const totalFees = payment.find((fees) => fees.className === selectClass);
 
   const classTeacherName = teacherData.find(
     (teacher) => teacher._id === student?.classTeacher,
@@ -551,6 +584,132 @@ function StudentDetails() {
             {/* academic Overview */}
             <div>
               <AcademicOverview studentId={id} />
+            </div>
+          </div>
+
+          {/* student fees */}
+          <div className="bg-white shadow mt-3 rounded-[8px] p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-700 text-white">
+                  <IoWalletOutline size={24} />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold">Payment & Fees</h1>
+                  <p>View your payment history and fees details.</p>
+                </div>
+              </div>
+              <div>
+                <select
+                  value={selectClass}
+                  onChange={(e) => setSelectClass(e.target.value)}
+                  className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
+                >
+                  <option>Select Class</option>
+                  {className.map((e, index) => (
+                    <option key={index}>{e}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4 w-full overflow-auto max-h-[400px]">
+              <table className="w-full min-w-[699px]">
+                {/* Table Header */}
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="border-b border-gray-300 text-gray-600">
+                    <th className="text-left py-3 px-2 text-[14px]">#</th>
+                    <th className="text-left py-3 px-2 text-[14px]">Class</th>
+                    <th className="text-left py-3 px-2 text-[14px]">
+                      Payment Method
+                    </th>
+                    <th className="text-left py-3 px-2 text-[14px]">
+                      Fees Type
+                    </th>
+                    <th className="text-left py-3 px-2 text-[14px]">Date</th>
+                    <th className="text-left py-3 px-2 text-[14px]">
+                      Paid Amount
+                    </th>
+                  </tr>
+                </thead>
+
+                {/* Student Data */}
+                <tbody>
+                  {paymentWithClassWise.map((e, index) => {
+                    return (
+                      <tr
+                        key={e._id}
+                        className="border-b border-gray-200 hover:bg-gray-50"
+                      >
+                        <td className="py-3 px-2">{index + 1}</td>
+
+                        <td className="py-3 px-2">{e.className}</td>
+
+                        <td className="py-3 px-2">{e.paymentMethod}</td>
+
+                        <td className="py-3 px-2">{e.feesType}</td>
+
+                        <td className="py-3 px-2">
+                          <div>
+                            {new Date(e?.paymentDate).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
+                          </div>
+                          <div className="text-[14px] text-gray-400">
+                            {new Date(e?.paymentDate).toLocaleTimeString(
+                              "en-BD",
+                              {
+                                timeZone: "Asia/Dhaka",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-2">
+                          {Number(e?.amount).toLocaleString("en-BD")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-blue-100 font-semibold rounded-[8px]">
+                    <td colSpan="5" className="py-3 px-2 text-right">
+                      Total Paid
+                    </td>
+                    <td className="py-3 px-2 ">
+                      {Number(totalPaid).toLocaleString("en-BD")}
+                    </td>
+                  </tr>
+                  <tr className="bg-blue-100 font-semibold rounded-[8px]">
+                    <td colSpan="5" className="py-3 px-2 text-right">
+                      Total Fees
+                    </td>
+                    <td className="py-3 px-2 ">
+                      {totalFees?.totalFee
+                        ? Number(totalFees?.totalFee).toLocaleString("en-BD")
+                        : 0}
+                    </td>
+                  </tr>
+                  <tr className="bg-blue-100 font-semibold rounded-[8px]">
+                    <td colSpan="5" className="py-3 px-2 text-right">
+                      Due Amount
+                    </td>
+                    <td className="py-3 px-2 ">
+                      {Number(totalFees?.totalFee - totalPaid).toLocaleString(
+                        "en-BD",
+                      ) || 0}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           </div>
         </div>

@@ -238,7 +238,7 @@ function TeachersList() {
             </div>
             {/* teacher Table */}
 
-            <div className="mt-4 w-full overflow-auto max-h-[300px]">
+            <div className="mt-4 w-full overflow-auto max-h-[400px]">
               <table className="w-full min-w-[700px]">
                 {/* Table Header */}
                 <thead className="sticky top-0 bg-white z-10">

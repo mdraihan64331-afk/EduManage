@@ -228,16 +228,26 @@ function ListPayment() {
               {/* Table Header */}
               <thead className="sticky top-0 bg-white z-10">
                 <tr className="border-b border-gray-300 text-gray-600">
-                  <th className="text-left py-3 px-2">#</th>
-                  <th className="text-left py-3 px-2">Photo</th>
-                  <th className="text-left py-3 px-2">Name</th>
-                  <th className="text-left py-3 px-2">Payment Method</th>
-                  <th className="text-left py-3 px-2">Class</th>
-                  <th className="text-left py-3 px-2">Total Fee</th>
-                  <th className="text-left py-3 px-2">Paid Amount</th>
-                  <th className="text-left py-3 px-2">Due Amount</th>
-                  <th className="text-left py-3 px-2">Date</th>
-                  <th className="text-left py-3 px-2">Actions</th>
+                  <th className="text-left py-3 px-2 text-[14px]">#</th>
+                  <th className="text-left py-3 px-2 text-[14px]">Photo</th>
+                  <th className="text-left py-3 px-2 text-[14px]">Name</th>
+                  <th className="text-left py-3 px-2 text-[14px]">Class</th>
+                  <th className="text-left py-3 px-2 text-[14px]">
+                    Academic Year
+                  </th>
+                  <th className="text-left py-3 px-2 text-[14px]">
+                    Payment Method
+                  </th>
+                  <th className="text-left py-3 px-2 text-[14px]">Fees Type</th>
+                  <th className="text-left py-3 px-2 text-[14px]">Total Fee</th>
+                  <th className="text-left py-3 px-2 text-[14px]">
+                    Paid Amount
+                  </th>
+                  <th className="text-left py-3 px-2 text-[14px]">
+                    Due Amount
+                  </th>
+                  <th className="text-left py-3 px-2 text-[14px]">Date</th>
+                  <th className="text-left py-3 px-2 text-[14px]">Actions</th>
                 </tr>
               </thead>
 
@@ -254,7 +264,7 @@ function ListPayment() {
                     >
                       <td className="py-3 px-2">{index + 1}</td>
 
-                      <td className="py-3 px-2">
+                      <td className="py-3 px-2 flex items-center gap-2">
                         <div className="w-10 h-10">
                           {e?.student?.image ? (
                             <img
@@ -272,7 +282,7 @@ function ListPayment() {
 
                       <td className="py-3 px-2">
                         <div>
-                          <h1 className="font-semibold capitalize">
+                          <h1 className="text-[14px] font-semibold capitalize">
                             {e?.student?.fullName}
                           </h1>
 
@@ -282,16 +292,20 @@ function ListPayment() {
                         </div>
                       </td>
 
-                      <td className="py-3 px-2">{e.paymentMethod}</td>
-
                       <td className="py-3 px-2">
-                        <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-2xl">
+                        <div className="bg-blue-100 text-[14px] text-blue-600 px-2 py-1 rounded-2xl w-15">
                           {e.className}
                         </div>
                       </td>
 
+                      <td className="py-3 px-2">{e.academicYear}</td>
+
+                      <td className="py-3 px-2">{e.paymentMethod}</td>
+
+                      <td className="py-3 px-2">{e.feesType}</td>
+
                       <td className="py-3 px-2">
-                        {Number(totalFees?.fees).toLocaleString("en-BD")}
+                        {Number(e?.totalFee).toLocaleString("en-BD")}
                       </td>
 
                       <td className="py-3 px-2">
@@ -299,9 +313,7 @@ function ListPayment() {
                       </td>
 
                       <td className="py-3 px-2">
-                        {Number(totalFees?.fees - e?.amount).toLocaleString(
-                          "en-BD",
-                        )}
+                        {Number(e?.dueAmount).toLocaleString("en-BD")}
                       </td>
 
                       <td className="py-3 px-2">

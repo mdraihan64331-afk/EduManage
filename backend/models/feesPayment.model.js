@@ -55,6 +55,21 @@ const feesPaymentSchema = new mongoose.Schema(
     remark: {
       type: String,
     },
+
+    totalFee: {
+      type: Number,
+      required: true,
+    },
+
+    paidAmount: {
+      type: Number,
+      required: true,
+    },
+
+    dueAmount: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true },
 );

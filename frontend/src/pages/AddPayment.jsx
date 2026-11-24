@@ -113,6 +113,9 @@ function AddPayment() {
           paymentMethod,
           paymentDate,
           remark,
+          totalFee,
+          paidAmount,
+          dueAmount,
         },
         { withCredentials: true },
       );
@@ -274,13 +277,13 @@ function AddPayment() {
 
             <div className="flex flex-col gap-2 mt-3">
               <label>
-                academicYear <span className="text-red-500">*</span>
+                Academic Year <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                placeholder="AcademicYear"
+                placeholder="Academic Year"
                 onChange={(e) => setAcademicYear(e.target.value)}
-                className="w-50 border border-gray-300 px-2 py-1 rounded-[8px]"
+                className="w-50 border outline-none border-gray-300 px-2 py-1 rounded-[8px]"
               />
             </div>
 

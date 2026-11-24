@@ -11,6 +11,9 @@ export const addFeesPayment = async (req, res) => {
       paymentMethod,
       paymentDate,
       remark,
+      totalFee,
+      paidAmount,
+      dueAmount,
     } = req.body;
 
     if (!student) {
@@ -58,6 +61,9 @@ export const addFeesPayment = async (req, res) => {
       paymentMethod,
       paymentDate,
       remark,
+      totalFee,
+      paidAmount,
+      dueAmount,
     });
 
     return res.status(201).json(newPayment);
@@ -79,6 +85,24 @@ export const getAllPayment = async (req, res) => {
 
     return res.status(200).json(payments);
   } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getPaymentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const payment = await FeesPayment.find(id);
+
+    if (!payment) {
+      return res.status(400).json({ message: "Payment not found!" });
+    }
+
+    return res.status(200).json(payment);
+  } catch (error) {
+    console.log("payment error: ", error);
+
     return res.status(500).json({ message: error.message });
   }
 };
