@@ -27,8 +27,10 @@ function ListPayment() {
     "Class 9",
     "Class 10",
   ];
-  const [section, setSection] = useState("");
-  const sectionName = ["A", "B", "C"];
+  const currentAcademicYear = new Date().getFullYear();
+  const [academicYear, setAcademicYear] = useState(
+    `${currentAcademicYear}-${currentAcademicYear + 1}`,
+  );
   const [input, setInput] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -43,6 +45,61 @@ function ListPayment() {
       admissionDate.getFullYear() === now.getFullYear()
     );
   }).length;
+
+  const totalFees = Array.isArray(classFeesData)
+    ? classFeesData.reduce((total, fee) => {
+        const studentCount = studentData.filter(
+          (student) => student.className === fee.className,
+        ).length;
+
+        return total + studentCount * Number(fee?.fees || 0);
+      }, 0)
+    : 0;
+
+  const totalPaid = Array.isArray(displayStudents)
+    ? displayStudents.reduce((sum, fee) => sum + fee?.amount, 0)
+    : 0;
+
+  const totalDue = totalFees - totalPaid;
+
+  const handleFilter = () => {
+    let filtered = paymentData;
+
+    if (input) {
+      filtered = filtered.filter((student) => {
+        student.student?.fullName?.String().includes(input.toLowerCase()) ||
+          student.student?.studentId
+            ?.toLowerCase()
+            .includes(input.toLowerCase()) ||
+          student.student?.rollNumber
+            ?.toLowerCase()
+            .includes(input.toLowerCase());
+      });
+    }
+
+    if (selectClass) {
+      filtered = filtered.filter(
+        (student) => student.student?.className === selectClass,
+      );
+    }
+
+    if (academicYear) {
+      filtered = filtered.filter((student) =>
+        student.academicYear.toLowerCase().includes(academicYear.toLowerCase()),
+      );
+    }
+
+    setFilteredStudents(filtered);
+    setIsFiltered(true);
+  };
+
+  const handleReset = () => {
+    setInput("");
+    setSelectClass("");
+    setAcademicYear(`${currentAcademicYear}-${currentAcademicYear + 1}`);
+    setFilteredStudents([]);
+    setIsFiltered(false);
+  };
 
   return (
     <div className="flex bg-blue-50">
@@ -90,7 +147,7 @@ function ListPayment() {
                   <p className="font-semibold">Total Fee (This Year)</p>
                   <h1 className="font-bold text-2xl flex items-center">
                     <TbCurrencyTaka />
-                    1,44,000
+                    {Number(totalFees).toLocaleString("en-BD")}
                   </h1>
                   {/* <p
                     className={`text-xs flex items-center gap-2 ${
@@ -122,7 +179,7 @@ function ListPayment() {
                   <p className="font-semibold">Total Paid</p>
                   <h1 className="font-bold text-2xl flex items-center">
                     <TbCurrencyTaka />
-                    72000
+                    {Number(totalPaid).toLocaleString("en-BD")}
                   </h1>
                   {/* <p
                     className={`text-xs flex items-center gap-2 ${
@@ -149,7 +206,7 @@ function ListPayment() {
                   <p className="font-semibold">Total Due</p>
                   <h1 className="font-bold text-2xl text-red-600 flex items-center">
                     <TbCurrencyTaka />
-                    72000
+                    {Number(totalDue).toLocaleString("en-BD")}
                   </h1>
                   {/* <p
                     className={`text-xs flex items-center gap-2 ${
@@ -190,21 +247,17 @@ function ListPayment() {
             </div>
             {/* section */}
             <div className="flex flex-col gap-1">
-              <select
-                value={section}
-                onChange={(e) => setSection(e.target.value)}
+              <input
+                value={academicYear}
+                type="text"
                 className=" border w-50 border-gray-300 rounded-[8px] px-2 py-1 outline-none"
-              >
-                <option value="">Select Section</option>
-                {sectionName.map((e, index) => (
-                  <option key={index}>{e}</option>
-                ))}
-              </select>
+                onChange={(e) => setAcademicYear(e.target.value)}
+              />
             </div>
             {/* filter */}
             <button
               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-green-600 text-green-600 rounded-lg cursor-pointer group "
-              // onClick={handleFilter}
+              onClick={handleFilter}
             >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                 <FiFilter /> Filter
@@ -214,7 +267,7 @@ function ListPayment() {
             {/* reset */}
             <button
               className="relative overflow-hidden flex items-center justify-center gap-2 px-5 py-1 border border-blue-600 text-blue-600 rounded-lg cursor-pointer group"
-              // onClick={handleReset}
+              onClick={handleReset}
             >
               <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
                 <RiResetLeftFill /> Reset
@@ -254,9 +307,6 @@ function ListPayment() {
               {/* Student Data */}
               <tbody>
                 {displayStudents.map((e, index) => {
-                  const totalFees = classFeesData.find(
-                    (cls) => cls.className === e.student?.className,
-                  );
                   return (
                     <tr
                       key={e._id}

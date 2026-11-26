@@ -11,8 +11,7 @@ import { FaStar, FaTrophy, FaPercentage } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { RiResetLeftFill } from "react-icons/ri";
 
-function ResultRanking() {
-  const { studentData } = useSelector((state) => state.student);
+function ResultRanking() {  
   const { resultData } = useSelector((state) => state.result);
 
   // Filter states

@@ -18,6 +18,7 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import AcademicOverview from "../components/AcademicOverview ";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 function StudentDetails() {
   const { id } = useParams();
@@ -618,16 +619,16 @@ function StudentDetails() {
                 {/* Table Header */}
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="border-b border-gray-300 text-gray-600">
-                    <th className="text-left py-3 px-2 text-[14px]">#</th>
-                    <th className="text-left py-3 px-2 text-[14px]">Class</th>
-                    <th className="text-left py-3 px-2 text-[14px]">
+                    <th className="text-left py-3 px-2">#</th>
+                    <th className="text-left py-3 px-2">Class</th>
+                    <th className="text-left py-3 px-2">
                       Payment Method
                     </th>
-                    <th className="text-left py-3 px-2 text-[14px]">
+                    <th className="text-left py-3 px-2">
                       Fees Type
                     </th>
-                    <th className="text-left py-3 px-2 text-[14px]">Date</th>
-                    <th className="text-left py-3 px-2 text-[14px]">
+                    <th className="text-left py-3 px-2">Date</th>
+                    <th className="text-left py-3 px-2">
                       Paid Amount
                     </th>
                   </tr>
@@ -647,7 +648,10 @@ function StudentDetails() {
 
                         <td className="py-3 px-2">{e.paymentMethod}</td>
 
-                        <td className="py-3 px-2">{e.feesType}</td>
+                        <td className="py-3 px-2 flex items-center gap-1">
+                          <TbCurrencyTaka />
+                          {e.feesType}
+                        </td>
 
                         <td className="py-3 px-2">
                           <div>
@@ -661,7 +665,7 @@ function StudentDetails() {
                             )}
                           </div>
                           <div className="text-[14px] text-gray-400">
-                            {new Date(e?.paymentDate).toLocaleTimeString(
+                            {new Date(e?.createdAt).toLocaleTimeString(
                               "en-BD",
                               {
                                 timeZone: "Asia/Dhaka",
@@ -672,7 +676,8 @@ function StudentDetails() {
                           </div>
                         </td>
 
-                        <td className="py-3 px-2">
+                        <td className="py-3 px-2 flex items-center gap-1 text-green-500">
+                          <TbCurrencyTaka size={20}/>
                           {Number(e?.amount).toLocaleString("en-BD")}
                         </td>
                       </tr>
@@ -684,7 +689,8 @@ function StudentDetails() {
                     <td colSpan="5" className="py-3 px-2 text-right">
                       Total Paid
                     </td>
-                    <td className="py-3 px-2 ">
+                    <td className="py-3 px-2 flex items-center gap-1 text-green-500">
+                      <TbCurrencyTaka size={20}/>
                       {Number(totalPaid).toLocaleString("en-BD")}
                     </td>
                   </tr>
@@ -692,7 +698,8 @@ function StudentDetails() {
                     <td colSpan="5" className="py-3 px-2 text-right">
                       Total Fees
                     </td>
-                    <td className="py-3 px-2 ">
+                    <td className="py-3 px-2 flex items-center gap-1">
+                      <TbCurrencyTaka size={20}/>
                       {totalFees?.totalFee
                         ? Number(totalFees?.totalFee).toLocaleString("en-BD")
                         : 0}
@@ -702,7 +709,8 @@ function StudentDetails() {
                     <td colSpan="5" className="py-3 px-2 text-right">
                       Due Amount
                     </td>
-                    <td className="py-3 px-2 ">
+                    <td className="py-3 px-2 flex items-center gap-1 text-red-500">
+                      <TbCurrencyTaka size={20}/>
                       {Number(totalFees?.totalFee - totalPaid).toLocaleString(
                         "en-BD",
                       ) || 0}
